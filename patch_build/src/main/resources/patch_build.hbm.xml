@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.m3.patchbuild.info">
+	<class name="BuildPack" table="PB_BuildPack">
+		<id name="uuid" column="UUID" unsaved-value="null">
+			<generator class="uuid2"/>
+		</id>
+		<property name="buildNo" 	column="buildNo" 	type="string"/>
+		<property name="keywords" 	column="keywords" 	type="string"/>
+		<property name="requester" 	column="requester" 	type="string"/>
+		<property name="requestTime" 	column="requestTime" 	type="timestamp"/>
+		<property name="tester" 	column="tester" 	type="string"/>
+		<property name="testTime" 	column="testTime" 	type="timestamp"/>
+		<property name="passTime" 	column="passTime" 	type="timestamp"/>
+		<property name="deployer" 	column="deployer" 	type="string"/>
+		<property name="deployTime"	column="deployTime"	type="timestamp"/>
+		<property name="branch"		column="branch"		type="string"/>
+		<property name="patch"		column="patch"		type="string"/>
+		<property name="customers"	column="customers"	type="string"/>
+		<property name="comments"	column="comments" 	type="string"/>
+		<property name="status"		column="status">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.m3.patchbuild.info.BuildPackStatus</param>
+				<param name="type">12</param>
+			</type>
+		</property>
+		<set name="buildFiles" table="PB_BuildFile">
+           <key column="buildUuid"/>
+           <element type="string" column="url"/>
+       </set>
+       <set name="depends" table="PB_BuildPackDepend">
+       		<key column="buildUuid"/>
+       		<element type="string" column="dependNo"/>
+       </set>
+	</class>
+</hibernate-mapping>
