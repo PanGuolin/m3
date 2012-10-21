@@ -1,17 +1,11 @@
 package com.m3.patchbuild.service;
 
-import javassist.bytecode.stackmap.TypeData.NullType;
-
-import org.apache.commons.io.output.NullWriter;
-import org.tmatesoft.sqljet.core.internal.lang.SqlParser.id_column_def_return;
-
 import com.m3.common.MD5Util;
 import com.m3.common.SVNUtil;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.dao.UserDAO;
 import com.m3.patchbuild.info.BuildBranch;
 import com.m3.patchbuild.info.User;
-import com.m3.patchbuild.info.UserRoleEnum;
 
 /**
  * 用户业务接口
@@ -34,6 +28,15 @@ public class UserService {
 			return user;
 		String enPass = MD5Util.getMD5(userId + password);
 		return enPass.equals(user.getPassword()) ? user : null;
+	}
+	
+	/**
+	 * 查找系统中已存在的用户
+	 * @param userId
+	 * @return
+	 */
+	public static User findUser(String userId) {
+		return (User) dao.findByNo(userId);
 	}
 	
 	/**

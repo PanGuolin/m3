@@ -10,7 +10,7 @@ public class LoginAction extends BaseAction {
 	private String password;
 	
 	@Override
-	public String execute() throws Exception {
+	public String doExecute() throws Exception {
 		User user = UserService.getUser(username, password);
 		
 		if (user == null) {

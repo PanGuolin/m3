@@ -7,27 +7,24 @@
 <!doctype html>
 <html>
 <head>
-	<title>拜特构建管理系统</title>
-	<style>
-		#outterDiv {width:300px;margin-left:auto;margin-right:auto; margin-top:200px;}
-		#titleDiv {background:#369; line-height:30px; text-align:left;color:#FFF;font-weight:bold; }
-		#formDiv {border:1px solid #69C;}
-		#linkDiv {text-align:right; margin-bottom:3px;}
-		#linkDiv a { text-decoration:none;}
-        body{ text-align:center; font-size: 14px; margin:10px 0;}
-	</style>
+	<title>补丁构建管理系统 -用户注册</title>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/simple.css" type="text/css" />
 </head>
-<body> 
-	<s:set value="@com.m3.patchbuild.service.BuildBranchService@listAllBranch()" name="branchs"/>
-	<s:select name="branch" label="请选择SVN分支" labelposition="left" multiple="false" list="#branchs" listKey="branch" listValue="name"/> 
+<body class="simple"> 
+	
 	<div id="outterDiv">
-		<div id="linkDiv"><font color="red">${tips}</font> <a href="${pageContext.request.contextPath}/user/importfromsvn.jsp">从SVN引入用户</a></div>
-		<div id="titleDiv">欢迎使用补丁构建系统</div>
+		<div id="errorDiv">${tips}</div>
+		<div id="linkDiv"><a href="${pageContext.request.contextPath}/user/requestRegister.jsp">向管理员申请注册</a></div>
+		<div id="titleDiv">注册新用户</div>
 		<div id="formDiv">
-		<s:form action="/user/login.action" method="POST"> 
-  			<s:textfield label="用户名" name="username"/>
- 			<s:password label="用户口令" name="password" />
- 			<s:submit value="登录"/>
+		<s:form action="/user/importFromSvn.action" method="POST"> 
+			<s:set value="@com.m3.patchbuild.service.BuildBranchService@listAllBranch()" name="branchs"/>
+			<s:select name="branch" label="请选择SVN分支" multiple="false" list="#branchs" listKey="branch" listValue="name"/> 
+  			<s:textfield label="登录名" name="user.userId"/>
+ 			<s:password label="登录口令" name="user.password" />
+ 			<s:textfield label="真实姓名" name="user.username"/>
+ 			<s:textfield label="用户邮箱" name="user.email"/>
+ 			<s:submit value="验证并注册"/>
  		</s:form>
  		</div>
 	</div>

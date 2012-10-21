@@ -11,5 +11,11 @@
 			<result name="error">/index.jsp</result>
 			<result name="success">/user/myfp.jsp</result>
 		</action>
+		
+		<action name="importFromSvn" class="com.m3.patchbuild.action.user.ImportFromSVNAction">
+			<result name="error">/user/importfromsvn.jsp</result>
+			<result name="success">/user/myfp.jsp</result>
+		</action>
+		
 	</package>
 </struts>
