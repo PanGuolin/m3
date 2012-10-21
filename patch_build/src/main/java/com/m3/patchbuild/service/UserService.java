@@ -22,7 +22,7 @@ public class UserService {
 	 * @return 用户对象
 	 * @throws Exception
 	 */
-	public static User getUser(String userId, String password) {
+	public static User checkUser(String userId, String password) {
 		User user = (User) dao.findByNo(userId);
 		if (user == null)
 			return user;

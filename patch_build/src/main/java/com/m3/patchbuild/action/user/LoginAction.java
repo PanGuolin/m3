@@ -11,7 +11,7 @@ public class LoginAction extends BaseAction {
 	
 	@Override
 	public String doExecute() throws Exception {
-		User user = UserService.getUser(username, password);
+		User user = UserService.checkUser(username, password);
 		
 		if (user == null) {
 			setTips("登录失败，请重试！");

@@ -8,15 +8,15 @@ import junit.framework.TestCase;
 public class UserTest extends TestCase{
 	
 	public void test_getUser() throws Exception{
-		User user = UserService.getUser("pangl22", "", "testbranch");
+		User user = UserService.checkUser("pangl22", "");
 		assertTrue(user == null);
-		user = UserService.getUser("pangl", "pangl1q", "testbranch");
+		user = UserService.checkUser("pangl", "pangl1q");
 		assertTrue(user != null);
 		
 	}
 	
 	public void test_addUser() throws Exception{
-		if (UserService.getUser("admin", "123456", null) == null) {
+		if (UserService.checkUser("admin", "123456") == null) {
 			User user = new User();
 			user.setUserId("admin");
 			user.setPassword("123456");
@@ -31,7 +31,7 @@ public class UserTest extends TestCase{
 			user.setUsername("系统管理员");
 			UserService.createUser(user);
 		}
-		User user = UserService.getUser("admin", "123456", null);
+		User user = UserService.checkUser("admin", "123456");
 		assertTrue(user !=  null);
 		
 	}
