@@ -11,8 +11,7 @@ public class HibernateTest extends TestCase{
 	
 	public void test_1() throws Exception {
 		Configuration conf = new Configuration().configure();
-		SessionFactory sf = conf.buildSessionFactory();
-		Session sess = sf.openSession();
+		Session sess = conf.buildSessionFactory().openSession();
 		Transaction tx = sess.beginTransaction();
 		BuildPack bp = new BuildPack();
 		bp.setBranch("sp1");
@@ -42,5 +41,21 @@ public class HibernateTest extends TestCase{
 		tx.commit();
 		sess.close();
 	}
+	
+	public void test_3() throws Exception {
+		Configuration conf = new Configuration().configure();
+		SessionFactory sf = conf.buildSessionFactory();
+		Session sess = sf.openSession();
+		Transaction tx = sess.beginTransaction();
+		User user = new User();
+		user.setEmail("pangl@threemickey.com");
+		user.setPassword("test");
+		user.setUserId("pangl");
+		user.getRoles().add(UserRoleEnum.admin.name());
+		sess.save(user);
+		tx.commit();
+		sess.close();
+	}
+	
 	
 }

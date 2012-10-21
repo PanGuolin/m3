@@ -7,7 +7,7 @@ package com.m3.patchbuild.info;
  */
 public enum UserRoleEnum {
 
-	depeloper,//开发
+	developer,//开发
 	designer, //设计师
 	testmanager, //测试经理
 	tester,//测试员

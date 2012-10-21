@@ -19,7 +19,7 @@ com.byttersoft.patchbuild.permission.*" %>
 <body>
 <div class="outer">
 	<div class="main">
-		<div class="title">欢迎${session_username}, 当前分支:${session_branch}<br/>
+		<div class="title">欢迎${userBean.username},您当前有N个待处理任务<br/>
 		<span id="message_span"></span>
 		</div> 
 		<div class="toolbar" id="toolbar">

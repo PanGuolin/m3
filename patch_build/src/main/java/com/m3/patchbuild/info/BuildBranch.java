@@ -23,6 +23,7 @@ public class BuildBranch {
 	@Column(name = "uuid", unique = true)
 	private String uuid; //唯一标识
 	
+	@BillNO
 	@Column(name="branch")
 	private String branch; //分支标识
 	

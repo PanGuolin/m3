@@ -23,6 +23,10 @@
 
     <description>拜特补丁构建系统</description>
     <display-name>拜特补丁构建系统</display-name>
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+    </filter>
 	<filter>
     	<filter-name>loginFilter</filter-name>
         <filter-class>com.byttersoft.patchbuild.filter.LoginFilter</filter-class>
@@ -30,6 +34,10 @@
     <filter-mapping>
         <filter-name>loginFilter</filter-name>
         <url-pattern>/manage/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
     
     <servlet>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+	
+<struts>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+	<package name="user" extends="struts-default">
+		<action name="login" class="com.m3.patchbuild.action.user.LoginAction">
+			<result name="error">/index.jsp</result>
+			<result name="success">/user/myfp.jsp</result>
+		</action>
+	</package>
+</struts>
