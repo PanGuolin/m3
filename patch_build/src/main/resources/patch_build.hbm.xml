@@ -26,10 +26,10 @@
 				<param name="type">12</param>
 			</type>
 		</property>
-		<set name="buildFiles" table="PB_BuildFile">
-           <key column="buildUuid"/>
-           <element type="string" column="url"/>
-       </set>
+		<set name="buildFiles">
+    		<key column="buildUuid"/>
+    		<one-to-many class="com.m3.patchbuild.info.BuildFile"/>
+		</set>
        <set name="depends" table="PB_BuildPackDepend">
        		<key column="buildUuid"/>
        		<element type="string" column="dependNo"/>

@@ -106,6 +106,8 @@ public class BuildBranch {
 		return svnTagRoot;
 	}
 	public void setSvnTagRoot(String svnTagRoot) {
+		if (svnTagRoot != null && !svnTagRoot.startsWith("/"))
+			svnTagRoot = "/" + svnTagRoot;
 		this.svnTagRoot = svnTagRoot;
 	}
 	
@@ -120,6 +122,12 @@ public class BuildBranch {
 	}
 	public void setWorkspace(String workspace) {
 		this.workspace = workspace;
+	}
+	
+	public String trimUrl(String url) {
+		if (url == null || this.svnRoot == null || !url.startsWith(svnRoot))
+			return url;
+		return url.substring(svnRoot.length());
 	}
 	
 }

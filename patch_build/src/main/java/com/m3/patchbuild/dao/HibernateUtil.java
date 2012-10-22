@@ -50,6 +50,15 @@ public class HibernateUtil {
 		}
 		sess.rollback();
 	}
+	
+	public static void commit() {
+		SessionObject sess = sessions.get();
+		if (sess == null) {
+			return;
+		}
+		sess.commit();
+	}
+	
 	public static void closeSession() {
 		SessionObject sess = sessions.get();
 		if (sess == null) 
@@ -81,6 +90,11 @@ public class HibernateUtil {
 		
 		synchronized void rollback() {
 			tx.rollback();
+		}
+		
+		synchronized void commit() {
+			tx.commit();
+			tx = session.beginTransaction();
 		}
 		
 		void open() {

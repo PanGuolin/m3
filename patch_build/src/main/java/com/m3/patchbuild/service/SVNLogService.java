@@ -35,8 +35,8 @@ public class SVNLogService {
 		BuildBranch bBranch = BuildBranchService.getBranch(branch);
 		if (bBranch == null)
 			return new ArrayList<SVNLog>();
-		SVNLog maxLog = dao.getMaxRevision(branch);
-		long maxRevision = maxLog == null ? 0L : maxLog.getRevision();
+		long maxRevision = dao.getMaxRevision(branch);
+		//long maxRevision = maxLog == null ? 0L : maxLog.getRevision();
 		long ts = System.currentTimeMillis();
 		Set<SVNLogEntry> newLogs = SVNUtil.getSVNLogEntry(bBranch.getSvnUrl(), bBranch.getSvnUser(), 
 				bBranch.getSvnPassword(), maxRevision);
@@ -56,7 +56,7 @@ public class SVNLogService {
 					log.setRevision(nl.getRevision());
 					log.setFileType(path.getKind().toString());
 					log.setModifyType(path.getType());
-					log.setPath(path.getPath());
+					log.setPath(bBranch.trimUrl(path.getPath()));
 					list.add(log);
 				}
 			}

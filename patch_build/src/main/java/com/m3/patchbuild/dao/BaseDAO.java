@@ -99,6 +99,7 @@ public abstract class BaseDAO {
 				if (i % batch_size == 0) {
 					session.flush();
 					session.clear();
+					//HibernateUtil.commit();
 				}
 			}
 		} finally {

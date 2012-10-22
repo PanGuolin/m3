@@ -43,13 +43,16 @@ public class SVNLogDAO extends BaseDAO {
 		}
 	}
 	
-	public SVNLog getMaxRevision(String branch) {
+	public long getMaxRevision(String branch) {
 		try {
-			return (SVNLog) HibernateUtil.openSession()
+			Object value = HibernateUtil.openSession()
 				.createCriteria(SVNLog.class)
 				.add(Restrictions.eq("branch", branch))
 				.setProjection(Projections.projectionList().add(Projections.max("revision")))
 				.uniqueResult();
+			if (value == null)
+				return 0;
+			return (long)value;
 		} finally {
 			HibernateUtil.closeSession();
 		}

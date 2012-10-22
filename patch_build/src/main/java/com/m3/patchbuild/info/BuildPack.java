@@ -27,7 +27,7 @@ public class BuildPack {
 	private String comments; //构建描述
 	private String patch; //所属补丁
 	private BuildPackStatus status = null; //当前状态
-	private Set<String> buildFiles = new HashSet<String>(); //构建文件列表
+	private Set<BuildFile> buildFiles = new HashSet<BuildFile>(); //构建文件列表
 	private Set<String> depends = new HashSet<String>(); //依赖其它构建包列表
 	
 	public String getUuid() {
@@ -120,18 +120,18 @@ public class BuildPack {
 	public void setPatch(String patch) {
 		this.patch = patch;
 	}
-	public Set<String> getBuildFiles() {
-		Set<String> set = new HashSet<String>();
+	public Set<BuildFile> getBuildFiles() {
+		Set<BuildFile> set = new HashSet<BuildFile>();
 		set.addAll(this.buildFiles);
 		return set;
 	}
-	public void setBuildFiles(Set<String> buildFiles) {
+	public void setBuildFiles(Set<BuildFile> buildFiles) {
 		if (buildFiles != null)
 		this.buildFiles.addAll(buildFiles);
 	}
 	
-	public void addBuildFile(String url) {
-		this.buildFiles.add(url);
+	public void addBuildFile(BuildFile file) {
+		this.buildFiles.add(file);
 	}
 	
 	public boolean removeBuildFile(String url) {

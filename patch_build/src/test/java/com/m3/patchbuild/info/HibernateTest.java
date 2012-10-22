@@ -15,7 +15,6 @@ public class HibernateTest extends TestCase{
 		Transaction tx = sess.beginTransaction();
 		BuildPack bp = new BuildPack();
 		bp.setBranch("sp1");
-		bp.addBuildFile("test url");
 		bp.addDepends("depend1");
 		bp.setStatus(BuildPackStatus.deployed);
 		sess.save(bp);

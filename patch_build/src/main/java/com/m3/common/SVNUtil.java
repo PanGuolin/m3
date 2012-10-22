@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.SVNCommitInfo;
@@ -117,17 +116,11 @@ public abstract class SVNUtil {
 		long endRevision = -1; //FROM HEAD
 		
 		Set<SVNLogEntry> set = new HashSet<SVNLogEntry>();
-		//Pattern pattern = Pattern.compile(logPattern);
 		
 		Collection logEntries = repository.log(new String[] { "" }, null, startRevision, endRevision, true, true);
 		for ( Iterator entries = logEntries.iterator( ); entries.hasNext( ); ) {
             SVNLogEntry logEntry = (SVNLogEntry) entries.next( );
-            String logMsg = logEntry.getMessage();
-            //if (pattern.matcher(logMsg).find()) {
-            	//if (onlySelf && !logEntry.getAuthor().equals(user))
-            	//	continue;
-            	set.add(logEntry);
-            //}
+           	set.add(logEntry);
 		}
 		return set;
 	}

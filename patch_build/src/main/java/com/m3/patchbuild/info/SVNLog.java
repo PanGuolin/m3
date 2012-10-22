@@ -20,8 +20,8 @@ import org.hibernate.annotations.GenericGenerator;
 public class SVNLog {
 
 	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
+    @GeneratedValue(generator="my-uuid")
+    @GenericGenerator(name="my-uuid", strategy="uuid")
 	@Column(name = "uuid", unique = true)
 	private String uuid;
 	
