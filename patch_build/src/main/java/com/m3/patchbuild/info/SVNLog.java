@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
 /**
  * SVN修改日志对象
  * @author MickeyMic
@@ -21,7 +19,7 @@ public class SVNLog {
 
 	@Id
     @GeneratedValue(generator="my-uuid")
-    @GenericGenerator(name="my-uuid", strategy="uuid")
+    @org.hibernate.annotations.GenericGenerator(name="my-uuid", strategy="uuid")
 	@Column(name = "uuid", unique = true)
 	private String uuid;
 	
