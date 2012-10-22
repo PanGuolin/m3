@@ -90,6 +90,8 @@ public abstract class BaseDAO {
 	 * @param infos
 	 */
 	public void saveBatch(List<?> infos) {
+		if(infos == null || infos.size() == 0)
+			return;
 		if (batch_size < 1)
 			batch_size = 1;
 		try {

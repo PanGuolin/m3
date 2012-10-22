@@ -1,11 +1,14 @@
 package com.m3.patchbuild.info;
 
+import junit.framework.TestCase;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import junit.framework.TestCase;
+import com.m3.patchbuild.service.BuildBranchService;
+import com.m3.patchbuild.service.BuildPackService;
 
 public class HibernateTest extends TestCase{
 	
@@ -13,10 +16,19 @@ public class HibernateTest extends TestCase{
 		Configuration conf = new Configuration().configure();
 		Session sess = conf.buildSessionFactory().openSession();
 		Transaction tx = sess.beginTransaction();
+		
+		BuildBranch branch = BuildBranchService.getBranch("sp1");
+		
 		BuildPack bp = new BuildPack();
-		bp.setBranch("sp1");
+		bp.setBuildNo("test_build");
+		bp.setBranch(branch);
 		bp.addDepends("depend1");
 		bp.setStatus(BuildPackStatus.deployed);
+		
+		BuildFile file = new BuildFile();
+		file.setUrl("test url");
+		bp.addBuildFile(file);
+		
 		sess.save(bp);
 		tx.commit();
 		sess.close();

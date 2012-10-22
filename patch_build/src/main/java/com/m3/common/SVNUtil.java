@@ -77,13 +77,11 @@ public abstract class SVNUtil {
 	public static String[] listSVNProjects(String svnUrl, String user, String password) {
 		
 		Set<String> set = new TreeSet<String>();
-		
 		try {
 			DAVRepositoryFactory.setup();
 			SVNRepository repository = SVNRepositoryFactory.create(SVNURL.parseURIDecoded(svnUrl));
 			ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(user, password);
 			repository.setAuthenticationManager(authManager);
-			
 			
 			Collection entries = repository.getDir("", -1 , null , (Collection) null );
 	        Iterator iterator = entries.iterator( );
@@ -96,7 +94,7 @@ public abstract class SVNUtil {
 	            }
 	        }
 		} catch (SVNException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return (String[])set.toArray(new String[set.size()]);
 	}
@@ -107,7 +105,7 @@ public abstract class SVNUtil {
 	 * @return
 	 * @throws SVNException 
 	 */
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@SuppressWarnings({ "rawtypes" })
 	public static Set<SVNLogEntry> getSVNLogEntry(String svnUrl, String user, String password, long startRevision) throws SVNException {
 		DAVRepositoryFactory.setup();
 		SVNRepository repository = SVNRepositoryFactory.create(SVNURL.parseURIDecoded(svnUrl));
@@ -134,7 +132,7 @@ public abstract class SVNUtil {
 	 * @return
 	 * @throws SVNException 
 	 */
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@SuppressWarnings({ "rawtypes" })
 	public static ChangedSVNFiles listChangedFiles(String branch, String[] modules, String[] logPatterns) throws SVNException {
 		
 		RepositoryInfo repos = BuildReposManager.getByName(branch);
@@ -194,6 +192,28 @@ public abstract class SVNUtil {
 		return new ChangedSVNFiles(paths, sb.toString());
 	}
 	
+	public static void getFile(String svnRoot, String user, String password, File rootDir, String[] paths) throws SVNException {
+		if (paths == null || paths.length == 0)
+			return;
+		long ts = System.currentTimeMillis();
+		DAVRepositoryFactory.setup();
+		DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(new File("."), true);
+		SVNClientManager manager = SVNClientManager.newInstance(options, user, password);
+		SVNUpdateClient client = manager.getUpdateClient();
+		rootDir.mkdirs();
+		for (String path : paths) {
+			File dir = rootDir;
+			int index = path.lastIndexOf('/');
+			if (index != -1) {
+				dir = new File(rootDir, path.substring(0, index));
+				dir.mkdirs();
+			}
+			SVNURL svnURL = SVNURL.parseURIDecoded(svnRoot + path);
+			client.doExport(svnURL, dir, SVNRevision.HEAD, SVNRevision.HEAD, null, true, SVNDepth.FILES);
+		}
+		logger.info("export " + paths.length + " file to " + rootDir + " cost " + (System.currentTimeMillis() - ts) + "ms");
+	}
+	
 	/**
 	 * 检出或更新指定工程
 	 * @param branch 分支名称
@@ -203,7 +223,6 @@ public abstract class SVNUtil {
 	 * @param rootDir 本地SVN根目
 	 * @throws SVNException
 	 */
-	@SuppressWarnings("deprecation")
 	public static void checkOutModule(String branch, String module) throws SVNException {
 		
 		RepositoryInfo repos = BuildReposManager.getByName(branch);
@@ -238,7 +257,6 @@ public abstract class SVNUtil {
 	 * @param message 打标记时的消息
 	 * @throws SVNException 
 	 */
-	@SuppressWarnings("deprecation")
 	public static void tagProjects(String snvName, String user, String pwd, String[] projects, 
 			String tagName, String message) 
 			throws Exception {

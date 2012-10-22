@@ -1,5 +1,6 @@
 package com.m3.common;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,5 +40,18 @@ public class SVNUtilTest extends TestCase {
 				 System.out.println(key + "====" + paths.get(key).getPath() + ":" + paths.get(key).getType() + paths.get(key).getKind());
 			 }
 		}
+	}
+	
+	public void test_getFile() throws Exception {
+		String svnRoot = "https://svn.bytter.com/svn/v101/v10.2二季度产品维护/工程过程/实现与测试/branches/v10.3_20120720_sp1/";
+		File root = new File("c:/temp");
+		root.mkdirs();
+		String[] urls = new String[]{
+				"cms/src/main/webapp/cms/MatureQuery.jsp",
+				"admin-api/src/main/java/com/byttersoft/admin/persistence/dao/VUserCorpSysOprDao.java",
+				"cms/src/main/webapp/cms/AllMatureQuery.jsp"
+		};
+		
+		SVNUtil.getFile(svnRoot, "pangl", "pangl1q", root, urls);
 	}
 }

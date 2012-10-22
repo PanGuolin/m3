@@ -22,7 +22,7 @@ public class BuildPack {
 	private Date passTime; //测试通过时间
 	private String deployer; //发布用户
 	private Date deployTime; //发布时间
-	private String branch; //所属分支
+	private BuildBranch branch; //所属分支
 	private String customers = "ALL"; //适用客户
 	private String comments; //构建描述
 	private String patch; //所属补丁
@@ -84,10 +84,10 @@ public class BuildPack {
 	public void setDeployer(String deployer) {
 		this.deployer = deployer;
 	}
-	public String getBranch() {
+	public BuildBranch getBranch() {
 		return branch;
 	}
-	public void setBranch(String branch) {
+	public void setBranch(BuildBranch branch) {
 		this.branch = branch;
 	}
 	public String getCustomers() {
@@ -121,13 +121,11 @@ public class BuildPack {
 		this.patch = patch;
 	}
 	public Set<BuildFile> getBuildFiles() {
-		Set<BuildFile> set = new HashSet<BuildFile>();
-		set.addAll(this.buildFiles);
-		return set;
+		return this.buildFiles;
 	}
 	public void setBuildFiles(Set<BuildFile> buildFiles) {
 		if (buildFiles != null)
-		this.buildFiles.addAll(buildFiles);
+		this.buildFiles = buildFiles;
 	}
 	
 	public void addBuildFile(BuildFile file) {
@@ -138,13 +136,11 @@ public class BuildPack {
 		return this.buildFiles.remove(url);
 	}
 	public Set<String> getDepends() {
-		Set<String> set = new HashSet<String>();
-		set.addAll(depends);
-		return set;
+		return depends;
 	}
 	public void setDepends(Set<String> depends) {
 		if (depends != null)
-			this.depends.addAll(depends);
+			this.depends = depends;
 	}
 	
 	public void addDepends(String depend) {
@@ -155,4 +151,25 @@ public class BuildPack {
 		return this.depends.remove(depend);
 	}
 	
+	public String[] getFilePaths() {
+		Set<String> set = new HashSet<String>();
+		for (BuildFile file : buildFiles) {
+			set.add(file.getUrl());
+		}
+		return (String[])set.toArray(new String[set.size()]);
+	}
+	
+	public void addFilePath(String path) {
+		if (path == null)
+			return;
+		path = path.trim();
+		for (BuildFile file :buildFiles) {
+			if (path.equalsIgnoreCase(file.getUrl())) {
+				return;
+			}
+		}
+		BuildFile file = new BuildFile();
+		file.setUrl(path);
+		this.buildFiles.add(file);
+	}
 }
