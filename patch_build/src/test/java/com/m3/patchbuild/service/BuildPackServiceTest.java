@@ -1,5 +1,7 @@
 package com.m3.patchbuild.service;
 
+import org.tmatesoft.svn.core.SVNException;
+
 import junit.framework.TestCase;
 
 import com.m3.patchbuild.info.BuildBranch;
@@ -24,6 +26,11 @@ public class BuildPackServiceTest extends TestCase{
 			BuildPackService.save(bp);
 			System.out.println("Bulid Pack crateed!");
 		}
+	}
+	
+	public void test_prepareBuild() throws SVNException {
+		BuildPack bp = BuildPackService.find("sp1", "test_build");
+		BuildPackService.prepareBuild(bp);
 	}
 
 }
