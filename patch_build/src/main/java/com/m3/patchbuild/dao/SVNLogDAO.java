@@ -110,19 +110,21 @@ public class SVNLogDAO extends BaseDAO {
 		}
 		sql.append(")");
 		
-		List<SVNLog> list = HibernateUtil.openSession().createSQLQuery(sql.toString())
-			.addEntity("l", SVNLog.class)
-			.list();
-		pack.getBuildFiles().clear();
-		for (SVNLog log : list) {
-			//if (log.getRevision() == 0 && log.getAuthor() == null)
-			//	continue;
-			BuildFile file = new BuildFile();
-			file.setModifier(log.getAuthor());
-			file.setModifyTime(log.getModifyTime());
-			file.setRevision(log.getRevision());
-			file.setUrl(log.getPath());
-			pack.addBuildFile(file);
+		try {
+			List<SVNLog> list = HibernateUtil.openSession().createSQLQuery(sql.toString())
+				.addEntity("l", SVNLog.class)
+				.list();
+			pack.getBuildFiles().clear();
+			for (SVNLog log : list) {
+				BuildFile file = new BuildFile();
+				file.setModifier(log.getAuthor());
+				file.setModifyTime(log.getModifyTime());
+				file.setRevision(log.getRevision());
+				file.setUrl(log.getPath());
+				pack.addBuildFile(file);
+			}
+		} finally {
+			HibernateUtil.closeSession();
 		}
 	}
 

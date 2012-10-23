@@ -80,7 +80,9 @@ public abstract class BaseDAO {
 	public void saveInfo(Object info) {
 		try {
 			HibernateUtil.openSession().saveOrUpdate(info);		
-		} finally {
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}finally {
 			HibernateUtil.closeSession();
 		}
 	}
@@ -104,6 +106,14 @@ public abstract class BaseDAO {
 					//HibernateUtil.commit();
 				}
 			}
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	
+	public void delete(Object info) {
+		try {
+			HibernateUtil.openSession().delete(info);
 		} finally {
 			HibernateUtil.closeSession();
 		}

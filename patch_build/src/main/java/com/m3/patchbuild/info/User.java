@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -43,6 +44,9 @@ public class User {
 	
 	@Column(name="isSVN")
 	private boolean isSVNUser = false; //是否SVN用户，如果是SVN用户则密码验证交由SVN系统负责
+	
+	@OneToMany(mappedBy="")
+	private Set<User> staffs; //管理的员工
 	
 
 	@ElementCollection

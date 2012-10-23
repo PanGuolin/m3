@@ -26,7 +26,7 @@ public class BuildPack {
 	private String customers = "ALL"; //适用客户
 	private String comments; //构建描述
 	private String patch; //所属补丁
-	private BuildPackStatus status = null; //当前状态
+	private BuildPackStatus status = BuildPackStatus.init; //当前状态
 	private Set<BuildFile> buildFiles = new HashSet<BuildFile>(); //构建文件列表
 	private Set<String> depends = new HashSet<String>(); //依赖其它构建包列表
 	

@@ -4,10 +4,12 @@ import java.io.File;
 
 import org.tmatesoft.svn.core.SVNException;
 
+import com.m3.common.FileUtil;
 import com.m3.common.SVNUtil;
 import com.m3.patchbuild.dao.BuildPackDAO;
 import com.m3.patchbuild.info.BuildBranch;
 import com.m3.patchbuild.info.BuildPack;
+import com.m3.patchbuild.info.BuildPackStatus;
 
 
 /**
@@ -35,9 +37,12 @@ public class BuildPackService {
 	public static void prepareBuild(BuildPack bp) throws SVNException {
 		String[] paths = bp.getFilePaths();
 		BuildBranch bBranch = bp.getBranch();
-		File localRoot = new File(bBranch.getWorkspace() + bp.getBuildNo());
+		File localRoot = new File(bBranch.getWorkspace(), bp.getBuildNo());
+		FileUtil.emptyDir(localRoot);
 		SVNUtil.getFile(bBranch.getSvnUrl(), bBranch.getSvnUser(), bBranch.getSvnPassword(), localRoot, paths);
 		SVNLogService.fillBuildPack(bp);
+		bp.setStatus(BuildPackStatus.request);
+		dao.saveInfo(bp);
 		
 	}
 	
@@ -50,6 +55,10 @@ public class BuildPackService {
 	 */
 	public static BuildPack find(String branch, String buildNo) {
 		return dao.find(branch, buildNo);
+	}
+	
+	public static void delete(BuildPack bp) {
+		dao.delete(bp);
 		
 	}
 }

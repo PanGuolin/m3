@@ -25,16 +25,16 @@
 				<param name="type">12</param>
 			</type>
 		</property>
-		<set name="buildFiles" cascade="all">
+		<set name="buildFiles" cascade="all" lazy="false" inverse="true">
     		<key column="buildNo"/>
-    		<one-to-many class="com.m3.patchbuild.info.BuildFile" />
+    		<one-to-many class="com.m3.patchbuild.info.BuildFile"/>
 		</set>
        <set name="depends" table="PB_BuildPackDepend" cascade="all">
        		<key column="buildUuid"/>
        		<element type="string" column="dependNo"/>
        </set>
-       <many-to-one name="branch" column="branch" cascade="none"
+       <many-to-one name="branch" column="branch" 
    			class="com.m3.patchbuild.info.BuildBranch" fetch="join" 
-   			insert="false" property-ref="branch"/>
+   			property-ref="branch"/>
 	</class>
 </hibernate-mapping>
