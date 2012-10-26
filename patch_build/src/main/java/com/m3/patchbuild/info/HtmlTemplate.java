@@ -2,8 +2,6 @@ package com.m3.patchbuild.info;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -27,9 +25,9 @@ public class HtmlTemplate {
 	
 	@BillNO
 	@Column(name="type")
-	@Enumerated(EnumType.STRING)
-	private TemplateType type; //类型
+	private String type; //类型
 	
+	@Column(name="content")
 	private String content; //内容
 
 	public String getUuid() {
@@ -48,12 +46,14 @@ public class HtmlTemplate {
 		this.content = content;
 	}
 
-	public TemplateType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(TemplateType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
+
+	
 
 }

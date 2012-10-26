@@ -1,7 +1,5 @@
 package com.m3.patchbuild.dao;
 
-import org.hibernate.criterion.Restrictions;
-
 import com.m3.patchbuild.info.HtmlTemplate;
 
 /**
@@ -15,4 +13,5 @@ public class HtmlTemplateDAO extends BaseDAO{
 	protected Class<?> getInfoClass() {
 		return HtmlTemplate.class;
 	}
+
 }

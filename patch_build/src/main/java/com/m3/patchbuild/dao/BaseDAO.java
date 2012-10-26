@@ -43,7 +43,7 @@ public abstract class BaseDAO {
 	 * @return
 	 */
 	public Object findByNo(Object billNO) {
-		try {
+		try { 
 			return HibernateUtil.openSession()
 					.createCriteria(getInfoClass())
 					.add(Restrictions.eq(getBillNoProperty(), billNO))
