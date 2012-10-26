@@ -17,6 +17,10 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name="PB_Branch")
 public class BuildBranch {
 	
+	public static final String DIR_SVN = "svn"; //SVN文件目录名称
+	public static final String DIR_JAVA_SRC = "src"; //java文件保存目录名称
+	public static final String FILE_ANT = "build.xml"; //构建所用的脚本名称
+	
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
 	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")

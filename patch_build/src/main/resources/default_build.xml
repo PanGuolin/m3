@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="GBK" ?>
+<project name="DefaultPatchBuild" basedir="." default="build">
+	
+	<property name="dir.build" value="."/> <!-- 构建包的工作目录 -->
+	<property name="source.svn" value="${dir.build}/svn"/>
+	<property name="dir.target" value="${dir.build}/target/"/> <!-- 打包的目标地址 -->
+	
+	
+	<path id="java.compile.path"> <!-- 编译依赖路径 -->
+		<fileset dir="${dir.branch}/lib"/>
+	    <pathelement location="${dir.branch}/classes"/>
+	    <pathelement location="${dir.build}/lib"/>
+	</path>
+    
+	<target name="build" depends="clean,compileJava,copyFiles">
+		<zip destfile="${dir.build}/${build.buildNo}.zip" basedir="${dir.target}" />
+	</target>
+	
+	<target name="clean">
+		<delete dir="${dir.target}"/>
+		<mkdir dir="${dir.target}"/>
+	</target>
+
+	<target name="compileJava" description="编译JAVA文件">
+		<mkdir dir="${dir.target}/src"/>
+		<mkdir dir="${dir.target}/web/WEB-INF/classes"/>
+		<copy todir="${dir.target}/src">
+			<fileset dir="${source.svn}" >
+				<include name="*/src/main/java/**/*.java"/>
+			</fileset>
+			<regexpmapper from="(.*)/src/main/java/(.*)\.java" to="\2.java" casesensitive="no" handledirsep="true"/>
+		</copy>
+		
+		<javac srcdir="${dir.target}/src" 
+			encoding="GBK" 
+			destdir="${dir.target}/web/WEB-INF/classes"
+			classpathref="java.compile.path"
+			source="1.5"
+			target="1.5">
+		</javac>
+		<delete dir="${dir.target}/src"/>
+	</target>
+	
+	<target name="copyFiles" description="组装文件">
+		<!-- Copy SQL Files -->
+		<mkdir dir="${dir.target}/sql"/>
+		<copy todir="${dir.target}/sql">
+			<fileset dir="${source.svn}/sql/patch">
+				<include name="*.sql"/>
+			</fileset>
+		</copy>
+		<!-- copy resources -->
+		<copy todir="${dir.target}/web/WEB-INF/classes">
+			<fileset dir="${source.svn}" >
+				<include name="*/src/main/resources/**/*.*"/>
+			</fileset>
+			<regexpmapper from="(.*)/src/main/resources/(.*)" to="\2" casesensitive="no" handledirsep="true"/>
+		</copy>
+		<!-- copy web files -->
+		<copy todir="${dir.target}/web/">
+			<fileset dir="${source.svn}" >
+				<include name="*/src/main/webapp/**/*.*"/>
+			</fileset>
+			<regexpmapper from="(.*)/src/main/webapp/(.*)" to="\2" casesensitive="no" handledirsep="true"/>
+		</copy>
+		<!-- copy cs files -->
+		<mkdir dir="${dir.target}/cs"/>
+		<copy todir="${dir.target}/cs/" failonerror="false">
+			<fileset dir="${source.svn}/cs" >
+				<include name="*.*"/>
+			</fileset>
+			<regexpmapper from="(.*)/src/main/webapp/(.*)" to="\2" casesensitive="no" handledirsep="true"/>
+		</copy>
+	</target>
+</project>

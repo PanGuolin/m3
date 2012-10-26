@@ -1,5 +1,6 @@
 package com.m3.patchbuild.info;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,8 +17,12 @@ public class BuildPack {
 	private String buildNo; //构建号
 	private String keywords; //构建关键字
 	private String requester; //构建申请人
+	private String checker; //最后构建检查人
+	private Date checkTime; //检查通过时间
 	private Date requestTime; //申请日期
 	private String tester; //测试用户
+	private String assigner; //分配用户
+	private Date assignTime; //分配时间
 	private Date testTime; //开始测试时间
 	private Date passTime; //测试通过时间
 	private String deployer; //发布用户
@@ -29,6 +34,7 @@ public class BuildPack {
 	private BuildPackStatus status = BuildPackStatus.init; //当前状态
 	private Set<BuildFile> buildFiles = new HashSet<BuildFile>(); //构建文件列表
 	private Set<String> depends = new HashSet<String>(); //依赖其它构建包列表
+	private String failReason; //失败原因
 	
 	public String getUuid() {
 		return uuid;
@@ -171,5 +177,49 @@ public class BuildPack {
 		BuildFile file = new BuildFile();
 		file.setUrl(path);
 		this.buildFiles.add(file);
+	}
+	public String getChecker() {
+		return checker;
+	}
+	public void setChecker(String checker) {
+		this.checker = checker;
+	}
+	public Date getCheckTime() {
+		return checkTime;
+	}
+	public void setCheckTime(Date checkTime) {
+		this.checkTime = checkTime;
+	}
+	public String getFailReason() {
+		return failReason;
+	}
+	public void setFailReason(String failReason) {
+		this.failReason = failReason;
+	}
+	
+	public Date getAssignTime() {
+		return assignTime;
+	}
+	public void setAssignTime(Date assignTime) {
+		this.assignTime = assignTime;
+	}
+	
+	public String getAssigner() {
+		return assigner;
+	}
+	public void setAssigner(String assigner) {
+		this.assigner = assigner;
+	}
+	/**
+	 * 获取构建包的工作目录
+	 * @return
+	 */
+	public File getWSRoot() {
+		return new File(branch.getWorkspace(), "builds/" + getBuildNo());
+	}
+	
+	public static final String BUILD_LOG = "build.log";
+	public File getBuildLog() {
+		return new File(getWSRoot(), "build.log");
 	}
 }

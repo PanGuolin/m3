@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import com.m3.common.HibernateUtil;
 import com.m3.patchbuild.info.BuildBranch;
 import com.m3.patchbuild.info.BuildFile;
 import com.m3.patchbuild.info.BuildPack;

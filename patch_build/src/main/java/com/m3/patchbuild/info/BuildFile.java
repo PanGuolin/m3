@@ -35,6 +35,9 @@ public class BuildFile {
 	
 	@Column(name="modifier")
 	private String modifier; //修改人
+	
+	//@Column(name="buildNo")
+	//private String buildNo;
 
 	public String getUuid() {
 		return uuid;
@@ -87,6 +90,13 @@ public class BuildFile {
 		BuildFile of = (BuildFile)obj;
 		return this.url.endsWith(of.url) && this.revision == of.revision;
 	}
-	
+
+	//public String getBuildNo() {
+	//	return buildNo;
+	//}
+
+	//public void setBuildNo(String buildNo) {
+	//	this.buildNo = buildNo;
+	//}
 	
 }

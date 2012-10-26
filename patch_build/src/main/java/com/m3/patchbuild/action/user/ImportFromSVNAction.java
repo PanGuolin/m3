@@ -25,7 +25,7 @@ public class ImportFromSVNAction extends BaseAction{
 		if (SVNUtil.checkLogin(bBranch.getSvnUrl(), user.getUserId(), user.getPassword())) {
 			user.getRoles().clear();
 			user.addRole(UserRoleEnum.developer);
-			UserService.createUser(user);
+			UserService.save(user);
 			return SUCCESS;
 		} else {
 			setTips("用户名/口令在SVN上验证失败，请检查输入是否正确!你也可以向管理员申请注册");

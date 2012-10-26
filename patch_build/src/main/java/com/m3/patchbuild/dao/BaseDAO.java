@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
+import com.m3.common.HibernateUtil;
 import com.m3.patchbuild.info.BillNO;
 
 
@@ -41,7 +42,7 @@ public abstract class BaseDAO {
 	 * @param billNO
 	 * @return
 	 */
-	public Object findByNo(String billNO) {
+	public Object findByNo(Object billNO) {
 		try {
 			return HibernateUtil.openSession()
 					.createCriteria(getInfoClass())
@@ -80,8 +81,6 @@ public abstract class BaseDAO {
 	public void saveInfo(Object info) {
 		try {
 			HibernateUtil.openSession().saveOrUpdate(info);		
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
 		}finally {
 			HibernateUtil.closeSession();
 		}

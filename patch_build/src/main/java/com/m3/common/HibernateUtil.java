@@ -1,4 +1,4 @@
-package com.m3.patchbuild.dao;
+package com.m3.common;
 
 
 import org.hibernate.Session;
@@ -15,18 +15,24 @@ import org.hibernate.service.ServiceRegistryBuilder;
  */
 public class HibernateUtil {
 	
-	private static final SessionFactory sf = build(); 
+	private static SessionFactory sf = null; 
 	
-	private static SessionFactory build() {
-		Configuration configuration = new Configuration();
-	    configuration.configure();
-	    ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+	private static synchronized void build() {
+		try {
+			Configuration configuration = new Configuration();
+			configuration.configure();
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
 	    	.applySettings(configuration.getProperties()).buildServiceRegistry();        
-	    SessionFactory factory = configuration.buildSessionFactory(serviceRegistry);
-	    return factory;
+			sf = configuration.buildSessionFactory(serviceRegistry);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			
+		}
 	}
 	
 	public static SessionFactory getSessionFactory() {
+		if (sf == null)
+			build();
 		return sf;
 	}
 	
@@ -73,7 +79,7 @@ public class HibernateUtil {
 		private Transaction tx = null;
 		
 		SessionObject() {
-			session = sf.openSession();
+			session = getSessionFactory().openSession();
 			tx = session.beginTransaction();
 			deeps = 1;
 		}

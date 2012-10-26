@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.m3.common.mail">
+	<class name="MailServer" table="SYS_MailServer" >
+	    <id name="name" column="name" unsaved-value="null">
+			<generator class="assigned"/>
+		</id>
+		<property name="host" 	column="Host" 	type="string"/>
+		<property name="user" 	column="LoginUser" 	type="string"/>
+		<property name="password" 	column="Password" 	type="string"/>
+		<property name="smtpPort" 	column="SmtpPort" 	type="int"/>
+		<property name="useSSL" 	column="UseSSL" 	type="boolean"/>
+	</class>
+</hibernate-mapping>

@@ -1,11 +1,14 @@
 package com.m3.patchbuild.service;
 
+import java.util.List;
+
 import com.m3.common.MD5Util;
 import com.m3.common.SVNUtil;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.dao.UserDAO;
 import com.m3.patchbuild.info.BuildBranch;
 import com.m3.patchbuild.info.User;
+import com.m3.patchbuild.info.UserRoleEnum;
 
 /**
  * 用户业务接口
@@ -58,12 +61,20 @@ public class UserService {
 	}
 	
 	
-	public static void createUser(User user) throws Exception {
+	public static void save(User user) throws Exception {
 		if (!user.isSVNUser() && !StringUtil.isEmpty(user.getPassword())) {
 			user.setPassword(MD5Util.getMD5(user.getUserId() + user.getPassword()));
 		}
 		dao.saveInfo(user);
 		
+	}
+
+	public static void delete(User user) {
+		dao.delete(user);
+	}
+
+	public static List<User> findUser(UserRoleEnum role) {
+		return dao.findByRole(role);
 	}
 
 }
