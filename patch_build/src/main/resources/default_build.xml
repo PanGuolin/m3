@@ -4,11 +4,12 @@
 	<property name="dir.build" value="."/> <!-- 构建包的工作目录 -->
 	<property name="source.svn" value="${dir.build}/svn"/>
 	<property name="dir.target" value="${dir.build}/target/"/> <!-- 打包的目标地址 -->
-	
+	<property name="compile.lib" value="${dir.branch}/lib"/>
+	<property name="compile.classes" value="${dir.branch}/classes"/>
 	
 	<path id="java.compile.path"> <!-- 编译依赖路径 -->
-		<fileset dir="${dir.branch}/lib"/>
-	    <pathelement location="${dir.branch}/classes"/>
+		<fileset dir="${compile.lib}"/>
+	    <pathelement location="${compile.classes}"/>
 	    <pathelement location="${dir.build}/lib"/>
 	</path>
     

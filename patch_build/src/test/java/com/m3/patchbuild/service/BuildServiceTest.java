@@ -25,10 +25,10 @@ public class BuildServiceTest extends TestCase{
 		HibernateUtil.openSession();
 		try {
 			BuildPack bp = BuildPackService.find(branchNo, buildNo);
-			if (bp != null) {
-				BuildPackService.delete(bp);
+			if (bp == null) {
+				bp = new BuildPack();
 			}
-			bp = new BuildPack();
+			
 			BuildBranch branch = BuildBranchService.getBranch(branchNo);
 			bp.setBranch(branch);
 			bp.setBuildNo(buildNo);

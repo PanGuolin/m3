@@ -70,7 +70,7 @@ public class MailServer {
         final MimeMessage message = new MimeMessage(session);
         String subject =  MimeUtility.encodeText(new String(info.getSubject().getBytes(), 
         		info.getEncoding()), info.getEncoding(), "B");
-		message.setSubject(subject);
+		message.setSubject(info.getSubject(), info.getEncoding());
 		//message.setText(info.getContent(), info.getEncoding(), info.getContentType());
 		
 		

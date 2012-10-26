@@ -133,5 +133,10 @@ public class BuildBranch {
 			return url;
 		return url.substring(svnRoot.length());
 	}
+	@Override
+	public String toString() {
+		return this.name == null ? this.branch : this.name; 
+	}
+	
 	
 }

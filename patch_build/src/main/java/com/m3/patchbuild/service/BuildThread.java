@@ -68,6 +68,14 @@ public class BuildThread extends Thread {
 		proj.setProperty("dir.branch", branch.getWorkspace());
 		proj.setProperty("dir.build", bp.getWSRoot().getAbsolutePath());
 		proj.setProperty("build.buildNo", bp.getBuildNo());
+		if (branch.getParent() != null) {
+			//如果是子分支，那么需要共享主分支的编译环境
+			BuildBranch parent = BuildBranchService.getBranch(branch.getParent());
+			if (parent != null) {
+				proj.setProperty("compile.lib", branch.getWorkspace() + "/lib");
+				proj.setProperty("compile.classes", branch.getWorkspace() + "/classes");
+			}
+		}
 		
 		ProjectHelper helper = ProjectHelper.getProjectHelper();
 		helper.parse(proj, antFile);
