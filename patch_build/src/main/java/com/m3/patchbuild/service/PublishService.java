@@ -139,10 +139,10 @@ public class PublishService {
 					logFile.getParentFile().mkdirs();
 				PrintStream logOut = new PrintStream(logFile);
 		        DefaultLogger consoleLogger = new DefaultLogger();  
-		        //consoleLogger.setErrorPrintStream(logOut);  
-		        //consoleLogger.setOutputPrintStream(logOut);  
-		        consoleLogger.setErrorPrintStream(System.err);  
-		        consoleLogger.setOutputPrintStream(System.out);
+		        consoleLogger.setErrorPrintStream(logOut);  
+		        consoleLogger.setOutputPrintStream(logOut);  
+		        //consoleLogger.setErrorPrintStream(System.err);  
+		        //consoleLogger.setOutputPrintStream(System.out);
 		        //输出信息级别  
 		        consoleLogger.setMessageOutputLevel(Project.MSG_VERBOSE);  
 		        proj.addBuildListener(consoleLogger);  

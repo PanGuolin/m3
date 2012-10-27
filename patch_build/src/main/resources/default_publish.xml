@@ -24,24 +24,25 @@
 		<unzip dest="${dir.publish}" src="${pack.file}"/>
 		
 		<mkdir dir="${dir.latest}"/>
-		<copy todir="${dir.latest}">
+		<copy todir="${dir.latest}" overwrite="true">
 			<fileset dir="${dir.publish}">
 				<include name="web/**/*.*"/>
 				<include name="cs/**/*.*"/>
 			</fileset>
 		</copy>
-		
-		<merge destFile="${dir.latest}/${patch.name}_SQL2005.sql" >
+		<merge destFile="${dir.latest}/sql/${patch.name}_SQL2005.sql" commentStart="--" commentEnd="--">
 			<fileset dir="${dir.publish}/sql">
 				<include name="*_SQL2005.sql"/>
 			</fileset>
 		</merge>
 		
-		<merge destFile="${dir.latest}/${patch.name}_ORCL.sql">
+		<merge destFile="${dir.latest}/sql/${patch.name}_ORCL.sql" commentStart="--" commentEnd="--">
 			<fileset dir="${dir.publish}/sql">
 				<include name="*_ORCL.sql"/>
 			</fileset>
 		</merge>
+		
+		<zip destfile="${dir.patch}/${patch.name}.zip" basedir="${dir.latest}" />
 	</target>
 
 </project>
