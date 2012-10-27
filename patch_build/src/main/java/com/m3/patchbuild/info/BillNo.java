@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface BillNO {
-
+public @interface BillNo {
+	public int index() default 0;//业务对象的索引
 }

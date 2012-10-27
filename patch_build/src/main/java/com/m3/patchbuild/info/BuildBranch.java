@@ -15,11 +15,12 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name="PB_Branch")
-public class BuildBranch {
+public class BuildBranch implements IBusInfo{
 	
 	public static final String DIR_SVN = "svn"; //SVN文件目录名称
 	public static final String DIR_JAVA_SRC = "src"; //java文件保存目录名称
-	public static final String FILE_ANT = "build.xml"; //构建所用的脚本名称
+	public static final String FILE_BUILD = "build.xml"; //构建所用的脚本名称
+	public static final String FILE_PUBLISH = "publish.xml"; //发布所用的脚本名称
 	
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
@@ -27,7 +28,7 @@ public class BuildBranch {
 	@Column(name = "uuid", unique = true)
 	private String uuid; //唯一标识
 	
-	@BillNO
+	@BillNo
 	@Column(name="branch")
 	private String branch; //分支标识
 	

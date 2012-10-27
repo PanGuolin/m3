@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="GBK" ?>
 <project name="DefaultPatchBuild" basedir="." default="build">
 	
-	<property name="dir.build" value="."/> <!-- 构建包的工作目录 -->
+	<property name="dir.build" description="构建包的工作目录"/>
 	<property name="source.svn" value="${dir.build}/svn"/>
-	<property name="dir.target" value="${dir.build}/target/"/> <!-- 打包的目标地址 -->
+	<property name="dir.target" value="${dir.build}/target/"/>
 	<property name="compile.lib" value="${dir.branch}/lib"/>
 	<property name="compile.classes" value="${dir.branch}/classes"/>
 	

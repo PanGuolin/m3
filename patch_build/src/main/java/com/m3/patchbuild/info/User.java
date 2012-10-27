@@ -32,7 +32,7 @@ public class User {
 	@Column(name = "uuid", unique = true)
 	private String uuid; //唯一标识
 	
-	@BillNO
+	@BillNo
 	@Column(name="userId", nullable=false)
 	private String userId; //用户登录名
 	

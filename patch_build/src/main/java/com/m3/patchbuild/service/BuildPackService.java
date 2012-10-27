@@ -8,11 +8,17 @@ import org.tmatesoft.svn.core.SVNException;
 
 import com.m3.common.FileUtil;
 import com.m3.common.SVNUtil;
+import com.m3.common.StringUtil;
 import com.m3.patchbuild.dao.BuildPackDAO;
+import com.m3.patchbuild.exception.BussException;
+import com.m3.patchbuild.exception.DependsUnpublishException;
+import com.m3.patchbuild.exception.IllegalBPStateException;
+import com.m3.patchbuild.exception.NotMainBranchException;
 import com.m3.patchbuild.info.BuildBranch;
 import com.m3.patchbuild.info.BuildPack;
 import com.m3.patchbuild.info.BuildPackStatus;
 import com.m3.patchbuild.info.CheckInfo;
+import com.m3.patchbuild.info.PatchInfo;
 
 
 /**
@@ -28,7 +34,7 @@ public class BuildPackService {
 	 * 保存对象
 	 * @param bp
 	 */
-	private static void save(BuildPack bp) {
+	public static void save(BuildPack bp) {
 		dao.saveInfo(bp);
 	}
 	
@@ -95,9 +101,37 @@ public class BuildPackService {
 	 * @param bp
 	 * @throws Exception 
 	 */
-	public static void builded(BuildPack bp) throws Exception {
+	public static void builded(BuildPack bp) {
 		save(bp);
 		MailService.sendMail(bp);
+	}
+	
+	
+	/**
+	 * 发布构建包
+	 * @param bp
+	 * @throws Exception
+	 */
+	public static void publish(BuildPack bp) throws BussException {
+		BuildBranch branch = bp.getBranch();
+		if (!StringUtil.isEmpty(branch.getParent()))
+			throw new NotMainBranchException(bp);
+		if (!BuildPackStatus.pass.equals(bp.getStatus())) {
+			throw new IllegalBPStateException(bp, BuildPackStatus.pass);
+		}
+		//不能发布有依赖（未发布）的构建包
+		List<BuildPack> depends = dao.listUnpublishDepends(bp);
+		if (depends != null && !depends.isEmpty()) {
+			throw new DependsUnpublishException(bp, depends);
+		}
+		
+		PatchInfo info = PatchService.getPatch(branch, (Date)null);
+		//如果当天还没有补丁生成，则先生成补丁
+		if (info == null) {
+			info = PatchService.createPatch(branch);
+		}
+		
+		
 	}
 	
 }

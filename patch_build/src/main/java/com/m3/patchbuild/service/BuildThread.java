@@ -37,17 +37,14 @@ public class BuildThread extends Thread {
 			logger.error("执行构建时出错", e);
 			bp.setStatus(BuildPackStatus.buildFail);
 		} finally {
-			try {
-				BuildPackService.builded(bp);
-			} catch (Exception e) {
-				logger.error("执行构建时出错", e);
-			}
+			BuildService.buildComplete();
+			BuildPackService.builded(bp);
 		}
 		
 	}
 	
 	private void doBuild() throws Exception {
-		File antFile = new File(bp.getWSRoot(), BuildBranch.FILE_ANT);
+		File antFile = new File(bp.getWSRoot(), BuildBranch.FILE_BUILD);
 		if (!antFile.exists()) {
 			antFile = new File(BuildThread.class.getResource(DEFAULT_ANT_FILE).getFile());
 		}
@@ -68,13 +65,20 @@ public class BuildThread extends Thread {
 		proj.setProperty("dir.branch", branch.getWorkspace());
 		proj.setProperty("dir.build", bp.getWSRoot().getAbsolutePath());
 		proj.setProperty("build.buildNo", bp.getBuildNo());
-		if (branch.getParent() != null) {
-			//如果是子分支，那么需要共享主分支的编译环境
+		//如果是子分支，那么需要共享主分支的编译环境
+		boolean hasParent = branch.getParent() != null;
+		if (hasParent) {
 			BuildBranch parent = BuildBranchService.getBranch(branch.getParent());
 			if (parent != null) {
-				proj.setProperty("compile.lib", branch.getWorkspace() + "/lib");
-				proj.setProperty("compile.classes", branch.getWorkspace() + "/classes");
+				proj.setProperty("compile.lib", parent.getWorkspace() + "/lib");
+				proj.setProperty("compile.classes", parent.getWorkspace() + "/classes");
+			} else {
+				hasParent = false;
 			}
+		}
+		if (!hasParent) {
+			proj.setProperty("compile.lib", branch.getWorkspace() + "/lib");
+			proj.setProperty("compile.classes", branch.getWorkspace() + "/classes");
 		}
 		
 		ProjectHelper helper = ProjectHelper.getProjectHelper();

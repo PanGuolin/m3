@@ -1,13 +1,13 @@
 package com.m3.patchbuild.dao;
 
-import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.HibernateUtil;
-import com.m3.patchbuild.info.BillNO;
 
 
 /**
@@ -37,42 +37,24 @@ public abstract class BaseDAO {
 		}
 	}
 	
-	/**
-	 * 根据单据编号查找相应的单据
-	 * @param billNO
-	 * @return
-	 */
-	public Object findByNo(Object billNO) {
+	public Object findByBillNo(Map<String, Object> billNo) {
 		try { 
-			return HibernateUtil.openSession()
-					.createCriteria(getInfoClass())
-					.add(Restrictions.eq(getBillNoProperty(), billNO))
-					.uniqueResult();
+			Criteria crit = HibernateUtil.openSession().createCriteria(getInfoClass());
+			for (String key : billNo.keySet()) {
+				crit.add(Restrictions.eq(key, billNo.get(key)));
+			}
+			return crit.uniqueResult();
 		} finally {
 			HibernateUtil.closeSession();
 		}
 	}
 	
-	protected String billNoProperty = null;
-	/**
-	 * 返回单据编号的属性名称
-	 * @return
-	 */
-	protected String getBillNoProperty() {
-		if (billNoProperty == null) {
-			Class<?> cls = getInfoClass();
-			Field[] fs = cls.getDeclaredFields();
-			for (Field f : fs) {
-				if (f.getAnnotation(BillNO.class) != null) {
-					billNoProperty = f.getName();
-				}
-			}
-		}
-		if (billNoProperty == null) {
-			throw new RuntimeException("实体类" + getInfoClass() + " 没有定义BillNo属性");
-		}
-		return billNoProperty;
+	public Object findByBillNo(BillNo billNo) {
+		return findByBillNo(billNo.getProps());
 	}
+	
+	
+
 	
 	/**
 	 * 保存一个业务对象
@@ -117,4 +99,10 @@ public abstract class BaseDAO {
 			HibernateUtil.closeSession();
 		}
 	}
+	
+	public static BillNo getBillNo(String key, Object value) {
+		return new BillNo(key, value);
+	}
 }
+
+

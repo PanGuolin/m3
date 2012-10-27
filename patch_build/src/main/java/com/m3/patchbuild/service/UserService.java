@@ -3,10 +3,9 @@ package com.m3.patchbuild.service;
 import java.util.List;
 
 import com.m3.common.MD5Util;
-import com.m3.common.SVNUtil;
 import com.m3.common.StringUtil;
+import com.m3.patchbuild.dao.BaseDAO;
 import com.m3.patchbuild.dao.UserDAO;
-import com.m3.patchbuild.info.BuildBranch;
 import com.m3.patchbuild.info.User;
 import com.m3.patchbuild.info.UserRoleEnum;
 
@@ -26,7 +25,7 @@ public class UserService {
 	 * @throws Exception
 	 */
 	public static User checkUser(String userId, String password) {
-		User user = (User) dao.findByNo(userId);
+		User user = findUser(userId);
 		if (user == null)
 			return user;
 		String enPass = MD5Util.getMD5(userId + password);
@@ -39,27 +38,8 @@ public class UserService {
 	 * @return
 	 */
 	public static User findUser(String userId) {
-		return (User) dao.findByNo(userId);
+		return (User) dao.findByBillNo(BaseDAO.getBillNo("userId", userId));
 	}
-	
-	/**
-	 * 尝试在SVN上登录用户
-	 * @param userId
-	 * @param password
-	 * @param branch
-	 * @return 是否登录成功
-	 */
-	private static boolean loginSVN(String userId, String password, String branch) {
-		BuildBranch bBranch = BuildBranchService.getBranch(branch);
-		if (bBranch == null)
-			return false;
-		if (SVNUtil.checkLogin(bBranch.getSvnUrl(), userId, password)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	
 	public static void save(User user) throws Exception {
 		if (!user.isSVNUser() && !StringUtil.isEmpty(user.getPassword())) {

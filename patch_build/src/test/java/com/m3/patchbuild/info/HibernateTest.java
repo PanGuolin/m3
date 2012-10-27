@@ -23,7 +23,7 @@ public class HibernateTest extends TestCase{
 		bp.setBuildNo("test_build");
 		bp.setBranch(branch);
 		bp.addDepends("depend1");
-		bp.setStatus(BuildPackStatus.deployed);
+		bp.setStatus(BuildPackStatus.published);
 		
 		BuildFile file = new BuildFile();
 		file.setUrl("test url");

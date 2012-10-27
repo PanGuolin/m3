@@ -2,6 +2,7 @@ package com.m3.patchbuild.service;
 
 import java.util.List;
 
+import com.m3.patchbuild.dao.BaseDAO;
 import com.m3.patchbuild.dao.BuildBranchDAO;
 import com.m3.patchbuild.info.BuildBranch;
 
@@ -20,7 +21,7 @@ public class BuildBranchService {
 	 * @return
 	 */
 	public static BuildBranch getBranch(String branch) {
-		return (BuildBranch)dao.findByNo(branch);
+		return (BuildBranch)dao.findByBillNo(BaseDAO.getBillNo("branch", branch));
 	}
 	
 	/**

@@ -13,7 +13,7 @@ public class BuildBranchServiceTest extends TestCase{
 			branch = new BuildBranch();
 		branch.setBranch("testbranch");
 		branch.setName("测试分支");
-		branch.setVersion("test.yymmdd");
+		branch.setVersion("test.yyMMdd");
 		branch.setSvnPassword("pangl1q");
 		branch.setSvnUser("pangl");
 		branch.setSvnUrl("https://svn.bytter.com/svn/BTFMS/");
@@ -28,7 +28,7 @@ public class BuildBranchServiceTest extends TestCase{
 				branch = new BuildBranch();
 		branch.setBranch("sp1");
 		branch.setName("sp1分支");
-		branch.setVersion("SP10.03.yymmddsp1");
+		branch.setVersion("SP10.03.yyMMddsp1");
 		branch.setSvnPassword("pangl1q");
 		branch.setSvnUser("pangl");
 		branch.setSvnUrl("https://svn.bytter.com/svn/v101/v10.2二季度产品维护/工程过程/实现与测试/branches/v10.3_20120720_sp1/");

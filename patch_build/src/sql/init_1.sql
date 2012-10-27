@@ -40,5 +40,7 @@ INSERT INTO PB_HtmlTemplate(UUID, type, content) VALUE (uuid(), 'MAIL_CONT_TESTF
 INSERT INTO PB_HtmlTemplate(UUID, type, content) VALUE (uuid(), 'MAIL_SUBJ_TESTING', '【补丁构建】：构建包${BP.buildNo}开始测试');
 INSERT INTO PB_HtmlTemplate(UUID, type, content) VALUE (uuid(), 'MAIL_CONT_TESTING', '构建分支:${BP.branch.branch}<br/>构建号：${BP.buildNo}<br/>测试人员:${BP.tester}');
 
-INSERT INTO PB_HtmlTemplate(UUID, type, content) VALUE (uuid(), 'MAIL_SUBJ_DEPLOY', '【补丁构建】：构建包${BP.buildNo}已发布');
-INSERT INTO PB_HtmlTemplate(UUID, type, content) VALUE (uuid(), 'MAIL_CONT_DEPLOY', '构建分支:${BP.branch.branch}<br/>构建号：${BP.buildNo}<br/>发布人员${BP.deployer}<br/>发布补丁${BP.patch}');
+INSERT INTO PB_HtmlTemplate(UUID, type, content) VALUE (uuid(), 'MAIL_SUBJ_PUBLISH', '【补丁构建】：构建包${BP.buildNo}已发布');
+INSERT INTO PB_HtmlTemplate(UUID, type, content) VALUE (uuid(), 'MAIL_CONT_PUBLISH', '构建分支:${BP.branch.branch}<br/>构建号：${BP.buildNo}<br/>发布人员${BP.deployer}<br/>发布补丁${BP.patch}');
+
+commit;

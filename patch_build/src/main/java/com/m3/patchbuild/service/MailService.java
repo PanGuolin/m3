@@ -36,7 +36,7 @@ public class MailService {
 	 * @throws UnsupportedEncodingException 
 	 * @throws MessagingException 
 	 */
-	public static void sendMail(BuildPack bp) throws Exception {
+	public static void sendMail(BuildPack bp) {
 		MailServer mailServer = getMailServer();
 		if (mailServer == null) {
 			logger.info("没有配置邮件服务器信息，取消发送邮件");
@@ -120,7 +120,7 @@ public class MailService {
 				content = HtmlTemplateService.MAIL_CONT_TESTING;
 				ccUsers.clear();
 				break;
-			case deployed:
+			case published:
 				toUsers.add(reqUser);
 				Set<User> superiors = reqUser.getSuperiors();
 				for (User user : superiors) {
@@ -130,13 +130,17 @@ public class MailService {
 				}
 				if (toUsers.isEmpty())
 					toUsers.addAll(UserService.findUser(UserRoleEnum.deployer));
-				subject = HtmlTemplateService.MAIL_SUBJ_DEPLOY;
-				content = HtmlTemplateService.MAIL_CONT_DEPLOY;
+				subject = HtmlTemplateService.MAIL_SUBJ_PUBLISH;
+				content = HtmlTemplateService.MAIL_CONT_PUBLISH;
 				break;
 			default:
 					return;
 		}
-		sendMail(bp, subject, content, toUsers, ccUsers, attachments);
+		try {
+			sendMail(bp, subject, content, toUsers, ccUsers, attachments);
+		} catch (Exception e) {
+			logger.error("发送邮件时出错", e);
+		}
 	
 	}
 	

@@ -13,7 +13,7 @@ import java.util.Set;
 public class BuildPack {
 
 	private String uuid;//唯一标识
-	@BillNO
+	@BillNo
 	private String buildNo; //构建号
 	private String keywords; //构建关键字
 	private String requester; //构建申请人
@@ -222,4 +222,13 @@ public class BuildPack {
 	public File getBuildLog() {
 		return new File(getWSRoot(), "build.log");
 	}
+	@Override
+	public String toString() {
+		return getBranch().getBranch() + " -" + buildNo;
+	}
+	
+	public File getZipFile() {
+		return new File(getWSRoot(), buildNo + ".zip");
+	}
+	
 }

@@ -19,6 +19,7 @@
         <mapping class="com.m3.patchbuild.info.User" />
         <mapping class="com.m3.patchbuild.info.SVNLog" />
         <mapping class="com.m3.patchbuild.info.HtmlTemplate" />
+        <mapping class="com.m3.patchbuild.info.PatchInfo" />
         
          <mapping resource="common.hbm.xml"/>
         

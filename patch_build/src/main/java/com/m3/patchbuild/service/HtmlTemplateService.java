@@ -3,6 +3,7 @@ package com.m3.patchbuild.service;
 import org.apache.log4j.Logger;
 
 import com.m3.common.BeanUtil;
+import com.m3.patchbuild.dao.BaseDAO;
 import com.m3.patchbuild.dao.HtmlTemplateDAO;
 import com.m3.patchbuild.info.BuildPack;
 import com.m3.patchbuild.info.HtmlTemplate;
@@ -36,8 +37,8 @@ public class HtmlTemplateService {
 	public static final String MAIL_SUBJ_TESTING = "MAIL_SUBJ_TESTING";//测试中
 	public static final String MAIL_CONT_TESTING = "MAIL_CONT_TESTING";
 	
-	public static final String MAIL_SUBJ_DEPLOY = "MAIL_SUBJ_DEPLOY";//发布
-	public static final String MAIL_CONT_DEPLOY = "MAIL_CONT_DEPLOY";
+	public static final String MAIL_SUBJ_PUBLISH = "MAIL_SUBJ_PUBLISH";//发布
+	public static final String MAIL_CONT_PUBLISH = "MAIL_CONT_PUBLISH";
 	
 	public static final String MAIL_SUBJ_ASSIGN = "MAIL_SUBJ_ASSIGN"; //分配
 	public static final String MAIL_CONT_ASSIGN = "MAIL_CONT_ASSIGN";
@@ -46,7 +47,7 @@ public class HtmlTemplateService {
 	private static HtmlTemplateDAO dao = new HtmlTemplateDAO();
 	
 	public static String getTemplate(String type, BuildPack bp) {
-		HtmlTemplate temp =  (HtmlTemplate)dao.findByNo(type);
+		HtmlTemplate temp =  (HtmlTemplate)dao.findByBillNo(BaseDAO.getBillNo("type", type));
 		if (temp == null || temp.getContent() == null)
 			return type;
 		final String prefix = "${BP.";

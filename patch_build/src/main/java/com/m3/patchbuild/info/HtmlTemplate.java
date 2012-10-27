@@ -23,7 +23,7 @@ public class HtmlTemplate {
 	@Column(name="uuid")
 	private String uuid ; //唯一ID
 	
-	@BillNO
+	@BillNo
 	@Column(name="type")
 	private String type; //类型
 	

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="GBK" ?>
+<project name="DefaultDeploy" basedir="." default="deploy">
+	
+	<taskdef name="merge" classname="com.m3.patchbuild.ant.MergeTextFile"></taskdef>
+	
+	<property name="dir.publish" 	value="." description="补丁发布工作目录"/>
+	<property name="dir.patch"		value="." description="补丁根目录"/>
+	<property name="dir.branch" 	value="." description="分支根目录"/>
+	<property name="pack.file" 		value="." description="补丁包地址"/>
+	<property name="patch.name" 	value="." description="补丁包名称"/>
+	
+	<property name="dir.latest" 	value="${dir.branch}/patchs/latest"/>
+    
+	<target name="deploy">
+		<echo message="${dir.publish}"/>
+		<echo message="${dir.patch}"/>
+		<echo message="${dir.branch}"/>
+		<echo message="${pack.file}"/>
+		<echo message="${patch.name}"/>
+		<echo message="${dir.latest}"/>
+			
+		<delete dir="${dir.publish}"/>
+		<mkdir dir="${dir.publish}"/>
+		<unzip dest="${dir.publish}" src="${pack.file}"/>
+		
+		<mkdir dir="${dir.latest}"/>
+		<copy todir="${dir.latest}">
+			<fileset dir="${dir.publish}">
+				<include name="web/**/*.*"/>
+				<include name="cs/**/*.*"/>
+			</fileset>
+		</copy>
+		
+		<merge destFile="${dir.latest}/${patch.name}_SQL2005.sql" >
+			<fileset dir="${dir.publish}/sql">
+				<include name="*_SQL2005.sql"/>
+			</fileset>
+		</merge>
+		
+		<merge destFile="${dir.latest}/${patch.name}_ORCL.sql">
+			<fileset dir="${dir.publish}/sql">
+				<include name="*_ORCL.sql"/>
+			</fileset>
+		</merge>
+	</target>
+
+</project>
