@@ -8,6 +8,11 @@ import com.m3.patchbuild.dao.PatchDao;
 import com.m3.patchbuild.info.BuildBranch;
 import com.m3.patchbuild.info.PatchInfo;
 
+/**
+ * 补丁业务接口
+ * @author MickeyMic
+ *
+ */
 public abstract class PatchService {
 	
 	private static PatchDao dao = new PatchDao();
@@ -28,6 +33,7 @@ public abstract class PatchService {
 		PatchInfo info = new PatchInfo();
 		info.setBranch(branch);
 		info.setLastModify(date);
+		info.setCreateTime(date);
 		info.setName(getPatchName(branch, date));
 		dao.saveInfo(info);
 		return info;

@@ -16,6 +16,5 @@
 			<result name="error">/user/importfromsvn.jsp</result>
 			<result name="success">/user/myfp.jsp</result>
 		</action>
-		
 	</package>
 </struts>

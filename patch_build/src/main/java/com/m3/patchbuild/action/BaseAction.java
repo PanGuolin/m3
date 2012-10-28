@@ -32,7 +32,6 @@ public abstract class BaseAction implements Action {
 		return (User)ActionContext.getContext().getSession().get(KEY_SESSION_USER);
 	}
 
-	@Override
 	final public String execute() throws Exception {
 		UserRoleEnum[] roles = getAccessableRoles();
 		if (roles != null) {

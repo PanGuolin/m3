@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE project>
 <project name="DefaultDeploy" basedir="." default="deploy">
 	
-	<taskdef name="merge" classname="com.m3.patchbuild.ant.MergeTextFile"></taskdef>
+	<taskdef name="merge" classname="com.m3.common.ant.MergeTextFile"></taskdef>
 	
 	<property name="dir.publish" 	value="." description="补丁发布工作目录"/>
 	<property name="dir.patch"		value="." description="补丁根目录"/>

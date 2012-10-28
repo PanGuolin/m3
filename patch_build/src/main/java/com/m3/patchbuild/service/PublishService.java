@@ -57,7 +57,7 @@ public class PublishService {
 	/**
 	 * 启动监控线程
 	 */
-	public static void startMonitor() {
+	private static void startMonitor() {
 		//初始化构建线程
 		Thread monitor = new Thread() {
 			@Override

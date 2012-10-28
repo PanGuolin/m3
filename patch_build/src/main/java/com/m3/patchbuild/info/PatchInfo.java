@@ -44,6 +44,9 @@ public class PatchInfo {
 	
 	@Column(name="md5")
 	private String md5; //md5信息
+	
+	@Column(name="createTime")
+	private Date createTime;
 
 	public String getUuid() {
 		return uuid;
@@ -93,6 +96,15 @@ public class PatchInfo {
 		this.md5 = md5;
 	}
 	
+	
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	/**
 	 * 获取构建包的工作目录
 	 * @return

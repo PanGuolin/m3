@@ -10,6 +10,6 @@ public class PublishServiceTest extends TestCase{
 	public void test_publish() throws Exception {
 		BuildPack bp = TestDataUtil.initBuilPack("FY-AKS1-01");
 		PublishService.publish(bp);
-		Thread.sleep(10000000);
+		Thread.sleep(10000);
 	}
 }

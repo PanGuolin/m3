@@ -56,7 +56,7 @@ public class SVNLogDAO extends BaseDAO {
 				.uniqueResult();
 			if (value == null)
 				return 0;
-			return (long)value;
+			return (Long)value;
 		} finally {
 			HibernateUtil.closeSession();
 		}
