@@ -2,8 +2,10 @@ package com.m3.patchbuild.service;
 
 import java.util.Date;
 
-import com.m3.patchbuild.info.BuildBranch;
-import com.m3.patchbuild.info.PatchInfo;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.patch.PatchInfo;
+import com.m3.patchbuild.patch.PatchService;
 
 import junit.framework.TestCase;
 

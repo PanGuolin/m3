@@ -2,7 +2,7 @@ package com.m3.patchbuild.exception;
 
 import java.util.Collection;
 
-import com.m3.patchbuild.info.BuildPack;
+import com.m3.patchbuild.pack.BuildPack;
 
 /**
  * 依赖的构建包未发布异常

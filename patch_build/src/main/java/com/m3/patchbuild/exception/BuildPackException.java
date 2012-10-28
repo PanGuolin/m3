@@ -1,6 +1,6 @@
 package com.m3.patchbuild.exception;
 
-import com.m3.patchbuild.info.BuildPack;
+import com.m3.patchbuild.pack.BuildPack;
 
 /**
  * 构建包相关异常类

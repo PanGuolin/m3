@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC 
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="com.m3.patchbuild.info">
+<hibernate-mapping package="com.m3.patchbuild.pack">
 	<class name="BuildPack" table="PB_BuildPack">
 		<id name="uuid" column="UUID" unsaved-value="null">
 			<generator class="uuid2"/>
@@ -26,20 +26,20 @@
 		<property name="failReason"		column="failReason" 	type="string" lazy="true"/>
 		<property name="status"			column="status">
 			<type name="org.hibernate.type.EnumType">
-				<param name="enumClass">com.m3.patchbuild.info.BuildPackStatus</param>
+				<param name="enumClass">com.m3.patchbuild.pack.BuildPackStatus</param>
 				<param name="type">12</param>
 			</type>
 		</property>
 		<set name="buildFiles" cascade="all" lazy="false" inverse="false">
     		<key column="buildNo" property-ref="buildNo"/>
-    		<one-to-many class="com.m3.patchbuild.info.BuildFile"/>
+    		<one-to-many class="com.m3.patchbuild.pack.BuildFile"/>
 		</set>
        <set name="depends" table="PB_BuildPackDepend" cascade="all">
        		<key column="buildUuid"/>
        		<element type="string" column="dependNo"/>
        </set>
        <many-to-one name="branch" column="branch" 
-   			class="com.m3.patchbuild.info.BuildBranch" fetch="join" 
+   			class="com.m3.patchbuild.branch.BuildBranch" fetch="join" 
    			property-ref="branch"/>
 	</class>
 </hibernate-mapping>

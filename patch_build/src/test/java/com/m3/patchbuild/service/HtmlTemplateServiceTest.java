@@ -2,8 +2,11 @@ package com.m3.patchbuild.service;
 
 import junit.framework.TestCase;
 
-import com.m3.patchbuild.info.BuildBranch;
-import com.m3.patchbuild.info.BuildPack;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.common.service.HtmlTemplateService;
+import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.BuildPackService;
 
 /**
  * Test for HtmlTemplateService

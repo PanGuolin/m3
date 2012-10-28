@@ -5,10 +5,12 @@ import java.util.Set;
 
 import org.tmatesoft.svn.core.SVNException;
 
-import com.m3.patchbuild.info.BuildBranch;
-import com.m3.patchbuild.info.BuildFile;
-import com.m3.patchbuild.info.BuildPack;
-import com.m3.patchbuild.info.SVNLog;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.common.info.SVNLog;
+import com.m3.patchbuild.common.service.SVNLogService;
+import com.m3.patchbuild.pack.BuildFile;
+import com.m3.patchbuild.pack.BuildPack;
 
 import junit.framework.TestCase;
 
@@ -24,7 +26,7 @@ public class SVNLogServiceTest extends TestCase {
 			pack.addFilePath(log.getPath());
 		}
 		
-		SVNLogService.fillBuildPack(pack);
+		SVNLogService.fillBuildPack(pack, pack.getFilePaths());
 		Set<BuildFile> list = pack.getBuildFiles();
 		for (BuildFile file : list) {
 			System.out.println(file.getUrl() + ", " + file.getRevision() + ", " + file.getModifier());

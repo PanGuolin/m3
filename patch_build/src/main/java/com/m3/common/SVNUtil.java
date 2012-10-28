@@ -1,6 +1,8 @@
 package com.m3.common;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.SVNCommitInfo;
@@ -29,6 +32,7 @@ import org.tmatesoft.svn.core.wc.SVNCopySource;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.tmatesoft.svn.util.ISVNDebugLog;
 import org.tmatesoft.svn.util.SVNLogType;
 
 import com.byttersoft.patchbuild.beans.ChangedSVNFiles;
@@ -200,17 +204,115 @@ public abstract class SVNUtil {
 		DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(new File("."), true);
 		SVNClientManager manager = SVNClientManager.newInstance(options, user, password);
 		SVNUpdateClient client = manager.getUpdateClient();
+		client.setDebugLog(new ISVNDebugLog() {
+			
+			public void logSevere(SVNLogType logType, Throwable th) {
+
+				
+			}
+			
+			public void logSevere(SVNLogType logType, String message) {
+				System.out.println("===============" + message);
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void logFinest(SVNLogType logType, String message) {
+				System.out.println("===============" + message);
+				
+			}
+			
+			public void logFinest(SVNLogType logType, Throwable th) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void logFiner(SVNLogType logType, String message) {
+				System.out.println("===============" + message);
+				
+			}
+			
+			public void logFiner(SVNLogType logType, Throwable th) {
+				
+			}
+			
+			public void logFine(SVNLogType logType, String message) {
+				System.out.println("===============" + message);
+				
+			}
+			
+			public void logFine(SVNLogType logType, Throwable th) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void logError(SVNLogType logType, Throwable th) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void logError(SVNLogType logType, String message) {
+				System.out.println("===============" + message);
+				
+			}
+			
+			public void log(SVNLogType logType, String message, byte[] data) {
+				System.out.println("===============" + message);
+				
+			}
+			
+			public void log(SVNLogType logType, String message, Level logLevel) {
+				System.out.println("===============" + message);
+				
+			}
+			
+			public void log(SVNLogType logType, Throwable th, Level logLevel) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void flushStream(Object stream) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public OutputStream createOutputLogStream() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			public OutputStream createLogStream(SVNLogType logType, OutputStream os) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			public InputStream createLogStream(SVNLogType logType, InputStream is) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			public OutputStream createInputLogStream() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		});
 		rootDir.mkdirs();
+		
+		List<File> exists = new ArrayList<File>();
 		for (String path : paths) {
-			File dir = rootDir;
-			int index = path.lastIndexOf('/');
-			if (index != -1) {
-				dir = new File(rootDir, path.substring(0, index));
-				dir.mkdirs();
+			File file = new File(rootDir, path);
+			if (!file.exists()) {
+				file.getParentFile().mkdirs();
+			} else {
+				exists.add(file);
+				continue;
 			}
 			SVNURL svnURL = SVNURL.parseURIDecoded(svnRoot + path);
-			client.doExport(svnURL, dir, SVNRevision.HEAD, SVNRevision.HEAD, null, true, SVNDepth.FILES);
+			
+			client.doExport(svnURL, file.getParentFile(), SVNRevision.HEAD, SVNRevision.HEAD, null, true, SVNDepth.FILES);
 		}
+		if (!exists.isEmpty())
+			client.doUpdate(exists.toArray(new File[exists.size()]), SVNRevision.HEAD, SVNDepth.FILES, true, true);
 		logger.info("export " + paths.length + " file to " + rootDir + " cost " + (System.currentTimeMillis() - ts) + "ms");
 	}
 	

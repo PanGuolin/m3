@@ -1,0 +1,8 @@
+td.l { text-align:left;}
+td.r { text-align:right; padding-left: 1px;}
+#errorDiv { font-weight: bold; width:100%; text-align: left; line-height:30px; padding-left:30px;
+	 background: #999 url(/patch/images/error.gif); background-repeat: no-repeat; background-position: left;}
+body.simple{ background: #FFF; text-align: center; font-size: 75%;}
+
+.simple #outterDiv { text-align: left; width: 960px; margin:0 auto;}
+form table { width: 100%;}

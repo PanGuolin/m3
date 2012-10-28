@@ -5,7 +5,12 @@ package com.m3.patchbuild.exception;
  * @author pangl
  *
  */
-public class BussException extends Throwable{
+public class BussException extends Exception{
 	private static final long serialVersionUID = 1L;
-
+	public BussException() {
+		super();
+	}
+	public BussException(Throwable e) {
+		super(e);
+	}
 }

@@ -7,18 +7,21 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import com.m3.common.HibernateUtil;
-import com.m3.patchbuild.info.BuildBranch;
-import com.m3.patchbuild.info.BuildFile;
-import com.m3.patchbuild.info.BuildPack;
-import com.m3.patchbuild.info.CheckInfo;
-import com.m3.patchbuild.info.SVNLog;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.common.info.SVNLog;
+import com.m3.patchbuild.common.service.SVNLogService;
+import com.m3.patchbuild.pack.BuildFile;
+import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.pack.CheckInfo;
 
 public class BuildPackServiceTest extends TestCase{
 	String branchNo = "sp1";
 	String buildNo = "testBuild";
 	String keyword = "SX-AKS1-002";
 	
-	public void test_prepareBuild() throws Exception {
+	public void test_prepareBuild() throws Throwable {
 		HibernateUtil.openSession();
 		
 		BuildPack bp = BuildPackService.find(branchNo, buildNo);
@@ -41,7 +44,7 @@ public class BuildPackServiceTest extends TestCase{
 			bp.getBuildFiles().add(file);
 		}
 		bp.setKeywords(keyword);
-		BuildPackService.prepareBuild(bp);
+		BuildPackService.prepareBuild(bp, set.toArray(new String[set.size()]));
 		HibernateUtil.closeSession();
 		
 		bp = BuildPackService.find(branchNo, buildNo);

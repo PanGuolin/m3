@@ -2,7 +2,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ page isELIgnored="false" %>
-<%@page import="com.m3.patchbuild.service.BuildBranchService" %>
+<%@page import="com.m3.patchbuild.branch.BuildBranchService" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html>

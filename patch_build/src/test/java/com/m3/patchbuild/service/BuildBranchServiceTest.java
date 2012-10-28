@@ -1,6 +1,7 @@
 package com.m3.patchbuild.service;
 
-import com.m3.patchbuild.info.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchService;
 
 import junit.framework.TestCase;
 

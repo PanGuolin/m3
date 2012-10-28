@@ -7,8 +7,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import com.m3.patchbuild.service.BuildBranchService;
-import com.m3.patchbuild.service.BuildPackService;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.pack.BuildFile;
+import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.pack.BuildPackStatus;
+import com.m3.patchbuild.user.User;
+import com.m3.patchbuild.user.UserRoleEnum;
 
 public class HibernateTest extends TestCase{
 	

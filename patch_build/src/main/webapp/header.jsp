@@ -26,7 +26,7 @@ com.byttersoft.patchbuild.permission.*" %>
 			<a href="${contextPath}/manage/listpatch.jsp" id="btn_listpatch">补丁包列表</a>
 			<a href="${contextPath}/manage/listbuild.jsp" id="btn_listbuild">构建包列表</a>
 			<a href="${contextPath}/manage/showbuildlog.jsp" id="btn_showbuildlog">构建日志</a>
-			<a href="${contextPath}/manage/addbuild.jsp" id="btn_addbuild">增加构建</a>
+			<a href="${contextPath}/pack/addbuild.jsp" id="btn_addbuild">增加构建</a>
 			<a href="${contextPath}/manage/listbuildfiles.jsp" id="btn_listbuildfiles">文件查询</a>
 			<a href="${contextPath}/index.jsp" id="btn_index">切换用户</a>
 		</div>

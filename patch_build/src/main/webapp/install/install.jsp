@@ -9,6 +9,6 @@
  width="200" height="100" codebase="." archive="pb.jar">
 </applet>
 <br/>
-<input type="button" onclick="document.getElementById('installApp').start()" value="start"/>
+<input type="button" onclick='document.applets[0].hello("panda")' value="start"/>
 </body>
 </html>

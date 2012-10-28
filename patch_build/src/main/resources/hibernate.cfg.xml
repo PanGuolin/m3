@@ -13,13 +13,13 @@
     	<property name="connection.characterEncoding">UTF-8</property>
         <property name="format_sql">false</property>
 		<property name="show_sql">true</property>
-		<mapping class="com.m3.patchbuild.info.BuildFile" />
+		<mapping class="com.m3.patchbuild.pack.BuildFile" />
         <mapping resource="patch_build.hbm.xml"/>
-        <mapping class="com.m3.patchbuild.info.BuildBranch" />
-        <mapping class="com.m3.patchbuild.info.User" />
-        <mapping class="com.m3.patchbuild.info.SVNLog" />
-        <mapping class="com.m3.patchbuild.info.HtmlTemplate" />
-        <mapping class="com.m3.patchbuild.info.PatchInfo" />
+        <mapping class="com.m3.patchbuild.branch.BuildBranch" />
+        <mapping class="com.m3.patchbuild.user.User" />
+        <mapping class="com.m3.patchbuild.common.info.SVNLog" />
+        <mapping class="com.m3.patchbuild.common.info.HtmlTemplate" />
+        <mapping class="com.m3.patchbuild.patch.PatchInfo" />
         
          <mapping resource="common.hbm.xml"/>
         

@@ -19,7 +19,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
 
 import org.apache.log4j.Logger;
 
@@ -68,8 +67,8 @@ public class MailServer {
 		});
         
         final MimeMessage message = new MimeMessage(session);
-        String subject =  MimeUtility.encodeText(new String(info.getSubject().getBytes(), 
-        		info.getEncoding()), info.getEncoding(), "B");
+        //String subject =  MimeUtility.encodeText(new String(info.getSubject().getBytes(), 
+        //		info.getEncoding()), info.getEncoding(), "B");
 		message.setSubject(info.getSubject(), info.getEncoding());
 		//message.setText(info.getContent(), info.getEncoding(), info.getContentType());
 		

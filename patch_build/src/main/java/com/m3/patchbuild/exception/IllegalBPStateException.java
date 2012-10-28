@@ -1,7 +1,7 @@
 package com.m3.patchbuild.exception;
 
-import com.m3.patchbuild.info.BuildPack;
-import com.m3.patchbuild.info.BuildPackStatus;
+import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.BuildPackStatus;
 
 /**
  * 不正确的构建包状态异常

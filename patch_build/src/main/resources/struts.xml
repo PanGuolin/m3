@@ -7,14 +7,21 @@
 <struts>
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
 	<package name="user" extends="struts-default">
-		<action name="login" class="com.m3.patchbuild.action.user.LoginAction">
+		<action name="login" class="com.m3.patchbuild.user.action.LoginAction">
 			<result name="error">/index.jsp</result>
 			<result name="success">/user/myfp.jsp</result>
 		</action>
 		
-		<action name="importFromSvn" class="com.m3.patchbuild.action.user.ImportFromSVNAction">
+		<action name="importFromSvn" class="com.m3.patchbuild.user.action.ImportUserFromSVN">
 			<result name="error">/user/importfromsvn.jsp</result>
 			<result name="success">/user/myfp.jsp</result>
+		</action>
+	</package>
+	<package name="pack" extends="struts-default">
+		<action name="addBuild" class="com.m3.patchbuild.pack.action.AddBuildAction">
+			<result name="success" >/pack/addbuild.jsp</result>
+			<result name="next" >/pack/addbuild.jsp</result>
+			<result name="error">/pack/addbuild.jsp</result>
 		</action>
 	</package>
 </struts>

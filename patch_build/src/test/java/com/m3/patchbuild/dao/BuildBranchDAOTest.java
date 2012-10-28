@@ -2,7 +2,8 @@ package com.m3.patchbuild.dao;
 
 import java.util.List;
 
-import com.m3.patchbuild.info.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchDAO;
 
 import junit.framework.TestCase;
 

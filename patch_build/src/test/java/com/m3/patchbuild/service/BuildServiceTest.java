@@ -4,14 +4,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.m3.common.HibernateUtil;
-import com.m3.patchbuild.info.BuildBranch;
-import com.m3.patchbuild.info.BuildFile;
-import com.m3.patchbuild.info.BuildPack;
-import com.m3.patchbuild.info.CheckInfo;
-import com.m3.patchbuild.info.SVNLog;
-
 import junit.framework.TestCase;
+
+import com.m3.common.HibernateUtil;
+import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.common.info.SVNLog;
+import com.m3.patchbuild.common.service.SVNLogService;
+import com.m3.patchbuild.pack.BuildFile;
+import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.pack.CheckInfo;
 
 public class BuildServiceTest extends TestCase{
 
@@ -20,8 +23,6 @@ public class BuildServiceTest extends TestCase{
 	String keyword = "FY-AKS1-01";
 	
 	public void test_build() throws Exception{
-		BuildService.startMonitor();
-		
 		HibernateUtil.openSession();
 		try {
 			BuildPack bp = BuildPackService.find(branchNo, buildNo);
@@ -44,7 +45,7 @@ public class BuildServiceTest extends TestCase{
 				bp.getBuildFiles().add(file);
 			}
 			bp.setKeywords(keyword);
-			BuildPackService.prepareBuild(bp);
+			BuildPackService.prepareBuild(bp, set.toArray(new String[set.size()]));
 			
 			CheckInfo info = new CheckInfo();
 			info.setMessage("测试检查");

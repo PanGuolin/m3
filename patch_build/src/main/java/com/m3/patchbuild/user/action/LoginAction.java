@@ -1,0 +1,41 @@
+package com.m3.patchbuild.user.action;
+
+import com.m3.patchbuild.BaseAction;
+import com.m3.patchbuild.user.User;
+import com.m3.patchbuild.user.UserService;
+
+public class LoginAction extends BaseAction {
+	
+	private String username;
+	private String password;
+	
+	@Override
+	public String doExecute() throws Exception {
+		User user = UserService.checkUser(username, password);
+		
+		if (user == null) {
+			setTips("登录失败，请重试！");
+			return ERROR;
+		}
+		
+		super.userLogin(user);
+		return SUCCESS;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+}

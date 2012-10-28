@@ -3,8 +3,9 @@ package com.m3.patchbuild.service;
 import java.util.List;
 
 import com.m3.common.HibernateUtil;
-import com.m3.patchbuild.info.User;
-import com.m3.patchbuild.info.UserRoleEnum;
+import com.m3.patchbuild.user.User;
+import com.m3.patchbuild.user.UserRoleEnum;
+import com.m3.patchbuild.user.UserService;
 
 import junit.framework.TestCase;
 
