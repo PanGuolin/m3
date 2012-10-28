@@ -62,7 +62,7 @@ public class BuildService {
 		}
 		
 		//初始化构建线程
-		Thread monitor = new Thread() {
+		Thread monitor = new Thread("Build Monitor") {
 			@Override
 			public void run() {
 				while(true) {
