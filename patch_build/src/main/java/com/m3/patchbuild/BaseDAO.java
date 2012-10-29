@@ -63,6 +63,9 @@ public abstract class BaseDAO {
 		}
 	}
 	
+	public static void commit() {
+		HibernateUtil.commit();
+	}
 	
 
 	

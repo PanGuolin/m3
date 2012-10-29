@@ -12,6 +12,7 @@ import com.m3.common.FileUtil;
 import com.m3.common.SVNUtil;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.AbstractService;
+import com.m3.patchbuild.BaseDAO;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
@@ -82,7 +83,7 @@ public class PackService extends AbstractService {
 			}
 			if (PackStatus.builded.equals(status) && 
 					oldPack.getRequester() != null &&
-					!oldPack.getRequester().equals(bp.getRequester())) {
+					!oldPack.getRequester().equals(ContextUtil.getUserId())) {
 				throw new PackExistsException(bp, oldPack);
 			}
 			bp.setUuid(oldPack.getUuid());
@@ -98,15 +99,9 @@ public class PackService extends AbstractService {
 		//File svnRoot = new File(branch.getWorkspace(), BuildBranch.DIR_SVN);
 		File bpRoot = new File(bp.getWSRoot(), Branch.DIR_SVN);
 		FileUtil.emptyDir(bpRoot);
-		//FileUtils fu = FileUtils.getFileUtils();
 		try {
 			SVNUtil.getFile(branch.getSvnUrl(), branch.getSvnUser(), branch.getSvnPassword(), bpRoot, files);
 			SVNLogService.fillBuildPack(bp, files);
-//			for (String path : files) {
-//				File source = new File(svnRoot, path);
-//				File dest = new File(bpRoot, path);
-//				fu.copyFile(source, dest);
-//			}
 		} catch (Exception ex) {
 			throw new GetSVNFileException(ex);
 		}
@@ -114,6 +109,7 @@ public class PackService extends AbstractService {
 		bp.setRequestTime(new Date());
 		bp.setStatus(PackStatus.request);
 		getDao().saveInfo(bp);
+		BaseDAO.commit();
 		BuildService.add(bp);
 		//保存成功后发邮件通知
 		MailService.sendMail(bp);

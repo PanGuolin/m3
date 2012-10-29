@@ -6,7 +6,12 @@
 	
 <struts>
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
-	<package name="user" extends="struts-default">
+	<package name="patchbuild" extends="struts-default">
+	    <global-results>
+	        <result name="login">/index.jsp</result>
+	    </global-results>
+	</package>
+	<package name="user" extends="patchbuild">
 		<action name="login" class="com.m3.patchbuild.user.action.LoginAction">
 			<result name="error">/index.jsp</result>
 			<result name="success">/user/myfp.jsp</result>
@@ -17,7 +22,7 @@
 			<result name="success">/user/myfp.jsp</result>
 		</action>
 	</package>
-	<package name="pack" extends="struts-default">
+	<package name="pack" extends="patchbuild">
 		<action name="addBuild" class="com.m3.patchbuild.pack.action.AddBuildAction">
 			<result name="success" >/pack/addbuild.jsp</result>
 			<result name="next" >/pack/addbuild.jsp</result>
