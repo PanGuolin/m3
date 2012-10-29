@@ -30,4 +30,10 @@
         <service>com.m3.patchbuild.user.FunctionPermService</service>
         <singleton>true</singleton>
     </buss>
+    <buss>
+        <type>message</type>
+        <info>com.m3.patchbuild.message.Message</info>
+        <service>com.m3.patchbuild.message.MessageService</service>
+        <singleton>true</singleton>
+    </buss>
 </busslist>

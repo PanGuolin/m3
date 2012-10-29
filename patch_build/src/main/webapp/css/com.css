@@ -6,3 +6,16 @@ body.simple{ background: #FFF; text-align: center; font-size: 75%;}
 
 .simple #outterDiv { text-align: left; width: 960px; margin:0 auto;}
 form table { width: 100%;}
+
+#messageTitle { 
+width: 300px; height:25px; background:#93E; position:absolute; right:5px; bottom:0px; z-index:2; text-align:left; cursor: pointer; border: 2px solid 939;
+font: 12px / 1.5 tahoma,arial,ËÎÌåb8b\4f53; 
+}
+#messageTitle div {
+	margin-left: 30px; margin-top:3px; font-weight:bold;
+}
+#messageDiv {width: 295px; height: 30px; background:rgba(0, 0, 0, 0.4); position: absolute; right:7px; bottom:0px;  border:1px solid #D6D6D6; }
+#messageContent { width: 295px; background:rgba(0, 0, 0, 0.4); position: absolute; right:7px; bottom:0px;  border:1px solid #D6D6D6;}
+#messageContent div { width:100%; text-align: left; overflow: hidden; margin-top:5px; margin-left:5px; line-height:30px;}
+#messageContent .op { text-align:right;}
+#messageContent .content { text-align:left; width:200px;}

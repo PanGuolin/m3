@@ -24,7 +24,6 @@ public class AbstractService implements IService{
 		return dao;
 	}
 
-	@Override
 	public IBussInfo findInfoByUuid(String uuid) {
 		return (IBussInfo)dao.findByUuid(uuid);
 	}

@@ -9,6 +9,7 @@
 <head>
 	<title>补丁构建管理系统 -请求构建</title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/com.css" type="text/css" />
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
 </head>
 <body class="simple"> 
 	<div id="outterDiv">
@@ -39,5 +40,27 @@
 			</table>
  		</s:form>
 	</div>
+	
+	<div id="messageTitle"><div>你有新消息</div></div>
+	<div id="messageDiv">
+	</div>
+	<div id="messageContent">
+		<div>
+		<table cellpadding="5px;" style="width:100%">
+			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
+			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
+			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
+			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
+			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
+		</table>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function(){
+  			$("#messageTitle").click(function(){
+  				$("#messageContent").toggle();
+  			});
+		});
+	</script>
 </body>
 </html>
