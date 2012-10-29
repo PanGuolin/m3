@@ -55,6 +55,14 @@ public abstract class BaseDAO {
 		return findByBillNo(billNo.getProps());
 	}
 	
+	public Object findByUuid(String uuid) {
+		try { 
+			return HibernateUtil.openSession().get(getInfoClass(), uuid);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	
 	
 
 	

@@ -3,7 +3,7 @@ package com.m3.patchbuild.dao;
 import junit.framework.TestCase;
 
 import com.m3.patchbuild.branch.BuildBranchService;
-import com.m3.patchbuild.common.dao.SVNLogDAO;
+import com.m3.patchbuild.svn.SVNLogDAO;
 
 public class SVNLogDAOTest extends TestCase {
 	

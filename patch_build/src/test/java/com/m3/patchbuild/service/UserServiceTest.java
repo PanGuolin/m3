@@ -3,6 +3,7 @@ package com.m3.patchbuild.service;
 import java.util.List;
 
 import com.m3.common.HibernateUtil;
+import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRoleEnum;
 import com.m3.patchbuild.user.UserService;
@@ -13,7 +14,8 @@ public class UserServiceTest extends TestCase{
 	
 	
 	public void test_addUser() throws Exception{
-		if (UserService.checkUser("admin", "123456") == null) {
+		UserService userService = (UserService)BussFactory.getService(User.class);
+		if (userService.checkUser("admin", "123456") == null) {
 			User user = new User();
 			user.setUserId("admin");
 			user.setPassword("123456");
@@ -26,9 +28,9 @@ public class UserServiceTest extends TestCase{
 			user.addRole(UserRoleEnum.testmanager);
 			user.setSVNUser(false);
 			user.setUsername("系统管理员");
-			UserService.save(user);
+			userService.save(user);
 		}
-		User user = UserService.checkUser("admin", "123456");
+		User user = userService.checkUser("admin", "123456");
 		assertTrue(user !=  null);
 	}
 	
@@ -37,6 +39,7 @@ public class UserServiceTest extends TestCase{
 	 * @throws Exception
 	 */
 	public void test_superiors() throws Exception {
+		UserService userService = (UserService)BussFactory.getService(User.class);
 		HibernateUtil.openSession();
 		User developer = test_createUser("developer", UserRoleEnum.developer);
 		User deployer = test_createUser("deployer", UserRoleEnum.deployer);
@@ -49,21 +52,23 @@ public class UserServiceTest extends TestCase{
 		
 		tester.getSuperiors().add(testmanager);
 		
-		UserService.save(tester);
-		UserService.save(developer);
+		userService.save(tester);
+		userService.save(developer);
 		
 		HibernateUtil.closeSession();
 	}
 	
 	public void test_findUserByRole() throws Exception {
-		List<User> list = UserService.findUser(UserRoleEnum.designer);
+		UserService userService = (UserService)BussFactory.getService(User.class);
+		List<User> list = userService.findUser(UserRoleEnum.designer);
 		for (User user : list) {
 			System.out.println(user.getUserId());
 		}
 	}
 	
 	private User test_createUser(String userId, UserRoleEnum role) throws Exception {
-		User user = UserService.findUser(userId);
+		UserService userService = (UserService)BussFactory.getService(User.class);
+		User user = userService.findUser(userId);
 		if (user == null) {
 			user = new User();
 			user.setUserId(userId);
@@ -71,7 +76,7 @@ public class UserServiceTest extends TestCase{
 			user.setEmail(userId + "@threemickey.com");
 			user.setPassword("pswd");
 			user.addRole(role);
-			UserService.save(user);
+			userService.save(user);
 		}
 		return user;
 	}

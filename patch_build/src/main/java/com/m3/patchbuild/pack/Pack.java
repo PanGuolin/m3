@@ -5,14 +5,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.branch.Branch;
 
 /**
  * 补丁构建包对象
  * @author MickeyMic
  *
  */
-public class BuildPack {
+public class Pack implements IBussInfo{
 
 	private String uuid;//唯一标识
 	private String buildNo; //构建号
@@ -28,7 +29,7 @@ public class BuildPack {
 	private Date passTime; //测试通过时间
 	private String deployer; //发布用户
 	private Date deployTime; //发布时间
-	private BuildBranch branch; //所属分支
+	private Branch branch; //所属分支
 	private String customers = "ALL"; //适用客户
 	private String comments; //构建描述
 	private String patch; //所属补丁
@@ -91,10 +92,10 @@ public class BuildPack {
 	public void setDeployer(String deployer) {
 		this.deployer = deployer;
 	}
-	public BuildBranch getBranch() {
+	public Branch getBranch() {
 		return branch;
 	}
-	public void setBranch(BuildBranch branch) {
+	public void setBranch(Branch branch) {
 		this.branch = branch;
 	}
 	public String getCustomers() {

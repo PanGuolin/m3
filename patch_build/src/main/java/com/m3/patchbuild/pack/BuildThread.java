@@ -8,7 +8,8 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
 
 /**
@@ -20,14 +21,15 @@ public class BuildThread extends Thread {
 	public static final String DEFAULT_ANT_FILE = "/default_build.xml";
 	
 	private Logger logger = Logger.getLogger(BuildThread.class);
-	private BuildPack bp = null;
+	private Pack bp = null;
 	
 	BuildThread() {
 		super("Build Pack Thead");
 	}
 	
-	public synchronized void startBuild(BuildPack bp) {
-		this.bp = BuildPackService.find(bp.getBranch().getBranch(), bp.getBuildNo());
+	public synchronized void startBuild(Pack bp) {
+		this.bp = ((PackService)BussFactory.getService(Pack.class))
+				.find(bp.getBranch().getBranch(), bp.getBuildNo());
 		this.start();
 	}
 
@@ -41,13 +43,13 @@ public class BuildThread extends Thread {
 			bp.setStatus(BuildPackStatus.buildFail);
 		} finally {
 			BuildService.buildComplete();
-			BuildPackService.builded(bp);
+			((PackService)BussFactory.getService(Pack.class)).builded(bp);
 		}
 		
 	}
 	
 	private void doBuild() throws Exception {
-		File antFile = new File(bp.getWSRoot(), BuildBranch.FILE_BUILD);
+		File antFile = new File(bp.getWSRoot(), Branch.FILE_BUILD);
 		if (!antFile.exists()) {
 			antFile = new File(BuildThread.class.getResource(DEFAULT_ANT_FILE).getFile());
 		}
@@ -64,14 +66,14 @@ public class BuildThread extends Thread {
 		
 		proj.fireBuildStarted();
 		proj.init();
-		BuildBranch branch = bp.getBranch();
+		Branch branch = bp.getBranch();
 		proj.setProperty("dir.branch", branch.getWorkspace());
 		proj.setProperty("dir.build", bp.getWSRoot().getAbsolutePath());
 		proj.setProperty("build.buildNo", bp.getBuildNo());
 		//如果是子分支，那么需要共享主分支的编译环境
 		boolean hasParent = branch.getParent() != null;
 		if (hasParent) {
-			BuildBranch parent = BuildBranchService.getBranch(branch.getParent());
+			Branch parent = BuildBranchService.getBranch(branch.getParent());
 			if (parent != null) {
 				proj.setProperty("compile.lib", parent.getWorkspace() + "/lib");
 				proj.setProperty("compile.classes", parent.getWorkspace() + "/classes");

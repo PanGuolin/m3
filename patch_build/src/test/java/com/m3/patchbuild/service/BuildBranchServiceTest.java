@@ -1,6 +1,6 @@
 package com.m3.patchbuild.service;
 
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
 
 import junit.framework.TestCase;
@@ -9,9 +9,9 @@ public class BuildBranchServiceTest extends TestCase{
 	
 	public void test_createBuildBranch() {
 		
-		BuildBranch branch = BuildBranchService.getBranch("testbranch");
+		Branch branch = BuildBranchService.getBranch("testbranch");
 		if (branch == null)
-			branch = new BuildBranch();
+			branch = new Branch();
 		branch.setBranch("testbranch");
 		branch.setName("测试分支");
 		branch.setVersion("test.yyMMdd");
@@ -26,7 +26,7 @@ public class BuildBranchServiceTest extends TestCase{
 		
 		 branch = BuildBranchService.getBranch("sp1");
 			if (branch == null)
-				branch = new BuildBranch();
+				branch = new Branch();
 		branch.setBranch("sp1");
 		branch.setName("sp1分支");
 		branch.setVersion("SP10.03.yyMMddsp1");

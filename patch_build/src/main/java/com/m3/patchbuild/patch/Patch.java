@@ -14,8 +14,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.m3.patchbuild.branch.BuildBranch;
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.branch.Branch;
+import com.m3.patchbuild.pack.Pack;
 
 /**
  * 补丁信息
@@ -24,7 +25,7 @@ import com.m3.patchbuild.pack.BuildPack;
  */
 @Entity
 @Table(name="PB_Patch")
-public class PatchInfo {
+public class Patch implements IBussInfo{
 	
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
@@ -37,7 +38,7 @@ public class PatchInfo {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="branch", columnDefinition="branch")
-	private BuildBranch branch; //所属分支
+	private Branch branch; //所属分支
 	
 	@Column(name="modifyTime")
 	private Date lastModify; //最后修改时间
@@ -67,11 +68,11 @@ public class PatchInfo {
 		this.name = name;
 	}
 
-	public BuildBranch getBranch() {
+	public Branch getBranch() {
 		return branch;
 	}
 
-	public void setBranch(BuildBranch branch) {
+	public void setBranch(Branch branch) {
 		this.branch = branch;
 	}
 
@@ -120,7 +121,7 @@ public class PatchInfo {
 	 * 获取发布的日志文件
 	 * @return
 	 */
-	public File getPublishLog(BuildPack bp) {
+	public File getPublishLog(Pack bp) {
 		return new File(getPublishWS(bp) + "publish.log");
 	}
 	
@@ -129,7 +130,7 @@ public class PatchInfo {
 	 * @param bp
 	 * @return
 	 */
-	public File getPublishWS(BuildPack bp) {
+	public File getPublishWS(Pack bp) {
 		return new File(getWSRoot(), bp.getBuildNo());
 	}
 }

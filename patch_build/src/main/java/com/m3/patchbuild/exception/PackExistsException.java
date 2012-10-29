@@ -2,7 +2,7 @@ package com.m3.patchbuild.exception;
 
 import java.text.SimpleDateFormat;
 
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.Pack;
 
 /**
  * 构建包忆存在异常
@@ -12,8 +12,8 @@ import com.m3.patchbuild.pack.BuildPack;
 public class PackExistsException extends BuildPackException {
 	private static final long serialVersionUID = 1L;
 	
-	private BuildPack old = null;
-	public PackExistsException(BuildPack bp, BuildPack old) {
+	private Pack old = null;
+	public PackExistsException(Pack bp, Pack old) {
 		super(bp);
 		this.old = old;
 	}

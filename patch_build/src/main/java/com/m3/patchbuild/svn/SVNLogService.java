@@ -1,4 +1,4 @@
-package com.m3.patchbuild.common.service;
+package com.m3.patchbuild.svn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,8 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 
 import com.m3.common.SVNUtil;
-import com.m3.patchbuild.branch.BuildBranch;
-import com.m3.patchbuild.common.dao.SVNLogDAO;
-import com.m3.patchbuild.common.info.SVNLog;
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.branch.Branch;
+import com.m3.patchbuild.pack.Pack;
 
 /**
  * SVN日志服务类
@@ -34,7 +32,7 @@ public class SVNLogService {
 	 * @return
 	 * @throws SVNException
 	 */
-	public static void updateLog(BuildBranch branch) throws SVNException {
+	public static void updateLog(Branch branch) throws SVNException {
 		long maxRevision = dao.getMaxRevision(branch);
 		long ts = System.currentTimeMillis();
 		Set<SVNLogEntry> newLogs = SVNUtil.getSVNLogEntry(branch.getSvnUrl(), branch.getSvnUser(), 
@@ -76,7 +74,7 @@ public class SVNLogService {
 	 * @return
 	 * @throws SVNException 
 	 */
-	public static List<SVNLog> listByKeyword(BuildBranch branch, String keywords) throws SVNException {
+	public static List<SVNLog> listByKeyword(Branch branch, String keywords) throws SVNException {
 		updateLog(branch);
 		return dao.findByKeywords(branch, keywords);
 	}
@@ -86,7 +84,7 @@ public class SVNLogService {
 	 * @param pack
 	 * @throws SVNException 
 	 */
-	public static void fillBuildPack(BuildPack pack, String[] files) throws SVNException {
+	public static void fillBuildPack(Pack pack, String[] files) throws SVNException {
 		updateLog(pack.getBranch());
 		dao.fillBuildPack(pack, files);
 	}

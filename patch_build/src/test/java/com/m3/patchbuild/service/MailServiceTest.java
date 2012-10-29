@@ -3,7 +3,7 @@ package com.m3.patchbuild.service;
 import junit.framework.TestCase;
 
 import com.m3.common.mail.MailServer;
-import com.m3.patchbuild.common.service.MailService;
+import com.m3.patchbuild.message.MailService;
 
 public class MailServiceTest extends TestCase {
 	

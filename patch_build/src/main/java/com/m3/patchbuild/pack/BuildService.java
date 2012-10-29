@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.BuildBranchDAO;
 
 /**
@@ -15,7 +16,7 @@ import com.m3.patchbuild.branch.BuildBranchDAO;
 public class BuildService {
 	private static final Logger logger = Logger.getLogger(BuildService.class);
 	
-	private static List<BuildPack> queue = new ArrayList<BuildPack>(); //待构建队列
+	private static List<Pack> queue = new ArrayList<Pack>(); //待构建队列
 	
 	private static List<BuildThread> buildThreads = new ArrayList<BuildThread>(); //构建线程
 	
@@ -25,7 +26,7 @@ public class BuildService {
 		startMonitor();
 	}
 	
-	public static void add(BuildPack buildPack) {
+	public static void add(Pack buildPack) {
 		synchronized (queue) {
 			queue.add(buildPack);
 			queue.notifyAll();
@@ -51,9 +52,10 @@ public class BuildService {
 	private static void startMonitor() {
 		//从数据库中读取上次未构建的任务重新进行构建
 		try {
-			List<BuildPack> list = BuildPackService.listByStatus(BuildPackStatus.checked);
+			List<Pack> list = ((PackService)BussFactory.getService(Pack.class))
+					.listByStatus(BuildPackStatus.checked);
 			synchronized (queue) {
-				for (BuildPack bp : list) {
+				for (Pack bp : list) {
 					queue.add(bp);
 				}
 			}

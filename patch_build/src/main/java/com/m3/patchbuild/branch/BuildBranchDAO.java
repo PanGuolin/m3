@@ -13,13 +13,13 @@ import com.m3.patchbuild.BaseDAO;
 public class BuildBranchDAO extends BaseDAO{
 
 	@SuppressWarnings("unchecked")
-	public List<BuildBranch> listAllBranch() {
-		return (List<BuildBranch>)super.listAll();
+	public List<Branch> listAllBranch() {
+		return (List<Branch>)super.listAll();
 	}
 
 	@Override
 	protected Class<?> getInfoClass() {
-		return BuildBranch.class;
+		return Branch.class;
 	}
 	
 	/**

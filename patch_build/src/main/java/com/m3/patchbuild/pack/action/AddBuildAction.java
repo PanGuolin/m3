@@ -6,12 +6,13 @@ import java.util.List;
 
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.BaseAction;
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
-import com.m3.patchbuild.common.info.SVNLog;
-import com.m3.patchbuild.common.service.SVNLogService;
-import com.m3.patchbuild.pack.BuildPack;
-import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.pack.Pack;
+import com.m3.patchbuild.pack.PackService;
+import com.m3.patchbuild.svn.SVNLog;
+import com.m3.patchbuild.svn.SVNLogService;
 
 /**
  * 新增构建包，步骤1,根据构建包查找相应的构建文件
@@ -20,7 +21,7 @@ import com.m3.patchbuild.pack.BuildPackService;
  */
 public class AddBuildAction extends BaseAction{
 	
-	private BuildPack pack = null;//构建包信息
+	private Pack pack = null;//构建包信息
 	
 //	private String build = null; //是否构建
 	
@@ -36,7 +37,7 @@ public class AddBuildAction extends BaseAction{
 			if (StringUtil.isEmpty(keywords)) {
 				keywords = pack.getBuildNo();
 			}
-			BuildBranch branch = BuildBranchService.getBranch(pack.getBranch().getBranch());
+			Branch branch = BuildBranchService.getBranch(pack.getBranch().getBranch());
 			List<SVNLog> logs = SVNLogService.listByKeyword(branch, keywords);
 			List<String> list = new ArrayList<String>();
 			for (SVNLog log : logs) {
@@ -57,16 +58,16 @@ public class AddBuildAction extends BaseAction{
 				setTips("不能构建空的包");
 				return ERROR;
 			}
-			BuildPackService.prepareBuild(pack, files.split(";"));
+			((PackService)BussFactory.getService(Pack.class)).prepareBuild(pack, files.split(";"));
 		}
 		return SUCCESS;
 	}
 
-	public BuildPack getPack() {
+	public Pack getPack() {
 		return pack;
 	}
 
-	public void setPack(BuildPack pack) {
+	public void setPack(Pack pack) {
 		this.pack = pack;
 	}
 

@@ -1,4 +1,4 @@
-package com.m3.patchbuild.common.dao;
+package com.m3.patchbuild.message;
 
 import java.math.BigInteger;
 

@@ -1,4 +1,4 @@
-package com.m3.patchbuild.common.info;
+package com.m3.patchbuild.svn;
 
 import java.util.Date;
 

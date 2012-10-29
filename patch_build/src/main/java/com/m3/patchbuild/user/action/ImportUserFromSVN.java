@@ -2,7 +2,8 @@ package com.m3.patchbuild.user.action;
 
 import com.m3.common.SVNUtil;
 import com.m3.patchbuild.BaseAction;
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRoleEnum;
@@ -15,17 +16,17 @@ public class ImportUserFromSVN extends BaseAction{
 
 	@Override
 	public String doExecute() throws Exception {
-		
-		User exUser = UserService.findUser(user.getUserId());
+		UserService userService = (UserService)BussFactory.getService(User.class);
+		User exUser = userService.findUser(user.getUserId());
 		if (exUser != null) {
 			setTips("用户已存在，请不要重复注册!");
 			return ERROR;
 		}
-		BuildBranch bBranch = BuildBranchService.getBranch(branch);
+		Branch bBranch = BuildBranchService.getBranch(branch);
 		if (SVNUtil.checkLogin(bBranch.getSvnUrl(), user.getUserId(), user.getPassword())) {
 			user.getRoles().clear();
 			user.addRole(UserRoleEnum.developer);
-			UserService.save(user);
+			userService.save(user);
 			return SUCCESS;
 		} else {
 			setTips("用户名/口令在SVN上验证失败，请检查输入是否正确!你也可以向管理员申请注册");

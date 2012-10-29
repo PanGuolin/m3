@@ -2,7 +2,7 @@ package com.m3.patchbuild.exception;
 
 import java.util.Collection;
 
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.Pack;
 
 /**
  * 依赖的构建包未发布异常
@@ -13,9 +13,9 @@ public class DependsUnpublishException extends BuildPackException{
 	
 	private static final long serialVersionUID = 4915787980515932813L;
 	
-	private Collection<BuildPack> depends = null;
+	private Collection<Pack> depends = null;
 	
-	public DependsUnpublishException(BuildPack bp, Collection<BuildPack> depends) {
+	public DependsUnpublishException(Pack bp, Collection<Pack> depends) {
 		super(bp);
 		this.depends = depends;
 	}
@@ -25,7 +25,7 @@ public class DependsUnpublishException extends BuildPackException{
 		StringBuilder sb = new StringBuilder("构建包[" + buildPack.getBuildNo() + "]所依赖的包还没有发布\n");
 		if (depends != null && !depends.isEmpty()) {
 			sb.append("依赖的构建包列表：");
-			for (BuildPack bp : depends) {
+			for (Pack bp : depends) {
 				sb.append(bp.getBuildNo() + ",");
 			}
 		}

@@ -7,11 +7,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
 import com.m3.patchbuild.pack.BuildFile;
-import com.m3.patchbuild.pack.BuildPack;
-import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.pack.Pack;
+import com.m3.patchbuild.pack.PackService;
 import com.m3.patchbuild.pack.BuildPackStatus;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRoleEnum;
@@ -23,9 +23,9 @@ public class HibernateTest extends TestCase{
 		Session sess = conf.buildSessionFactory().openSession();
 		Transaction tx = sess.beginTransaction();
 		
-		BuildBranch branch = BuildBranchService.getBranch("sp1");
+		Branch branch = BuildBranchService.getBranch("sp1");
 		
-		BuildPack bp = new BuildPack();
+		Pack bp = new Pack();
 		bp.setBuildNo("test_build");
 		bp.setBranch(branch);
 		bp.addDepends("depend1");
@@ -45,7 +45,7 @@ public class HibernateTest extends TestCase{
 		SessionFactory sf = conf.buildSessionFactory();
 		Session sess = sf.openSession();
 		Transaction tx = sess.beginTransaction();
-		BuildBranch bb = new BuildBranch();
+		Branch bb = new Branch();
 		bb.setBranch("sp1");
 		bb.setName("sp1");
 		bb.setSvnPassword("test");

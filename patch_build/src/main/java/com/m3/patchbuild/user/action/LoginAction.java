@@ -1,6 +1,7 @@
 package com.m3.patchbuild.user.action;
 
 import com.m3.patchbuild.BaseAction;
+import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserService;
 
@@ -11,8 +12,8 @@ public class LoginAction extends BaseAction {
 	
 	@Override
 	public String doExecute() throws Exception {
-		User user = UserService.checkUser(username, password);
-		
+		User user = ((UserService)BussFactory.getService(User.class))
+				.checkUser(username, password);
 		if (user == null) {
 			setTips("登录失败，请重试！");
 			return ERROR;

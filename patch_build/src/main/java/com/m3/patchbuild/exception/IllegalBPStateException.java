@@ -1,6 +1,6 @@
 package com.m3.patchbuild.exception;
 
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.BuildPackStatus;
 
 /**
@@ -14,7 +14,7 @@ public class IllegalBPStateException extends BuildPackException{
 
 	private BuildPackStatus expected; //预期状态
 
-	public IllegalBPStateException(BuildPack bp, BuildPackStatus expected) {
+	public IllegalBPStateException(Pack bp, BuildPackStatus expected) {
 		super(bp);
 		this.expected = expected;
 	}

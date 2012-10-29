@@ -18,6 +18,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.m3.patchbuild.IBussInfo;
+
 /**
  * 用户信息对象
  * @author MickeyMic
@@ -25,7 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name="PB_User")
-public class User {
+public class User implements IBussInfo{
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
 	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")

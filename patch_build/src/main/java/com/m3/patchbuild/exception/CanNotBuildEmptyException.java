@@ -1,6 +1,6 @@
 package com.m3.patchbuild.exception;
 
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.Pack;
 
 /**
  * 不能构建空的包
@@ -10,7 +10,7 @@ import com.m3.patchbuild.pack.BuildPack;
 public class CanNotBuildEmptyException extends BuildPackException{
 	private static final long serialVersionUID = 1L;
 
-	public CanNotBuildEmptyException(BuildPack bp) {
+	public CanNotBuildEmptyException(Pack bp) {
 		super(bp);
 	}
 

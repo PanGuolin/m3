@@ -6,13 +6,13 @@ import java.util.Set;
 
 import org.tmatesoft.svn.core.SVNException;
 
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
-import com.m3.patchbuild.common.info.SVNLog;
-import com.m3.patchbuild.common.service.SVNLogService;
 import com.m3.patchbuild.pack.BuildFile;
-import com.m3.patchbuild.pack.BuildPack;
-import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.pack.Pack;
+import com.m3.patchbuild.pack.PackService;
+import com.m3.patchbuild.svn.SVNLog;
+import com.m3.patchbuild.svn.SVNLogService;
 
 /**
  * 测试数据工具类
@@ -22,14 +22,15 @@ import com.m3.patchbuild.pack.BuildPackService;
 public abstract class TestDataUtil {
 	public static final String BRANCH = "sp1";
 	
-	public static BuildPack initBuilPack(String buildNo) throws SVNException {
+	public static Pack initBuilPack(String buildNo) throws SVNException {
 		
-		BuildBranch branch = initBranch();
-		BuildPack bp = BuildPackService.find(branch.getBranch(), buildNo);
+		Branch branch = initBranch();
+		PackService packService = (PackService)BussFactory.getService(Pack.class);
+		Pack bp = packService.find(branch.getBranch(), buildNo);
 		if (bp != null)
 			return bp;
 		
-		bp = new BuildPack();
+		bp = new Pack();
 		bp.setBranch(branch);
 		bp.setBuildNo(buildNo);
 		bp.setRequester("developer");
@@ -44,14 +45,14 @@ public abstract class TestDataUtil {
 			bp.getBuildFiles().add(file);
 		}
 		bp.setKeywords(buildNo);
-		BuildPackService.save(bp);
+		packService.save(bp);
 		return bp;
 	}
 	
-	public static BuildBranch initBranch() {
-		BuildBranch branch = BuildBranchService.getBranch("sp1");
+	public static Branch initBranch() {
+		Branch branch = BuildBranchService.getBranch("sp1");
 		if (branch == null)
-			branch = new BuildBranch();
+			branch = new Branch();
 		branch.setBranch("sp1");
 		branch.setName("sp1分支");
 		branch.setVersion("SP10.03.yyMMddsp1");

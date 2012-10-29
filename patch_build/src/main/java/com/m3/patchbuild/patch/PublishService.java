@@ -12,10 +12,11 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 
-import com.m3.patchbuild.branch.BuildBranch;
-import com.m3.patchbuild.common.service.MailService;
-import com.m3.patchbuild.pack.BuildPack;
-import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.branch.Branch;
+import com.m3.patchbuild.message.MailService;
+import com.m3.patchbuild.pack.Pack;
+import com.m3.patchbuild.pack.PackService;
 import com.m3.patchbuild.pack.BuildPackStatus;
 
 /**
@@ -28,7 +29,7 @@ public class PublishService {
 	
 	private static final Logger logger = Logger.getLogger(PublishService.class);
 	
-	private static List<BuildPack> queue = new ArrayList<BuildPack>(); //待构建队列
+	private static List<Pack> queue = new ArrayList<Pack>(); //待构建队列
 	
 	private static PublishThread publishThread = new PublishThread();
 	
@@ -41,7 +42,7 @@ public class PublishService {
 	 * @param pack
 	 * @return
 	 */
-	public static int publish(BuildPack pack) {
+	public static int publish(Pack pack) {
 		synchronized (queue) {
 			queue.add(pack);
 			queue.notifyAll();
@@ -93,19 +94,20 @@ public class PublishService {
 	 *
 	 */
 	private static class PublishThread extends Thread {
-			private BuildPack bp = null;
-			private PatchInfo patch = null;
+			private Pack bp = null;
+			private Patch patch = null;
 			
 			PublishThread() {
 				super("Publish Pack Thread");
 			}
 			
-			public synchronized void publish(BuildPack bp) {
+			public synchronized void publish(Pack bp) {
 				this.bp = bp;
-				this.patch = PatchService.getPatch(bp.getBranch(), (Date)null);
+				PatchService patchService = ((PatchService)BussFactory.getService(Patch.class));
+				this.patch = patchService.getPatch(bp.getBranch(), (Date)null);
 				//如果当天还没有补丁生成，则先生成补丁
 				if (patch == null) {
-					patch = PatchService.createPatch(bp.getBranch());
+					patch = patchService.createPatch(bp.getBranch());
 				}
 				this.start();
 			}
@@ -125,14 +127,14 @@ public class PublishService {
 					bp.setFailReason(bo.toString());
 					//出错则不改变状态, 同时发布邮件
 				} finally {
-					BuildPackService.save(bp);
+					((PackService)BussFactory.getService(Pack.class)).save(bp);
 					MailService.sendMail(bp);
 				}
 			}
 			
 			private void doBuild() throws Exception {
-				BuildBranch branch = bp.getBranch();
-				File antFile = new File(branch.getWorkspace(), BuildBranch.FILE_PUBLISH);
+				Branch branch = bp.getBranch();
+				File antFile = new File(branch.getWorkspace(), Branch.FILE_PUBLISH);
 				if (!antFile.exists()) {
 					antFile = new File(PublishService.class.getResource(DEFAULT_ANT_FILE).getFile());
 				}

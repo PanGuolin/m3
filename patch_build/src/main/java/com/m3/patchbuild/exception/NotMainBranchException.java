@@ -1,7 +1,7 @@
 package com.m3.patchbuild.exception;
 
-import com.m3.patchbuild.branch.BuildBranch;
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.branch.Branch;
+import com.m3.patchbuild.pack.Pack;
 
 
 /**
@@ -13,11 +13,11 @@ public class NotMainBranchException extends BuildPackException{
 
 	private static final long serialVersionUID = 1L;
 	
-	public NotMainBranchException(BuildPack bp) {
+	public NotMainBranchException(Pack bp) {
 		super(bp);
 	}
 
-	public BuildBranch getBranch() {
+	public Branch getBranch() {
 		return super.buildPack.getBranch();
 	}
 

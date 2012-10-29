@@ -1,6 +1,6 @@
 package com.m3.patchbuild.exception;
 
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.Pack;
 
 /**
  * 构建包相关异常类
@@ -11,9 +11,9 @@ public class BuildPackException extends BussException{
 
 	private static final long serialVersionUID = 1L;
 
-	protected BuildPack buildPack;
+	protected Pack buildPack;
 	
-	public BuildPackException(BuildPack bp) {
+	public BuildPackException(Pack bp) {
 		this.buildPack = bp;
 	}
 }

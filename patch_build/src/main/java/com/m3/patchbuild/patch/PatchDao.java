@@ -10,7 +10,7 @@ public class PatchDao extends BaseDAO{
 
 	@Override
 	protected Class<?> getInfoClass() {
-		return PatchInfo.class;
+		return Patch.class;
 	}
 
 }

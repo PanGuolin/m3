@@ -16,11 +16,11 @@ import com.m3.patchbuild.BaseDAO;
  */
 @SuppressWarnings("unchecked")
 public class BuildPackDAO extends BaseDAO {
-	private static final List<BuildPack> empty = new ArrayList<BuildPack>();
+	private static final List<Pack> empty = new ArrayList<Pack>();
 
-	public BuildPack find(String branch, String buildNo) {
+	public Pack find(String branch, String buildNo) {
 		try {
-			return (BuildPack) HibernateUtil
+			return (Pack) HibernateUtil
 					.openSession()
 					.createCriteria(getInfoClass())
 					.add(Restrictions.and(
@@ -34,12 +34,12 @@ public class BuildPackDAO extends BaseDAO {
 
 	@Override
 	protected Class<?> getInfoClass() {
-		return BuildPack.class;
+		return Pack.class;
 	}
 
-	public List<BuildPack> listByStatus(BuildPackStatus status) {
+	public List<Pack> listByStatus(BuildPackStatus status) {
 		try {
-			return (List<BuildPack>) HibernateUtil.openSession()
+			return (List<Pack>) HibernateUtil.openSession()
 					.createCriteria(getInfoClass())
 					.add(Restrictions.eq("status", status)).list();
 		} finally {
@@ -52,11 +52,11 @@ public class BuildPackDAO extends BaseDAO {
 	 * @param bp
 	 * @return
 	 */
-	public List<BuildPack> listUnpublishDepends(BuildPack bp) {
+	public List<Pack> listUnpublishDepends(Pack bp) {
 		if (bp.getDepends().isEmpty())
 			return empty;
 		try {
-			return (List<BuildPack>) HibernateUtil.openSession()
+			return (List<Pack>) HibernateUtil.openSession()
 					.createCriteria(getInfoClass())
 					.add(Restrictions.not(Restrictions.eq("status", BuildPackStatus.published)))
 					.add(Restrictions.in("buildNo", bp.getDepends()))

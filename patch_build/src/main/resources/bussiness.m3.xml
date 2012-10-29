@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="GBK" ?>
+<busslist>
+    <buss>
+        <type>pack</type>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <service>com.m3.patchbuild.pack.PackService</service>
+        <singleton>true</singleton>
+    </buss>
+    <buss>
+        <type>branch</type>
+        <info>com.m3.patchbuild.branch.Branch</info>
+        <service>com.m3.patchbuild.branch.BranchService</service>
+        <singleton>true</singleton>
+    </buss>
+    <buss>
+        <type>patch</type>
+        <info>com.m3.patchbuild.patch.Patch</info>
+        <service>com.m3.patchbuild.patch.PatchService</service>
+        <singleton>true</singleton>
+    </buss>
+    <buss>
+        <type>user</type>
+        <info>com.m3.patchbuild.user.User</info>
+        <service>com.m3.patchbuild.user.UserService</service>
+        <singleton>true</singleton>
+    </buss>
+</busslist>

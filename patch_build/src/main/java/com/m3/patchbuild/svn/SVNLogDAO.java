@@ -1,4 +1,4 @@
-package com.m3.patchbuild.common.dao;
+package com.m3.patchbuild.svn;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,10 +9,9 @@ import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.HibernateUtil;
 import com.m3.patchbuild.BaseDAO;
-import com.m3.patchbuild.branch.BuildBranch;
-import com.m3.patchbuild.common.info.SVNLog;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.pack.BuildFile;
-import com.m3.patchbuild.pack.BuildPack;
+import com.m3.patchbuild.pack.Pack;
 
 /**
  * 处理SVN日志的DAO对象
@@ -49,7 +48,7 @@ public class SVNLogDAO extends BaseDAO {
 		}
 	}
 	
-	public long getMaxRevision(BuildBranch branch) {
+	public long getMaxRevision(Branch branch) {
 		try {
 			Object value = HibernateUtil.openSession()
 				.createCriteria(SVNLog.class)
@@ -71,7 +70,7 @@ public class SVNLogDAO extends BaseDAO {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<SVNLog> findByKeywords(BuildBranch branch, String keywords) {
+	public List<SVNLog> findByKeywords(Branch branch, String keywords) {
 		StringBuilder sql = new StringBuilder("from SVNLog as l where l.branch = :branch");
 		if (keywords != null) {
 			sql.append(" AND (");
@@ -98,7 +97,7 @@ public class SVNLogDAO extends BaseDAO {
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
-	public void fillBuildPack(BuildPack pack, String[] paths)  {
+	public void fillBuildPack(Pack pack, String[] paths)  {
 		
 		if (paths.length == 0)
 			return;

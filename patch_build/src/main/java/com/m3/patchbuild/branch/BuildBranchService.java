@@ -18,15 +18,15 @@ public class BuildBranchService {
 	 * @param branch
 	 * @return
 	 */
-	public static BuildBranch getBranch(String branch) {
-		return (BuildBranch)dao.findByBillNo(BaseDAO.getBillNo("branch", branch));
+	public static Branch getBranch(String branch) {
+		return (Branch)dao.findByBillNo(BaseDAO.getBillNo("branch", branch));
 	}
 	
 	/**
 	 * 保存一个分支对象
 	 * @param branch
 	 */
-	public static void saveBranch(BuildBranch branch) {
+	public static void saveBranch(Branch branch) {
 		dao.saveInfo(branch);
 	}
 	
@@ -34,7 +34,7 @@ public class BuildBranchService {
 	 * 获取系统中的所有分支信息
 	 * @return
 	 */
-	public static List<BuildBranch> listAllBranch() {
+	public static List<Branch> listAllBranch() {
 		return dao.listAllBranch();
 	}
 

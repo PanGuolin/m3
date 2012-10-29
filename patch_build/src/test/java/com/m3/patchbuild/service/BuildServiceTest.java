@@ -7,14 +7,15 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import com.m3.common.HibernateUtil;
-import com.m3.patchbuild.branch.BuildBranch;
+import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
-import com.m3.patchbuild.common.info.SVNLog;
-import com.m3.patchbuild.common.service.SVNLogService;
 import com.m3.patchbuild.pack.BuildFile;
-import com.m3.patchbuild.pack.BuildPack;
-import com.m3.patchbuild.pack.BuildPackService;
+import com.m3.patchbuild.pack.Pack;
+import com.m3.patchbuild.pack.PackService;
 import com.m3.patchbuild.pack.CheckInfo;
+import com.m3.patchbuild.svn.SVNLog;
+import com.m3.patchbuild.svn.SVNLogService;
 
 public class BuildServiceTest extends TestCase{
 
@@ -24,13 +25,14 @@ public class BuildServiceTest extends TestCase{
 	
 	public void test_build() throws Exception{
 		HibernateUtil.openSession();
+		PackService packService = (PackService)BussFactory.getService(Pack.class);
 		try {
-			BuildPack bp = BuildPackService.find(branchNo, buildNo);
+			Pack bp = packService.find(branchNo, buildNo);
 			if (bp == null) {
-				bp = new BuildPack();
+				bp = new Pack();
 			}
 			
-			BuildBranch branch = BuildBranchService.getBranch(branchNo);
+			Branch branch = BuildBranchService.getBranch(branchNo);
 			bp.setBranch(branch);
 			bp.setBuildNo(buildNo);
 			bp.setRequester("developer");
@@ -45,13 +47,13 @@ public class BuildServiceTest extends TestCase{
 				bp.getBuildFiles().add(file);
 			}
 			bp.setKeywords(keyword);
-			BuildPackService.prepareBuild(bp, set.toArray(new String[set.size()]));
+			packService.prepareBuild(bp, set.toArray(new String[set.size()]));
 			
 			CheckInfo info = new CheckInfo();
 			info.setMessage("测试检查");
 			info.setPass(true);
 			info.setUser("designer");
-			BuildPackService.check(bp, info);
+			packService.check(bp, info);
 		} finally {
 			HibernateUtil.closeSession();
 		}

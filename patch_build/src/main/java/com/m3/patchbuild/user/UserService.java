@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.m3.common.MD5Util;
 import com.m3.common.StringUtil;
+import com.m3.patchbuild.AbstractService;
 import com.m3.patchbuild.BaseDAO;
 
 /**
@@ -11,8 +12,15 @@ import com.m3.patchbuild.BaseDAO;
  * @author MickeyMic
  *
  */
-public class UserService {
-	private static UserDAO dao = new UserDAO();
+public class UserService extends AbstractService{
+	
+	public UserService() {
+		super(new UserDAO());
+	}
+
+	public UserDAO getDao() {
+		return (UserDAO)super.getDao();
+	}
 	
 	/**
 	 * 检查用户口令合并性，如果合法则返回User对象
@@ -21,7 +29,7 @@ public class UserService {
 	 * @return 用户对象
 	 * @throws Exception
 	 */
-	public static User checkUser(String userId, String password) {
+	public User checkUser(String userId, String password) {
 		User user = findUser(userId);
 		if (user == null)
 			return user;
@@ -34,24 +42,24 @@ public class UserService {
 	 * @param userId
 	 * @return
 	 */
-	public static User findUser(String userId) {
-		return (User) dao.findByBillNo(BaseDAO.getBillNo("userId", userId));
+	public User findUser(String userId) {
+		return (User) getDao().findByBillNo(BaseDAO.getBillNo("userId", userId));
 	}
 	
-	public static void save(User user) throws Exception {
+	public void save(User user) throws Exception {
 		if (!user.isSVNUser() && !StringUtil.isEmpty(user.getPassword())) {
 			user.setPassword(MD5Util.getMD5(user.getUserId() + user.getPassword()));
 		}
-		dao.saveInfo(user);
+		getDao().saveInfo(user);
 		
 	}
 
-	public static void delete(User user) {
-		dao.delete(user);
+	public void delete(User user) {
+		getDao().delete(user);
 	}
 
-	public static List<User> findUser(UserRoleEnum role) {
-		return dao.findByRole(role);
+	public List<User> findUser(UserRoleEnum role) {
+		return getDao().findByRole(role);
 	}
 
 }

@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.m3.patchbuild.IBussInfo;
+
 /**
  * 构建分支信息对象
  * @author MickeyMic
@@ -15,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name="PB_Branch")
-public class BuildBranch {
+public class Branch implements IBussInfo{
 	
 	public static final String DIR_SVN = "svn"; //SVN文件目录名称
 	public static final String DIR_JAVA_SRC = "src"; //java文件保存目录名称
