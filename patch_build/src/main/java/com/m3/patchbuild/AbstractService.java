@@ -20,7 +20,7 @@ public class AbstractService implements IService{
 		}
 	}
 	
-	public BaseDAO getDao() {
+	protected BaseDAO getDao() {
 		return dao;
 	}
 

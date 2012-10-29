@@ -53,7 +53,7 @@ public class BuildService {
 		//从数据库中读取上次未构建的任务重新进行构建
 		try {
 			List<Pack> list = ((PackService)BussFactory.getService(Pack.class))
-					.listByStatus(BuildPackStatus.checked);
+					.listByStatus(PackStatus.checked);
 			synchronized (queue) {
 				for (Pack bp : list) {
 					queue.add(bp);

@@ -1,7 +1,7 @@
 package com.m3.patchbuild.exception;
 
 import com.m3.patchbuild.pack.Pack;
-import com.m3.patchbuild.pack.BuildPackStatus;
+import com.m3.patchbuild.pack.PackStatus;
 
 /**
  * 不正确的构建包状态异常
@@ -12,18 +12,18 @@ public class IllegalBPStateException extends BuildPackException{
 
 	private static final long serialVersionUID = 1L;
 
-	private BuildPackStatus expected; //预期状态
+	private PackStatus expected; //预期状态
 
-	public IllegalBPStateException(Pack bp, BuildPackStatus expected) {
+	public IllegalBPStateException(Pack bp, PackStatus expected) {
 		super(bp);
 		this.expected = expected;
 	}
 
-	public BuildPackStatus getExpected() {
+	public PackStatus getExpected() {
 		return expected;
 	}
 
-	public BuildPackStatus getActual() {
+	public PackStatus getActual() {
 		return super.buildPack.getStatus();
 	}
 

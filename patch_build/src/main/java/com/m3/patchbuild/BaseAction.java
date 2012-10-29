@@ -1,13 +1,17 @@
 package com.m3.patchbuild;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.m3.common.ContextUtil;
 import com.m3.common.HibernateUtil;
 import com.m3.common.StringUtil;
+import com.m3.patchbuild.user.FunctionPerm;
+import com.m3.patchbuild.user.FunctionPermService;
 import com.m3.patchbuild.user.User;
-import com.m3.patchbuild.user.UserRoleEnum;
+import com.m3.patchbuild.user.UserRole;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 
@@ -44,34 +48,40 @@ public abstract class BaseAction implements Action {
 	}
 
 	final public String execute() throws Exception {
-		UserRoleEnum[] roles = getAccessableRoles();
-		if (roles != null) {
+		
+		FunctionPermService fpService = (FunctionPermService)BussFactory.getService(FunctionPerm.class);
+		List<String> roles = fpService.listRoleByAction(this.getClass());
+		if (roles != null && !roles.isEmpty()) {
 			User user = getLoginUser();
 			if (user == null) {
 				setTips("用户必须登录才能继续操作");
 				return LOGIN;
 			}
-			boolean valid = false;
-			for (UserRoleEnum role : roles) {
+			boolean hasRole = false;
+			for (String role : roles) {
+				if (UserRole.loginedUser.equals(role)) {
+					hasRole = true;
+					break;
+				}
 				if (user.hasRole(role)) {
-					valid = true;
+					hasRole = true;
 					break;
 				}
 			}
-			if (!valid) {
-				if (user != null) {
-					setTips("当前用户没有权限执行本操作");
-					return INPUT;
-				}
+			if (!hasRole) {
+				setTips("用户没有执行当前功能的权限！");
+				return LOGIN;
 			}
-			
 		}
+		
+		User user = getLoginUser();
+		ContextUtil.setUserId(user == null ? null : user.getUserId());
 		try {
 			HibernateUtil.openSession();
 			return doExecute();
 		} catch (Throwable ex) {
 			logger.error("Action发生异常", ex);
-			setTips("程序发生异常:" + ex.getMessage());
+			setTips("错误:" + ex.getMessage());
 			return ERROR;
 		} finally {
 			HibernateUtil.closeSession();
@@ -82,12 +92,4 @@ public abstract class BaseAction implements Action {
 
 	protected abstract String doExecute() throws Exception;
 	
-	/**
-	 * 获取有权限执行当前action的角色列表，返回空或null表示任意人都可以执行
-	 * TODO: 修改为可配置方式
-	 * @return
-	 */
-	public UserRoleEnum[] getAccessableRoles() {
-		return null;
-	}
 }

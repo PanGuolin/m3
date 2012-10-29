@@ -119,13 +119,13 @@ public class User implements IBussInfo{
 		this.roles = roles;
 	}
 	
-	public void addRole(UserRoleEnum role) {
+	public void addRole(String role) {
 		if (role != null)
-			this.roles.add(role.name());
+			this.roles.add(role);
 	}
 	
-	public boolean hasRole(UserRoleEnum role) {
-		return this.roles.contains(role.name());
+	public boolean hasRole(String role) {
+		return this.roles.contains(role);
 	}
 
 	public String getUsername() {

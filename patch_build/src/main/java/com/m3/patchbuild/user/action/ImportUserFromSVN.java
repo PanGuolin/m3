@@ -6,7 +6,7 @@ import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.BuildBranchService;
 import com.m3.patchbuild.user.User;
-import com.m3.patchbuild.user.UserRoleEnum;
+import com.m3.patchbuild.user.UserRole;
 import com.m3.patchbuild.user.UserService;
 
 public class ImportUserFromSVN extends BaseAction{
@@ -25,7 +25,7 @@ public class ImportUserFromSVN extends BaseAction{
 		Branch bBranch = BuildBranchService.getBranch(branch);
 		if (SVNUtil.checkLogin(bBranch.getSvnUrl(), user.getUserId(), user.getPassword())) {
 			user.getRoles().clear();
-			user.addRole(UserRoleEnum.developer);
+			user.addRole(UserRole.developer);
 			userService.save(user);
 			return SUCCESS;
 		} else {

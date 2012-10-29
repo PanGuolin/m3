@@ -1,4 +1,4 @@
-package com.m3.patchbuild.htmltemplate;
+package com.m3.patchbuild.template;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,11 +23,11 @@ public class HtmlTemplateDAO {
 	public static final String FILE_SUFFIX = ".htpl";
 	
 	private static File root = null;
-	
-	static {
+	 
+	static { 
 		try {
-			String dir = HtmlTemplateDAO.class.getResource(TEMPLATE_DIR).getFile();
-			root = new File(dir);
+			String dir = HtmlTemplateDAO.class.getResource("/").getFile();
+			root = new File(dir, TEMPLATE_DIR);
 		} catch (Throwable t) {
 			logger.error("初始化HTML模板文件根目录时出错", t);
 		}

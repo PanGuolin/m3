@@ -12,9 +12,9 @@ import com.m3.patchbuild.branch.BuildBranchService;
 import com.m3.patchbuild.pack.BuildFile;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
-import com.m3.patchbuild.pack.BuildPackStatus;
+import com.m3.patchbuild.pack.PackStatus;
 import com.m3.patchbuild.user.User;
-import com.m3.patchbuild.user.UserRoleEnum;
+import com.m3.patchbuild.user.UserRole;
 
 public class HibernateTest extends TestCase{
 	
@@ -29,7 +29,7 @@ public class HibernateTest extends TestCase{
 		bp.setBuildNo("test_build");
 		bp.setBranch(branch);
 		bp.addDepends("depend1");
-		bp.setStatus(BuildPackStatus.published);
+		bp.setStatus(PackStatus.published);
 		
 		BuildFile file = new BuildFile();
 		file.setUrl("test url");
@@ -68,7 +68,7 @@ public class HibernateTest extends TestCase{
 		user.setEmail("pangl@threemickey.com");
 		user.setPassword("test");
 		user.setUserId("pangl");
-		user.getRoles().add(UserRoleEnum.admin.name());
+		user.getRoles().add(UserRole.admin);
 		sess.save(user);
 		tx.commit();
 		sess.close();

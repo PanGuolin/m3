@@ -8,18 +8,17 @@
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.username">patchbuild</property>
         <property name="hibernate.connection.password">patchbuild</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/patch_build?generateSimpleParameterMetadata=true</property>
+        <property name="connection.url">jdbc:mysql://localhost:3307/patch_build?generateSimpleParameterMetadata=true</property>
         <property name="connection.useUnicode">true</property>
     	<property name="connection.characterEncoding">UTF-8</property>
         <property name="format_sql">false</property>
 		<property name="show_sql">true</property>
 		<mapping class="com.m3.patchbuild.pack.BuildFile" />
         <mapping resource="patch_build.hbm.xml"/>
-        <mapping class="com.m3.patchbuild.branch.BuildBranch" />
+        <mapping class="com.m3.patchbuild.branch.Branch" />
         <mapping class="com.m3.patchbuild.user.User" />
-        <mapping class="com.m3.patchbuild.common.info.SVNLog" />
-        <mapping class="com.m3.patchbuild.common.info.HtmlTemplate" />
-        <mapping class="com.m3.patchbuild.patch.PatchInfo" />
+        <mapping class="com.m3.patchbuild.svn.SVNLog" />
+        <mapping class="com.m3.patchbuild.patch.Patch" />
         
          <mapping resource="common.hbm.xml"/>
         

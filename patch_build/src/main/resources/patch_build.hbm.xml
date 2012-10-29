@@ -3,7 +3,7 @@
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.m3.patchbuild.pack">
-	<class name="BuildPack" table="PB_BuildPack">
+	<class name="Pack" table="PB_BuildPack">
 		<id name="uuid" column="UUID" unsaved-value="null">
 			<generator class="uuid2"/>
 		</id>
@@ -26,7 +26,7 @@
 		<property name="failReason"		column="failReason" 	type="string" lazy="true"/>
 		<property name="status"			column="status">
 			<type name="org.hibernate.type.EnumType">
-				<param name="enumClass">com.m3.patchbuild.pack.BuildPackStatus</param>
+				<param name="enumClass">com.m3.patchbuild.pack.PackStatus</param>
 				<param name="type">12</param>
 			</type>
 		</property>
@@ -39,7 +39,7 @@
        		<element type="string" column="dependNo"/>
        </set>
        <many-to-one name="branch" column="branch" 
-   			class="com.m3.patchbuild.branch.BuildBranch" fetch="join" 
+   			class="com.m3.patchbuild.branch.Branch" fetch="join" 
    			property-ref="branch"/>
 	</class>
 </hibernate-mapping>

@@ -1,4 +1,4 @@
-package com.m3.patchbuild.htmltemplate;
+package com.m3.patchbuild.template;
 
 import java.io.IOException;
 

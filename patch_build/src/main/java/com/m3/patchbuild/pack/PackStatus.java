@@ -5,7 +5,7 @@ package com.m3.patchbuild.pack;
  * @author MickeyMic
  *
  */
-public enum BuildPackStatus {
+public enum PackStatus {
 
 	init, //初始状态
 	request, //请求构建

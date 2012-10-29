@@ -13,10 +13,10 @@ import com.m3.common.EncodeUtil;
 import com.m3.common.mail.MailInfo;
 import com.m3.common.mail.MailServer;
 import com.m3.patchbuild.BussFactory;
-import com.m3.patchbuild.htmltemplate.HtmlTemplateService;
 import com.m3.patchbuild.pack.Pack;
+import com.m3.patchbuild.template.HtmlTemplateService;
 import com.m3.patchbuild.user.User;
-import com.m3.patchbuild.user.UserRoleEnum;
+import com.m3.patchbuild.user.UserRole;
 import com.m3.patchbuild.user.UserService;
 
 /**
@@ -87,12 +87,12 @@ public class MailService {
 			{
 				Set<User> superiors = reqUser.getSuperiors();
 				for (User user : superiors) {
-					if (user.hasRole(UserRoleEnum.designer)) {
+					if (user.hasRole(UserRole.designer)) {
 						toUsers.add(user);
 					}
 				}
 				if (toUsers.isEmpty())
-					toUsers.addAll(userService.findUser(UserRoleEnum.designer));
+					toUsers.addAll(userService.findUserByRole(UserRole.designer));
 			}
 				subject = MAIL_SUBJ_REQUEST;
 				content = MAIL_CONT_REQUEST;
@@ -113,12 +113,12 @@ public class MailService {
 			{
 				Set<User> superiors = reqUser.getSuperiors();
 				for (User user : superiors) {
-					if (user.hasRole(UserRoleEnum.testmanager)) {
+					if (user.hasRole(UserRole.testmanager)) {
 						toUsers.add(user);
 					}
 				}
 				if (toUsers.isEmpty())
-					toUsers.addAll(userService.findUser(UserRoleEnum.testmanager));
+					toUsers.addAll(userService.findUserByRole(UserRole.testmanager));
 			}
 				subject = MAIL_SUBJ_BUILD;
 				content = MAIL_CONT_BUILD;
@@ -127,12 +127,12 @@ public class MailService {
 			{
 				Set<User> superiors = reqUser.getSuperiors();
 				for (User user : superiors) {
-					if (user.hasRole(UserRoleEnum.deployer)) {
+					if (user.hasRole(UserRole.deployer)) {
 						toUsers.add(user);
 					}
 				}
 				if (toUsers.isEmpty())
-					toUsers.addAll(userService.findUser(UserRoleEnum.deployer));
+					toUsers.addAll(userService.findUserByRole(UserRole.deployer));
 				ccUsers.add(reqUser);
 			}
 				subject = MAIL_SUBJ_PASS;
@@ -153,12 +153,12 @@ public class MailService {
 				toUsers.add(reqUser);
 				Set<User> superiors = reqUser.getSuperiors();
 				for (User user : superiors) {
-					if (user.hasRole(UserRoleEnum.deployer)) {
+					if (user.hasRole(UserRole.deployer)) {
 						toUsers.add(user);
 					}
 				}
 				if (toUsers.isEmpty())
-					toUsers.addAll(userService.findUser(UserRoleEnum.deployer));
+					toUsers.addAll(userService.findUserByRole(UserRole.deployer));
 				subject = MAIL_SUBJ_PUBLISH;
 				content = MAIL_CONT_PUBLISH;
 				break;

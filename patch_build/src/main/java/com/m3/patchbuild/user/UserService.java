@@ -18,7 +18,7 @@ public class UserService extends AbstractService{
 		super(new UserDAO());
 	}
 
-	public UserDAO getDao() {
+	protected UserDAO getDao() {
 		return (UserDAO)super.getDao();
 	}
 	
@@ -58,7 +58,7 @@ public class UserService extends AbstractService{
 		getDao().delete(user);
 	}
 
-	public List<User> findUser(UserRoleEnum role) {
+	public List<User> findUserByRole(String role) {
 		return getDao().findByRole(role);
 	}
 

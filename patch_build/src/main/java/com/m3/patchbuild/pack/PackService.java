@@ -72,15 +72,15 @@ public class PackService extends AbstractService {
 
 		Pack oldPack = find(bp.getBranch().getBranch(), bp.getBuildNo());
 		if (oldPack != null) {
-			BuildPackStatus status = oldPack.getStatus();
-			if (!BuildPackStatus.buildFail.equals(status) && 
-					!BuildPackStatus.checkFail.equals(status) &&
-					!BuildPackStatus.testFail.equals(status)  && 
-					!BuildPackStatus.builded.equals(status) &&
-					!BuildPackStatus.request.equals(status)) {
+			PackStatus status = oldPack.getStatus();
+			if (!PackStatus.buildFail.equals(status) && 
+					!PackStatus.checkFail.equals(status) &&
+					!PackStatus.testFail.equals(status)  && 
+					!PackStatus.builded.equals(status) &&
+					!PackStatus.request.equals(status)) {
 				throw new PackExistsException(bp, oldPack);
 			}
-			if (BuildPackStatus.builded.equals(status) && 
+			if (PackStatus.builded.equals(status) && 
 					oldPack.getRequester() != null &&
 					!oldPack.getRequester().equals(bp.getRequester())) {
 				throw new PackExistsException(bp, oldPack);
@@ -112,7 +112,7 @@ public class PackService extends AbstractService {
 		}
 		bp.setRequester(ContextUtil.getUserId());
 		bp.setRequestTime(new Date());
-		bp.setStatus(BuildPackStatus.request);
+		bp.setStatus(PackStatus.request);
 		getDao().saveInfo(bp);
 		BuildService.add(bp);
 		//保存成功后发邮件通知
@@ -128,7 +128,7 @@ public class PackService extends AbstractService {
 	public void check(Pack bp, CheckInfo info) throws Exception {
 		bp.setChecker(info.getUser());
 		bp.setCheckTime(new Date());
-		bp.setStatus(info.isPass() ? BuildPackStatus.checked : BuildPackStatus.checkFail);
+		bp.setStatus(info.isPass() ? PackStatus.checked : PackStatus.checkFail);
 		bp.setFailReason(info.isPass() ? "" : info.getMessage());
 		save(bp);
 		MailService.sendMail(bp);
@@ -153,7 +153,7 @@ public class PackService extends AbstractService {
 	 * 列出所有待构建(检查通过)的构建包信息
 	 * @return
 	 */
-	public List<Pack> listByStatus(BuildPackStatus status) {
+	public List<Pack> listByStatus(PackStatus status) {
 		return getDao().listByStatus(status);
 	}
 
@@ -177,8 +177,8 @@ public class PackService extends AbstractService {
 		Branch branch = bp.getBranch();
 		if (!StringUtil.isEmpty(branch.getParent()))
 			throw new NotMainBranchException(bp);
-		if (!BuildPackStatus.pass.equals(bp.getStatus())) {
-			throw new IllegalBPStateException(bp, BuildPackStatus.pass);
+		if (!PackStatus.pass.equals(bp.getStatus())) {
+			throw new IllegalBPStateException(bp, PackStatus.pass);
 		}
 		//不能发布有依赖（未发布）的构建包
 		List<Pack> depends = getDao().listUnpublishDepends(bp);

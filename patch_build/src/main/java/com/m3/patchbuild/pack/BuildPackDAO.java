@@ -37,7 +37,7 @@ public class BuildPackDAO extends BaseDAO {
 		return Pack.class;
 	}
 
-	public List<Pack> listByStatus(BuildPackStatus status) {
+	public List<Pack> listByStatus(PackStatus status) {
 		try {
 			return (List<Pack>) HibernateUtil.openSession()
 					.createCriteria(getInfoClass())
@@ -58,7 +58,7 @@ public class BuildPackDAO extends BaseDAO {
 		try {
 			return (List<Pack>) HibernateUtil.openSession()
 					.createCriteria(getInfoClass())
-					.add(Restrictions.not(Restrictions.eq("status", BuildPackStatus.published)))
+					.add(Restrictions.not(Restrictions.eq("status", PackStatus.published)))
 					.add(Restrictions.in("buildNo", bp.getDepends()))
 					.list();
 		} finally {

@@ -36,7 +36,7 @@
 				<tr>
 					<td colspan="6" class="r"><s:submit value="提交构建" name="build"/></td>
 				</tr>
-			<table>
+			</table>
  		</s:form>
 	</div>
 </body>

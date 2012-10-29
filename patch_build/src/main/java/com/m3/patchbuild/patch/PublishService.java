@@ -17,7 +17,7 @@ import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.message.MailService;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
-import com.m3.patchbuild.pack.BuildPackStatus;
+import com.m3.patchbuild.pack.PackStatus;
 
 /**
  * 发布服务
@@ -116,12 +116,12 @@ public class PublishService {
 			public synchronized void run() {
 				try {
 					doBuild();
-					bp.setStatus(BuildPackStatus.published);
+					bp.setStatus(PackStatus.published);
 					bp.setPatch(patch.getName());
 					//发送相应的邮件
 				} catch (Exception e) {
 					logger.error("执行构建时出错", e);
-					bp.setStatus(BuildPackStatus.publishFail);
+					bp.setStatus(PackStatus.publishFail);
 					ByteArrayOutputStream bo = new ByteArrayOutputStream();
 					e.printStackTrace(new PrintStream(bo));
 					bp.setFailReason(bo.toString());

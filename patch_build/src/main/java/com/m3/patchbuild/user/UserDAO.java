@@ -18,12 +18,12 @@ public class UserDAO extends BaseDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<User> findByRole(UserRoleEnum role) {
+	public List<User> findByRole(String role) {
 		try {
 			return HibernateUtil.openSession()
 					.createSQLQuery("select {user.*} from PB_User user left join PB_UserRole role on user.uuid = role.Useruuid and role.roles = :role")
 					.addEntity("user", User.class)
-					.setParameter("role", role.name())
+					.setParameter("role", role)
 					.list();
 		} finally {
 			HibernateUtil.closeSession();
