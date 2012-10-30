@@ -2,6 +2,7 @@ package com.m3.patchbuild.svn;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Projections;
@@ -97,18 +98,19 @@ public class SVNLogDAO extends BaseDAO {
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
-	public void fillBuildPack(Pack pack, String[] paths)  {
-		
-		if (paths.length == 0)
+	public void fillBuildPack(Pack pack, Set<String> paths)  {
+		if (paths.isEmpty())
 			return;
 		StringBuilder sql = new StringBuilder("SELECT {l.*} FROM pb_svnlog l")
 			.append(" INNER JOIN (SELECT MAX(revision) r, path p FROM pb_svnlog GROUP BY path) m")
 			.append(" ON l.revision = m.r and l.path = m.p WHERE branch = '" + pack.getBranch().getBranch() + "'")
 			.append(" AND (");
-		for (int i=0; i<paths.length; i++) {
-			if (i > 0)
+		boolean first = true;
+		for (String path : paths) {
+			if (!first)
 				sql.append(" OR");
-			sql.append(" l.path = '" + paths[i] + "'");
+			sql.append(" l.path= '" + path + "'");
+			first = false;
 		}
 		sql.append(")");
 		

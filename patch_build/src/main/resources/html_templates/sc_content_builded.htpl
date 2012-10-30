@@ -1,0 +1,7 @@
+您好！<br/>
+ &nbsp;&nbsp;&nbsp;&nbsp; <b>${BP.buildNo}</b>已成功构建，补丁分支：<b>${BP.branch.branch}</b>，构建申请人：${BP.requester}<br/>
+ &nbsp;&nbsp;&nbsp;&nbsp; 只有设计师的检查通过的补丁才能进入测试，如果您是该申请人的主检查设计师，请登录系统进行检查<br/>
+ 谢谢<br/>
+ <br/>
+
+<i>本邮件由系统自动发出，请匆回复！</i>

@@ -1,6 +1,8 @@
 package com.m3.common;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +54,8 @@ public class SVNUtilTest extends TestCase {
 				"cms/src/main/webapp/cms/AllMatureQuery.jsp"
 		};
 		
-		SVNUtil.getFile(svnRoot, "pangl", "pangl1q", root, urls);
+		Set<String> set = new HashSet<String>();
+		set.addAll(Arrays.asList(urls));
+		SVNUtil.getFile(svnRoot, "pangl", "pangl1q", root, set);
 	}
 }

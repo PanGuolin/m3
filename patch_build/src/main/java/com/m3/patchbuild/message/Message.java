@@ -1,11 +1,17 @@
 package com.m3.patchbuild.message;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -18,7 +24,7 @@ import com.m3.patchbuild.IBussInfo;
  *
  */
 @Entity
-@Table(name="PB_Message")
+@Table(name="Msg_Message")
 public class Message implements IBussInfo{
 	
 	public static final int TYPE_VIEW = 1;
@@ -29,8 +35,17 @@ public class Message implements IBussInfo{
 	@Column(name = "uuid", unique = true)
 	private String uuid;
 	
-	@Column(name="group")
-	private String group; //消息分组
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "Msg_Notifier", joinColumns = @JoinColumn(name = "MessageId"))
+	private Set<String> notifiers = new HashSet<String>();//消息通知人列表
+	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "Msg_Reciever", joinColumns = @JoinColumn(name = "MessageId"))
+	private Set<String> recievers = new HashSet<String>();//消息接收人列表
+	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "Msg_Attachment", joinColumns = @JoinColumn(name = "MessageId"))
+	private Set<String> attachments = new HashSet<String>();//消息接收人列表
 	
 	@Column(name="bussType")
 	private String bussType; //业务类别
@@ -47,12 +62,20 @@ public class Message implements IBussInfo{
 	@Column(name="messageType")
 	private int messageType; //消息类型
 	
-	@Column(name="owner")
-	private String owner; //消息消息用户
+	@Column(name="operator")
+	private String operator; //处理人
 	
-	private Date createTime; //创建时间
+	@Column(name="operateTime")
+	private Date operateTime;//处理时间
 	
-	private Date dealTime; //处理时间
+	@Column(name="sender")
+	private String sender; //发送人
+	
+	@Column(name="sendTime")
+	private Date sendTime; //发送时间
+	
+	@Column(name="status")
+	private int status; //消息状态
 
 	public String getUuid() {
 		return uuid;
@@ -62,12 +85,20 @@ public class Message implements IBussInfo{
 		this.uuid = uuid;
 	}
 
-	public String getGroup() {
-		return group;
+	public Set<String> getNotifiers() {
+		return notifiers;
 	}
 
-	public void setGroup(String group) {
-		this.group = group;
+	public void setNotifiers(Set<String> notifiers) {
+		this.notifiers = notifiers;
+	}
+
+	public Set<String> getRecievers() {
+		return recievers;
+	}
+
+	public void setRecievers(Set<String> recievers) {
+		this.recievers = recievers;
 	}
 
 	public String getBussType() {
@@ -110,13 +141,51 @@ public class Message implements IBussInfo{
 		this.messageType = messageType;
 	}
 
-	public String getOwner() {
-		return owner;
+	public String getOperator() {
+		return operator;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
-	
 
+	public Date getOperateTime() {
+		return operateTime;
+	}
+
+	public void setOperateTime(Date operateTime) {
+		this.operateTime = operateTime;
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public Set<String> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<String> attachments) {
+		this.attachments = attachments;
+	}
 }

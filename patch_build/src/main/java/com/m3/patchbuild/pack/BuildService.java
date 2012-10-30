@@ -1,12 +1,14 @@
 package com.m3.patchbuild.pack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.m3.patchbuild.BussFactory;
-import com.m3.patchbuild.branch.BuildBranchDAO;
 
 /**
  * 构建服务，处理系统构建
@@ -18,7 +20,9 @@ public class BuildService {
 	
 	private static List<Pack> queue = new ArrayList<Pack>(); //待构建队列
 	
-	private static List<BuildThread> buildThreads = new ArrayList<BuildThread>(); //构建线程
+	private static Map<Pack, Set<String>> fileMap= new HashMap<Pack, Set<String>>();
+	
+	private static Map<String, BuildThread> buildThreads = new HashMap<String, BuildThread>(); //构建线程
 	
 	private static int threadSize = 3; //同时运行的线程数量
 	
@@ -26,15 +30,17 @@ public class BuildService {
 		startMonitor();
 	}
 	
-	public static void add(Pack buildPack) {
+	public static void add(Pack pack, Set<String> files) {
 		synchronized (queue) {
-			queue.add(buildPack);
+			fileMap.put(pack, files);
+			queue.add(pack);
 			queue.notifyAll();
 		}
 	}
 	
-	public static void buildComplete() {
+	public static void buildComplete(Pack pack) {
 		synchronized (queue) {
+			buildThreads.remove(pack.getBuildNo());
 			queue.notifyAll();
 		}
 	}
@@ -69,32 +75,33 @@ public class BuildService {
 			public void run() {
 				while(true) {
 					synchronized (queue) {
-						boolean begin = false;
-						if (!queue.isEmpty()) {
-							//判断是否有可用的线程，否则等待
-							for (BuildThread thread : buildThreads) {
-								if (thread.isAlive()) {
-									thread.startBuild(queue.remove(0));
-									begin = true;
-									break;
-								}
-							}
-							if (!begin) {
-								if (buildThreads.size() < threadSize) {
+						try {
+							if (!queue.isEmpty()) {
+								Pack pack = queue.remove(0);
+								//正在构建相同的包，则忽略现有
+								if (buildThreads.containsKey(pack.getBuildNo())) {
+									logger.error("相同的构建包正在构建当中，放弃当前构建" + pack.getBuildNo());
+								} else if (buildThreads.size() >= threadSize) {
+									try {
+										Thread.sleep(1000);
+									} catch (Throwable t) {
+										logger.error("构建监控线程等待时出错", t);
+									}
+									queue.add(0, pack);
+								} else {
 									BuildThread thread = new BuildThread();
-									thread.setDaemon(true);
-									buildThreads.add(thread);
-									thread.startBuild(queue.remove(0));
-									begin = true;
+									buildThreads.put(pack.getBuildNo(), thread);
+									thread.startBuild(pack, fileMap.remove(pack));
+								}
+							} else {
+								try {
+									queue.wait();
+								} catch (InterruptedException e) {
+									logger.error("构建监控线程等待时出错", e);
 								}
 							}
-						}
-						if (!begin) {
-							try {
-								queue.wait();
-							} catch (InterruptedException e) {
-								logger.error("构建监控线程等待时出错", e);
-							}
+						} catch (Throwable t) {
+							logger.error("构建时出错", t);
 						}
 					}
 				}
@@ -103,15 +110,4 @@ public class BuildService {
 		monitor.setDaemon(true);
 		monitor.start();
 	}
-	
-	private static BuildBranchDAO dao = new BuildBranchDAO();
-	/**
-	 * 获取分支对应的构建脚本
-	 * @param branch
-	 * @return
-	 */
-	public static String getBuildScript(String branch) {
-		return dao.getBuildScript(branch);
-	}
-
 }

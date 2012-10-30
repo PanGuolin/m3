@@ -15,7 +15,7 @@ import com.m3.patchbuild.BaseDAO;
  * 
  */
 @SuppressWarnings("unchecked")
-public class BuildPackDAO extends BaseDAO {
+public class PackDAO extends BaseDAO {
 	private static final List<Pack> empty = new ArrayList<Pack>();
 
 	public Pack find(String branch, String buildNo) {

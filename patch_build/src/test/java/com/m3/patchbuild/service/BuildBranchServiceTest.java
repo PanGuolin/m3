@@ -1,7 +1,7 @@
 package com.m3.patchbuild.service;
 
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.branch.BranchService;
 
 import junit.framework.TestCase;
 
@@ -9,7 +9,7 @@ public class BuildBranchServiceTest extends TestCase{
 	
 	public void test_createBuildBranch() {
 		
-		Branch branch = BuildBranchService.getBranch("testbranch");
+		Branch branch = BranchService.getBranch("testbranch");
 		if (branch == null)
 			branch = new Branch();
 		branch.setBranch("testbranch");
@@ -20,11 +20,11 @@ public class BuildBranchServiceTest extends TestCase{
 		branch.setSvnUrl("https://svn.bytter.com/svn/BTFMS/");
 		branch.setSvnRoot("");
 		branch.setWorkspace("d:/patch_build/testbranch");
-		BuildBranchService.saveBranch(branch);
+		BranchService.saveBranch(branch);
 		
 		
 		
-		 branch = BuildBranchService.getBranch("sp1");
+		 branch = BranchService.getBranch("sp1");
 			if (branch == null)
 				branch = new Branch();
 		branch.setBranch("sp1");
@@ -35,7 +35,7 @@ public class BuildBranchServiceTest extends TestCase{
 		branch.setSvnUrl("https://svn.bytter.com/svn/v101/v10.2二季度产品维护/工程过程/实现与测试/branches/v10.3_20120720_sp1/");
 		branch.setSvnRoot("/v10.2二季度产品维护/工程过程/实现与测试/branches/v10.3_20120720_sp1/");
 		branch.setWorkspace("d:/patch_build/sp1");
-		BuildBranchService.saveBranch(branch);
+		BranchService.saveBranch(branch);
 	}
 
 }

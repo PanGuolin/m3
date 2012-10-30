@@ -30,7 +30,7 @@ public class Branch implements IBussInfo{
 	@Column(name = "uuid", unique = true)
 	private String uuid; //唯一标识
 	
-	@Column(name="branch")
+	@Column(name="branch", unique=true)
 	private String branch; //分支标识
 	
 	@Column(name="name")

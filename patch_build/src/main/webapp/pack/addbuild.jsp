@@ -2,7 +2,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ page isELIgnored="false" %>
-<%@page import="com.m3.patchbuild.branch.BuildBranchService" %>
+<%@page import="com.m3.patchbuild.branch.BranchService" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html>
@@ -46,7 +46,7 @@
 	</div>
 	<div id="messageContent">
 		<div>
-		<table cellpadding="5px;" style="width:100%">
+		<table id="messageContentTable" cellpadding="5px;" style="width:100%">
 			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
 			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
 			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
@@ -56,9 +56,30 @@
 		</div>
 	</div>
 	<script>
+		
 		$(document).ready(function(){
   			$("#messageTitle").click(function(){
   				$("#messageContent").toggle();
+  				$.get("${pageContext.request.contextPath}/msg/fnmsg.action", function(data, status) {
+  					if (status != "success") return;
+  					var ids = data.ids.split(";");
+  					if (ids.length == 0) {
+  						$("#messageTitle").hide();
+  						$("#messageDiv").hide();
+  						$("#messageContent").hide();
+  					} else {
+  						$("#messageTitle").show();
+  						$("#messageDiv").show();
+  						$("#messageContent").show();
+  						var htm = "";
+  						for (var i=0; i<ids.length; i++) {
+  							var dt = data[ids[i]];
+  							alert(dt.subject);
+  							htm += "<tr><td class='content'>" + dt.subject.substring(8) + "</td><td class='op'><a href='#'>处理</a></td><td><a href='#'>忽略</a></tr>";
+  						}
+  						$("#messageContentTable").html(htm);
+  					}
+  				}, "json");
   			});
 		});
 	</script>

@@ -84,7 +84,7 @@ public class SVNLogService {
 	 * @param pack
 	 * @throws SVNException 
 	 */
-	public static void fillBuildPack(Pack pack, String[] files) throws SVNException {
+	public static void fillBuildPack(Pack pack, Set<String> files) throws SVNException {
 		updateLog(pack.getBranch());
 		dao.fillBuildPack(pack, files);
 	}

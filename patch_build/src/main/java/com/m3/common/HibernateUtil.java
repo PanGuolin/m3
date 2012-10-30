@@ -100,6 +100,7 @@ public class HibernateUtil {
 		
 		synchronized void commit() {
 			tx.commit();
+			session.flush();
 			tx = session.beginTransaction();
 		}
 		

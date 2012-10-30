@@ -14,7 +14,8 @@ import org.apache.tools.ant.ProjectHelper;
 
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.message.MailService;
+import com.m3.patchbuild.message.Message;
+import com.m3.patchbuild.message.MessageService;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
 import com.m3.patchbuild.pack.PackStatus;
@@ -128,7 +129,7 @@ public class PublishService {
 					//出错则不改变状态, 同时发布邮件
 				} finally {
 					((PackService)BussFactory.getService(Pack.class)).save(bp);
-					MailService.sendMail(bp);
+					((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
 				}
 			}
 			

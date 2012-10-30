@@ -7,7 +7,7 @@ import java.util.Set;
 import org.tmatesoft.svn.core.SVNException;
 
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.branch.BranchService;
 import com.m3.patchbuild.pack.BuildFile;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
@@ -50,7 +50,7 @@ public abstract class TestDataUtil {
 	}
 	
 	public static Branch initBranch() {
-		Branch branch = BuildBranchService.getBranch("sp1");
+		Branch branch = BranchService.getBranch("sp1");
 		if (branch == null)
 			branch = new Branch();
 		branch.setBranch("sp1");
@@ -61,7 +61,7 @@ public abstract class TestDataUtil {
 		branch.setSvnUrl("https://svn.bytter.com/svn/v101/v10.2二季度产品维护/工程过程/实现与测试/branches/v10.3_20120720_sp1/");
 		branch.setSvnRoot("/v10.2二季度产品维护/工程过程/实现与测试/branches/v10.3_20120720_sp1/");
 		branch.setWorkspace("d:/patch_build/sp1");
-		BuildBranchService.saveBranch(branch);
+		BranchService.saveBranch(branch);
 		return branch;
 	}
 

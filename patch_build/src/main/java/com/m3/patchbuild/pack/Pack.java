@@ -232,5 +232,4 @@ public class Pack implements IBussInfo{
 	public File getZipFile() {
 		return new File(getWSRoot(), buildNo + ".zip");
 	}
-	
 }

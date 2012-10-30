@@ -8,7 +8,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.branch.BranchService;
 import com.m3.patchbuild.pack.BuildFile;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
@@ -23,7 +23,7 @@ public class HibernateTest extends TestCase{
 		Session sess = conf.buildSessionFactory().openSession();
 		Transaction tx = sess.beginTransaction();
 		
-		Branch branch = BuildBranchService.getBranch("sp1");
+		Branch branch = BranchService.getBranch("sp1");
 		
 		Pack bp = new Pack();
 		bp.setBuildNo("test_build");

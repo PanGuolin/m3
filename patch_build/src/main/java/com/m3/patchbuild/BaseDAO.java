@@ -51,6 +51,14 @@ public abstract class BaseDAO {
 		}
 	}
 	
+	public void update(Object info) {
+		try { 
+			HibernateUtil.openSession().update(info);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	
 	public Object findByBillNo(BillNo billNo) {
 		return findByBillNo(billNo.getProps());
 	}
@@ -76,7 +84,7 @@ public abstract class BaseDAO {
 	public void saveInfo(Object info) {
 		try {
 			Session sess = HibernateUtil.openSession();
-			sess.clear();
+			//sess.clear();
 			sess.saveOrUpdate(info);		
 		}finally {
 			HibernateUtil.closeSession();

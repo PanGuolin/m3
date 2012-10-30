@@ -1,4 +1,4 @@
-package com.m3.patchbuild.template;
+package com.m3.patchbuild.message;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class HtmlTemplateService {
 			content = dao.getTemplate(type);
 		} catch (IOException e) {
 			logger.error("读取模板信息时出错", e);
-			return "";
+			return type;
 		}
 		
 		final String prefix = "${BP.";

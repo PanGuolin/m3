@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import com.m3.common.HibernateUtil;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.branch.BranchService;
 import com.m3.patchbuild.pack.BuildFile;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
@@ -31,7 +31,7 @@ public class BuildPackServiceTest extends TestCase{
 			bp = new Pack();
 		}
 		
-		Branch branch = BuildBranchService.getBranch(branchNo);
+		Branch branch = BranchService.getBranch(branchNo);
 		bp.setBranch(branch);
 		bp.setBuildNo(buildNo);
 		bp.setRequester("developer");
@@ -46,7 +46,7 @@ public class BuildPackServiceTest extends TestCase{
 			bp.getBuildFiles().add(file);
 		}
 		bp.setKeywords(keyword);
-		packService.prepareBuild(bp, set.toArray(new String[set.size()]));
+		packService.prepareBuild(bp, set);
 		HibernateUtil.closeSession();
 		
 		bp = packService.find(branchNo, buildNo);

@@ -2,13 +2,15 @@ package com.m3.patchbuild.pack.action;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.branch.BranchService;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
 import com.m3.patchbuild.svn.SVNLog;
@@ -37,7 +39,7 @@ public class AddBuildAction extends BaseAction{
 			if (StringUtil.isEmpty(keywords)) {
 				keywords = pack.getBuildNo();
 			}
-			Branch branch = BuildBranchService.getBranch(pack.getBranch().getBranch());
+			Branch branch = BranchService.getBranch(pack.getBranch().getBranch());
 			List<SVNLog> logs = SVNLogService.listByKeyword(branch, keywords);
 			List<String> list = new ArrayList<String>();
 			for (SVNLog log : logs) {
@@ -46,6 +48,11 @@ public class AddBuildAction extends BaseAction{
 				if (!list.contains(path)) {
 					list.add(path);
 				}
+			}
+			if (list.isEmpty()) {
+				this.files = "";
+				setTips("没有找到相关的文件，请重新设置关键字或手工录入");
+				return ERROR;
 			}
 			Collections.sort(list);
 			StringBuilder sb = new StringBuilder();
@@ -58,7 +65,14 @@ public class AddBuildAction extends BaseAction{
 				setTips("不能构建空的包");
 				return ERROR;
 			}
-			((PackService)BussFactory.getService(Pack.class)).prepareBuild(pack, files.split(";"));
+			Set<String> set = new HashSet<String>();
+			for (String s : files.split(";")) {
+				s = s.trim();
+				if (s.length() == 0)
+					continue;
+				set.add(s);
+			}
+			((PackService)BussFactory.getService(Pack.class)).prepareBuild(pack, set);
 		}
 		return SUCCESS;
 	}

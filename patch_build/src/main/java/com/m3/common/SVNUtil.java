@@ -196,8 +196,8 @@ public abstract class SVNUtil {
 		return new ChangedSVNFiles(paths, sb.toString());
 	}
 	
-	public static void getFile(String svnRoot, String user, String password, File rootDir, String[] paths) throws SVNException {
-		if (paths == null || paths.length == 0)
+	public static void getFile(String svnRoot, String user, String password, File rootDir, Set<String> paths) throws SVNException {
+		if (paths == null || paths.isEmpty())
 			return;
 		long ts = System.currentTimeMillis();
 		DAVRepositoryFactory.setup();
@@ -313,7 +313,7 @@ public abstract class SVNUtil {
 		}
 		if (!exists.isEmpty())
 			client.doUpdate(exists.toArray(new File[exists.size()]), SVNRevision.HEAD, SVNDepth.FILES, true, true);
-		logger.info("export " + paths.length + " file to " + rootDir + " cost " + (System.currentTimeMillis() - ts) + "ms");
+		logger.info("export " + paths.size() + " file to " + rootDir + " cost " + (System.currentTimeMillis() - ts) + "ms");
 	}
 	
 	/**

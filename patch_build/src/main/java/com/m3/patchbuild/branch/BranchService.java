@@ -9,9 +9,9 @@ import com.m3.patchbuild.BaseDAO;
  * @author MickeyMic
  *
  */
-public class BuildBranchService {
+public class BranchService {
 	
-	private static BuildBranchDAO dao = new BuildBranchDAO();
+	private static BranchDAO dao = new BranchDAO();
 	
 	/**
 	 * 获取分支对象

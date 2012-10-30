@@ -3,13 +3,15 @@ package com.m3.common;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
+
 /**
  * 对象取值工具类
  * @author pangl
  *
  */
 public abstract class BeanUtil {
-	//private static Logger logger = Logger.getLogger(BeanUtil.class);
+	private static Logger logger = Logger.getLogger(BeanUtil.class);
 	
 	/**
 	 * 获取指定对象的属性
@@ -55,6 +57,7 @@ public abstract class BeanUtil {
 			Method method = cls.getMethod("get" + methodName, (Class<?>[])null);
 			return method.invoke(value, (Object[])null);
 		} catch (Exception ex) {
+			logger.error("找不到get方法", ex);
 			Method method = cls.getMethod("is" + methodName, (Class<?>[])null);
 			return method.invoke(value, (Object[])null);
 				

@@ -1,32 +1,28 @@
 package com.m3.patchbuild.pack;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.tmatesoft.svn.core.SVNException;
 
 import com.m3.common.ContextUtil;
-import com.m3.common.FileUtil;
-import com.m3.common.SVNUtil;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.AbstractService;
 import com.m3.patchbuild.BaseDAO;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.branch.BranchService;
 import com.m3.patchbuild.exception.BussException;
 import com.m3.patchbuild.exception.CanNotBuildEmptyException;
 import com.m3.patchbuild.exception.DependsUnpublishException;
-import com.m3.patchbuild.exception.GetSVNFileException;
 import com.m3.patchbuild.exception.IllegalBPStateException;
 import com.m3.patchbuild.exception.NotMainBranchException;
 import com.m3.patchbuild.exception.PackExistsException;
-import com.m3.patchbuild.message.MailService;
+import com.m3.patchbuild.message.Message;
+import com.m3.patchbuild.message.MessageService;
 import com.m3.patchbuild.patch.Patch;
 import com.m3.patchbuild.patch.PatchService;
-import com.m3.patchbuild.svn.SVNLogService;
 
 
 /**
@@ -37,11 +33,11 @@ import com.m3.patchbuild.svn.SVNLogService;
 public class PackService extends AbstractService {
 
 	public PackService() {
-		super(new BuildPackDAO());
+		super(new PackDAO());
 	}
 
-	public BuildPackDAO getDao() {
-		return (BuildPackDAO)super.getDao();
+	public PackDAO getDao() {
+		return (PackDAO)super.getDao();
 	}
 	
 	/**
@@ -57,20 +53,10 @@ public class PackService extends AbstractService {
 	 * @param bp
 	 * @throws Exception 
 	 */
-	public void prepareBuild(Pack bp, String[] files) throws BussException {
-		if (files == null)
+	public void prepareBuild(Pack bp, Set<String> files) throws BussException {
+		if (files == null || files.isEmpty())
 			throw new CanNotBuildEmptyException(bp);
-		List<String> list = new ArrayList<String>();
-		for (String f : files) {
-			f = f.trim();
-			if (f.length() == 0) continue;
-			if (!list.add(f))
-				list.add(f);
-		}
-		if (list.isEmpty())
-			throw new CanNotBuildEmptyException(bp);
-		files = (String[])list.toArray(new String[list.size()]);
-
+		
 		Pack oldPack = find(bp.getBranch().getBranch(), bp.getBuildNo());
 		if (oldPack != null) {
 			PackStatus status = oldPack.getStatus();
@@ -86,34 +72,24 @@ public class PackService extends AbstractService {
 					!oldPack.getRequester().equals(ContextUtil.getUserId())) {
 				throw new PackExistsException(bp, oldPack);
 			}
-			bp.setUuid(oldPack.getUuid());
+			//bp.setUuid(oldPack.getUuid());
+			bp = oldPack;
 		}
 		
-		Branch branch = bp.getBranch();
-		if (branch.getUuid() == null) {
-			branch = BuildBranchService.getBranch(bp.getBranch().getBranch());
-			bp.setBranch(branch);
-		}
-		
-		//下载SVN中的文件
-		//File svnRoot = new File(branch.getWorkspace(), BuildBranch.DIR_SVN);
-		File bpRoot = new File(bp.getWSRoot(), Branch.DIR_SVN);
-		FileUtil.emptyDir(bpRoot);
-		try {
-			SVNUtil.getFile(branch.getSvnUrl(), branch.getSvnUser(), branch.getSvnPassword(), bpRoot, files);
-			SVNLogService.fillBuildPack(bp, files);
-		} catch (Exception ex) {
-			throw new GetSVNFileException(ex);
-		}
 		bp.setRequester(ContextUtil.getUserId());
 		bp.setRequestTime(new Date());
 		bp.setStatus(PackStatus.request);
+		if (bp.getBranch().getUuid() == null) {
+			Branch branch = ((BranchService)BussFactory.getService(Branch.class)).getBranch(bp.getBranch().getBranch());
+			bp.setBranch(branch);
+		}
 		getDao().saveInfo(bp);
 		BaseDAO.commit();
-		BuildService.add(bp);
+		BuildService.add(bp, files);
 		//保存成功后发邮件通知
-		MailService.sendMail(bp);
+		//((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
 	}
+	
 	
 	/**
 	 * 设计人员检查构建信息
@@ -127,7 +103,7 @@ public class PackService extends AbstractService {
 		bp.setStatus(info.isPass() ? PackStatus.checked : PackStatus.checkFail);
 		bp.setFailReason(info.isPass() ? "" : info.getMessage());
 		save(bp);
-		MailService.sendMail(bp);
+		((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
 	}
 	
 	/**
@@ -160,7 +136,7 @@ public class PackService extends AbstractService {
 	 */
 	public void builded(Pack bp) {
 		save(bp);
-		MailService.sendMail(bp);
+		((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
 	}
 	
 	

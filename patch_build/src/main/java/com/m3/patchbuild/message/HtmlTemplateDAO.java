@@ -1,4 +1,4 @@
-package com.m3.patchbuild.template;
+package com.m3.patchbuild.message;
 
 import java.io.BufferedReader;
 import java.io.File;

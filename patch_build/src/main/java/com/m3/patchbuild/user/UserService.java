@@ -1,6 +1,7 @@
 package com.m3.patchbuild.user;
 
 import java.util.List;
+import java.util.Set;
 
 import com.m3.common.MD5Util;
 import com.m3.common.StringUtil;
@@ -60,6 +61,10 @@ public class UserService extends AbstractService{
 
 	public List<User> findUserByRole(String role) {
 		return getDao().findByRole(role);
+	}
+	
+	public List<User> listByUserId(Set<String> userIds) {
+		return getDao().listByUserId(userIds);
 	}
 
 }

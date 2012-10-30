@@ -4,7 +4,7 @@ import com.m3.common.SVNUtil;
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BuildBranchService;
+import com.m3.patchbuild.branch.BranchService;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRole;
 import com.m3.patchbuild.user.UserService;
@@ -22,7 +22,7 @@ public class ImportUserFromSVN extends BaseAction{
 			setTips("用户已存在，请不要重复注册!");
 			return ERROR;
 		}
-		Branch bBranch = BuildBranchService.getBranch(branch);
+		Branch bBranch = BranchService.getBranch(branch);
 		if (SVNUtil.checkLogin(bBranch.getSvnUrl(), user.getUserId(), user.getPassword())) {
 			user.getRoles().clear();
 			user.addRole(UserRole.developer);

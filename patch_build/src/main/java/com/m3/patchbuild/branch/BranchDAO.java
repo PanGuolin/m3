@@ -10,7 +10,7 @@ import com.m3.patchbuild.BaseDAO;
  * @author MickeyMic
  *
  */
-public class BuildBranchDAO extends BaseDAO{
+public class BranchDAO extends BaseDAO{
 
 	@SuppressWarnings("unchecked")
 	public List<Branch> listAllBranch() {
