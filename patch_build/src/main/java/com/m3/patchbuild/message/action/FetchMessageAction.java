@@ -16,7 +16,7 @@ import com.m3.patchbuild.message.MessageService;
  *
  */
 public class FetchMessageAction extends BaseAction{
-	private int size = 5; //默认获取5条
+	private int size = 25; //默认获取5条
 	private Map<String, Object> dataMap = new HashMap<String, Object>();
 
 	@Override
@@ -24,15 +24,18 @@ public class FetchMessageAction extends BaseAction{
 		if (size < 1)
 			size = 5;
 		MessageService msgService = (MessageService)BussFactory.getService(Message.class);
-		List<Message> msgs = msgService.fetchNew(ContextUtil.getUserId(), size);
+		List<Message> msgs = msgService.fetchNew(ContextUtil.getUserId());
 		StringBuilder sb = new StringBuilder();
 		
 		dataMap.put("size", msgs.size());
+		int index = 0;
 		for(Message msg : msgs) {
-			if (sb.length() > 0)
+			if (index > 0)
 				sb.append(";");
 			sb.append(msg.getUuid());
 			dataMap.put(msg.getUuid(), msg);
+			if (++index > size)
+				break;
 		}
 		dataMap.put("ids", sb.toString());
 		return SUCCESS;

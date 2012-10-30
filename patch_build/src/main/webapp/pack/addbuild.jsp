@@ -82,6 +82,13 @@
   				}, "json");
   			});
 		});
+		var wait=setInterval(function(){    
+            if(!$(".box").is(":animated")){    
+                clearInterval(wait);    
+                //执行code    
+                alert("动画都已经执行完！");    
+            }    
+        },200);   
 	</script>
 </body>
 </html>

@@ -35,8 +35,8 @@ public class MessageService extends AbstractService {
 	 * @param size
 	 * @return
 	 */
-	public List<Message> fetchNew(String userId, int size) {
-		return getDao().fetchNew(userId, size);
+	public List<Message> fetchNew(String userId) {
+		return getDao().fetchNew(userId);
 	}
 
 	/**

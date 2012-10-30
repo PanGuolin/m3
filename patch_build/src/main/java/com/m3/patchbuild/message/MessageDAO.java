@@ -19,12 +19,12 @@ public class MessageDAO extends BaseDAO{
 	}
 
 	
-	public List<Message> fetchNew(String userId, int size) {
+	public List<Message> fetchNew(String userId) {
 		try {
 			return HibernateUtil.openSession().createQuery("FROM Message Where operator is null" +
 					" AND (:userId = any elements(recievers) OR :userId = any elements(notifiers))")
 					.setParameter("userId", userId)
-					.setMaxResults(size)
+					//.setMaxResults(size)
 					.list();
 		} finally {
 			HibernateUtil.closeSession();
