@@ -15,6 +15,9 @@ com.byttersoft.patchbuild.permission.*" %>
 	<link rel="stylesheet" href="${contextPath}/css/common.css" type="text/css" />
 	<script type="text/javascript" src="${contextPath}/js/jquery.js"></script>
 	<script type="text/javascript" src="${contextPath}/js/pub.js"></script>
+	<script type="text/javascript">
+		var contextPath = "${contextPath}";
+	</script>
 </head>
 <body>
 <div class="outer">

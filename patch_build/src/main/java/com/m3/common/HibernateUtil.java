@@ -89,6 +89,7 @@ public class HibernateUtil {
 			if (deeps <= 0) {
 				tx.commit();
 				session.clear();
+				session.close();
 				return true;
 			}
 			return false;

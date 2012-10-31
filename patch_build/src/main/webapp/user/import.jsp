@@ -14,11 +14,11 @@
 	
 	<div id="outterDiv">
 		<div id="errorDiv">${tips}</div>
-		<div id="linkDiv"><a href="${pageContext.request.contextPath}/user/requestRegister.jsp">向管理员申请注册</a></div>
+		<div id="linkDiv"><a href="${pageContext.request.contextPath}/user/register.jsp">向管理员申请注册</a></div>
 		<div id="titleDiv">注册新用户</div>
 		<div id="formDiv">
 		<s:form action="/user/importFromSvn.action" method="POST"> 
-			<s:set value="@com.m3.patchbuild.service.BuildBranchService@listAllBranch()" name="branchs"/>
+			<s:set value="@com.m3.patchbuild.branch.BranchService@listAllBranch()" name="branchs"/>
 			<s:select name="branch" label="请选择SVN分支" multiple="false" list="#branchs" listKey="branch" listValue="name"/> 
   			<s:textfield label="登录名" name="user.userId"/>
  			<s:password label="登录口令" name="user.password" />

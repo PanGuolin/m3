@@ -19,7 +19,7 @@ public class UserDAO extends BaseDAO {
 	protected Class<?> getInfoClass() {
 		return User.class;
 	}
-
+	
 	public List<User> findByRole(String role) {
 		try {
 			return HibernateUtil.openSession()

@@ -48,7 +48,7 @@ public class UserService extends AbstractService{
 	}
 	
 	public void save(User user) throws Exception {
-		if (!user.isSVNUser() && !StringUtil.isEmpty(user.getPassword())) {
+		if (!StringUtil.isEmpty(user.getPassword()) && user.getPassword().length() != 32) {
 			user.setPassword(MD5Util.getMD5(user.getUserId() + user.getPassword()));
 		}
 		getDao().saveInfo(user);

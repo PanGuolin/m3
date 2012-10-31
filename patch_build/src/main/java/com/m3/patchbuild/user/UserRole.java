@@ -7,6 +7,7 @@ package com.m3.patchbuild.user;
  */
 public interface UserRole {
 
+	
 	String developer = "developer";//开发
 	String designer = "designer"; //设计师
 	String testmanager = "testmanager"; //测试经理
@@ -15,4 +16,5 @@ public interface UserRole {
 	String admin = "admin";//系统管理员
 	String loginedUser = "[LoginedUser]";//登录用户
 	
+	String[] SYSROLES = new String[]{developer, designer, testmanager, tester, deployer, admin};
 }

@@ -1,0 +1,12 @@
+#messageTitle { 
+width: 300px; height:25px; background:#93E; position:absolute; right:5px; bottom:0px; z-index:2; text-align:left; cursor: pointer; border: 2px solid 939;
+font: 12px / 1.5 tahoma,arial,ËÎÌåb8b\4f53; 
+}
+#messageTitle div {
+	margin-left: 30px; margin-top:3px; font-weight:bold;
+}
+#messageDiv {width: 295px; height: 30px; background:rgba(0, 0, 0, 0.4); position: absolute; right:7px; bottom:0px;  border:1px solid #D6D6D6; }
+#messageContent { width: 295px; background:rgba(0, 0, 0, 0.4); position: absolute; right:7px; bottom:25px;  border:1px solid #D6D6D6; }
+#messageContent .op {float: right; line-height: 30px; margin-right: 5px; clear: right;}
+#messageContent .subj {float:left; line-height: 30px; margin-left:10px; clear: left;}
+#messageContent .content { text-align:left; width:200px; margin-right:5px;}

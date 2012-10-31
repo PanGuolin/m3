@@ -17,6 +17,7 @@ import com.m3.patchbuild.message.MessageService;
  */
 public class FetchMessageAction extends BaseAction{
 	private int size = 25; //默认获取5条
+	private int t = 0;//消息类型 0: 新消息, 1：已处理消息 2：全部消息
 	private Map<String, Object> dataMap = new HashMap<String, Object>();
 
 	@Override

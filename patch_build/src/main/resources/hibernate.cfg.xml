@@ -8,9 +8,17 @@
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.username">patchbuild</property>
         <property name="hibernate.connection.password">patchbuild</property>
-        <property name="connection.url">jdbc:mysql://localhost:3307/patch_build?generateSimpleParameterMetadata=true</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/patch_build?generateSimpleParameterMetadata=true</property>
         <property name="connection.useUnicode">true</property>
     	<property name="connection.characterEncoding">UTF-8</property>
+    	<property name="hibernate.connection.provider_class"> org.hibernate.connection.C3P0ConnectionProvider </property>
+    	<property name="hibernate.c3p0.max_size">30</property>
+    	<property name="hibernate.c3p0.min_size">1</property>
+    	<property name="hibernate.c3p0.timeout">1800</property>
+    	<property name="hibernate.c3p0.max_statements">1000</property>
+    	<property name="hibernate.c3p0.idle_test_period">30000</property>
+    	<property name="hibernate.c3p0.acquire_increment">1</property>
+    	<property name="hibernate.c3p0.validate">false</property> 
         <property name="format_sql">false</property>
 		<property name="show_sql">true</property>
 		<mapping class="com.m3.patchbuild.pack.BuildFile" />

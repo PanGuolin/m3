@@ -12,8 +12,8 @@
 	<div id="outterDiv">
 		<div id="errorDiv">${tips}</div>
 		<div id="linkDiv">
-			<a href="${pageContext.request.contextPath}/user/requestRegister.jsp">申请注册</a>
-			<a href="${pageContext.request.contextPath}/user/importfromsvn.jsp">从SVN引入用户</a>
+			<a href="${pageContext.request.contextPath}/user/register.jsp">申请注册</a>
+			<a href="${pageContext.request.contextPath}/user/import.jsp">从SVN引入用户</a>
 		</div>
 		<div id="titleDiv">欢迎使用补丁构建系统</div>
 		<div id="formDiv">

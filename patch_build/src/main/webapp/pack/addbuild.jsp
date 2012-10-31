@@ -41,54 +41,53 @@
  		</s:form>
 	</div>
 	
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/showmessages.css" type="text/css" />
 	<div id="messageTitle"><div>你有新消息</div></div>
-	<div id="messageDiv">
-	</div>
-	<div id="messageContent">
-		<div>
-		<table id="messageContentTable" cellpadding="5px;" style="width:100%">
-			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
-			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
-			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
-			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
-			<tr><td class="content">消息1</td><td class="op"><a href="#">处理</a></td><td><a href="#">忽略</a></td></tr>
-		</table>
-		</div>
-	</div>
-	<script>
-		
-		$(document).ready(function(){
-  			$("#messageTitle").click(function(){
-  				$("#messageContent").toggle();
-  				$.get("${pageContext.request.contextPath}/msg/fnmsg.action", function(data, status) {
-  					if (status != "success") return;
-  					var ids = data.ids.split(";");
-  					if (ids.length == 0) {
-  						$("#messageTitle").hide();
-  						$("#messageDiv").hide();
-  						$("#messageContent").hide();
-  					} else {
-  						$("#messageTitle").show();
-  						$("#messageDiv").show();
-  						$("#messageContent").show();
-  						var htm = "";
-  						for (var i=0; i<ids.length; i++) {
-  							var dt = data[ids[i]];
-  							alert(dt.subject);
-  							htm += "<tr><td class='content'>" + dt.subject.substring(8) + "</td><td class='op'><a href='#'>处理</a></td><td><a href='#'>忽略</a></tr>";
-  						}
-  						$("#messageContentTable").html(htm);
-  					}
-  				}, "json");
-  			});
+	<div id="messageDiv"></div>
+	<div id="messageContent"></div>
+	<script type="text/javascript">
+	
+	function fetchMsg() {
+		$.get("${pageContext.request.contextPath}/msg/fnmsg.action", handleMsgData, "json");
+	}
+	
+	function handleMsgData(data, status) {
+		if (status != "success" || !data.ids.length) {
+			hideMsg();
+		}
+  		var ids = data.ids.split(";");
+  		$("#messageTitle>div").text("你有" + ids.length + "条新消息");
+  		var htm = "";
+  		for (var i=0; i<ids.length; i++) {
+  			if (i > 10) break;
+  			var dt = data[ids[i]];
+  			htm += "<div class='subj'><a href='#'>" + dt.subject.substring(8) + "</a></div><div class='op'><a href='#' tips='忽略'>X</a></div>";
+		}
+		$("#messageContent").html(htm);
+		$("#messageTitle").show();
+		$("#messageTitle").click(function(){
+  			$("#messageContent").toggle();
+  			fetchMsg();
 		});
-		var wait=setInterval(function(){    
-            if(!$(".box").is(":animated")){    
-                clearInterval(wait);    
-                //执行code    
-                alert("动画都已经执行完！");    
-            }    
-        },200);   
+		
+	}
+	
+	function hideMsg() {
+		$("#messageTitle").hide();
+  		$("#messageDiv").hide();
+  		$("#messageContent").hide();
+	}
+	function showMsg() {
+		$("#messageTitle").show();
+  		$("#messageDiv").show();
+  		$("#messageContent").show();
+	}
+	
+	$(document).ready(function(){
+		fetchMsg();
+		setInterval("fetchMsg()",5000);
+	});
 	</script>
 </body>
 </html>
