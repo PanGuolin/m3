@@ -35,17 +35,11 @@ public class Message implements IBussInfo{
 	@Column(name = "uuid", unique = true)
 	private String uuid;
 	
-	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name = "Msg_Notifier", joinColumns = @JoinColumn(name = "MessageId"))
-	private Set<String> notifiers = new HashSet<String>();//消息通知人列表
+	private String notifiers = null;//消息通知人，以分号连接
 	
-	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name = "Msg_Reciever", joinColumns = @JoinColumn(name = "MessageId"))
-	private Set<String> recievers = new HashSet<String>();//消息接收人列表
-	
-	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name = "Msg_Attachment", joinColumns = @JoinColumn(name = "MessageId"))
-	private Set<String> attachments = new HashSet<String>();//消息接收人列表
+	private String recievers;//消息接收人列表，以分号连接
+
+	private String attachments; //附件列表，以分号连接
 	
 	@Column(name="bussType")
 	private String bussType; //业务类别
@@ -83,22 +77,6 @@ public class Message implements IBussInfo{
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-	public Set<String> getNotifiers() {
-		return notifiers;
-	}
-
-	public void setNotifiers(Set<String> notifiers) {
-		this.notifiers = notifiers;
-	}
-
-	public Set<String> getRecievers() {
-		return recievers;
-	}
-
-	public void setRecievers(Set<String> recievers) {
-		this.recievers = recievers;
 	}
 
 	public String getBussType() {
@@ -181,11 +159,28 @@ public class Message implements IBussInfo{
 		this.status = status;
 	}
 
-	public Set<String> getAttachments() {
+	public String getNotifiers() {
+		return notifiers;
+	}
+
+	public void setNotifiers(String notifiers) {
+		this.notifiers = notifiers;
+	}
+
+	public String getRecievers() {
+		return recievers;
+	}
+
+	public void setRecievers(String recievers) {
+		this.recievers = recievers;
+	}
+
+	public String getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(Set<String> attachments) {
+	public void setAttachments(String attachments) {
 		this.attachments = attachments;
 	}
+
 }

@@ -14,7 +14,7 @@ public class BranchDAO extends BaseDAO{
 
 	@SuppressWarnings("unchecked")
 	public List<Branch> listAllBranch() {
-		return (List<Branch>)super.listAll();
+		return (List<Branch>)super.list(null);
 	}
 
 	@Override

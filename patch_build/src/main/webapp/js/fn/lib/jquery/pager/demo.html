@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>jquer.pager.js 示例</title>
+</head>
+<body>
+    <b id="result">Click the pager below.</b>
+    
+    
+    <div id="div_pager"></div>
+    
+    
+    <script src="../../../fn.js"></script>
+    <script>
+		fn.use("jquery.pager");
+		
+		// 显示一条消息
+		function msg(s){
+			$("#result").html(s);
+		};
+		
+		// 异步加载数据
+		// pageIndex: 页数
+		function loadDataList(pageIndex){
+			
+			// 假设一个ajax返回值
+			var ret = {
+					count: 80,
+					index: pageIndex
+				},
+				pageSize = 6;
+			
+			// 重新设置分页
+			$("#div_pager").pager({
+				pageIndex: pageIndex, 
+				
+				pageSize: pageSize,
+				rowsCount: ret.count,
+				//pageCount: pageCount, // 可以只传入pageCount，或者同时传入pageSize和rowsCount以计算pageCount
+				
+				onClick: loadDataList, // 回调函数onclick被调用时会传入一个index参数
+				text: {
+					prev: "上一页",
+					next: "下一页"
+				},
+				showFirstBtn: false,
+				showLastBtn: false
+			});
+			
+			// 显示数据
+			msg("这里显示第" + pageIndex + "页的数据");
+		};
+		
+		// 页面加载完成后加载第一页数据
+        $(document).ready(function() {
+            loadDataList(1);
+        });
+       
+    </script>
+</body>
+</html>

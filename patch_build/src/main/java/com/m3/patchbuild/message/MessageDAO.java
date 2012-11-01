@@ -2,8 +2,14 @@ package com.m3.patchbuild.message;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+
+import com.m3.common.ContextUtil;
 import com.m3.common.HibernateUtil;
 import com.m3.patchbuild.BaseDAO;
+import com.m3.patchbuild.BaseQuery;
+import com.sun.org.apache.bcel.internal.generic.Type;
 
 /**
  * 消息DAO
@@ -28,6 +34,15 @@ public class MessageDAO extends BaseDAO{
 					.list();
 		} finally {
 			HibernateUtil.closeSession();
+		}
+	}
+
+
+	@Override
+	protected void beforeList(BaseQuery query, Criteria criter) {
+		MessageQuery q = (MessageQuery)query;
+		if (!q.isIncludeDealed()) {
+			criter.add(Restrictions.isNull("operator"));
 		}
 	}
 

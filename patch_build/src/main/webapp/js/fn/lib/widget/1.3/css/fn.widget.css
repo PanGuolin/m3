@@ -1,0 +1,186 @@
+@import url(fn.widget.base.css);
+
+/* 更改combobox中指针为手型 */
+.fwb_combobox-item{
+	cursor:pointer; 
+}
+
+
+/* 修改ie中combo控件弹出框没有边的bug */
+.fwb_panel{
+	*padding-right:2px;
+}
+
+
+.fwb_tree-border{
+	border:#EEE solid 1px;
+	padding:4px 2px;
+}
+
+
+.clear{ display:block; clear:both; content:""; visibility:hidden; height:0;}
+
+
+.bt-radios-box, .bt-checkboxs-box{
+	list-style:none; margin:0; padding:0;
+	display:inline-block; *display:-moz-inline-stack; *display:inline; zoom:1; 
+}
+.bt-radios-box-border, .bt-checkboxs-box-border{ 
+	border:#A4BED4 solid 1px; padding:2px 5px; 
+}
+.bt-radios-box label, .bt-checkboxs-box label{ 
+	margin:5px 5px 2px 0; *margin:5px 0 0 0;
+	display:inline-block; display:-moz-inline-stack; *display:inline; zoom:1; 
+}
+.checkbox-selectall{
+    color: #666;
+}
+
+
+.gridwindow .fwb_datagrid{ padding:1px;}
+.gridwindow .topbar{ padding:5px 5px 2px 5px;}
+.gridwindow .bottombar{ padding:5px 5px 2px 5px; text-align:center;}
+
+/* msg */
+/*
+    <div class="tools_msg m_t_error">
+    	<div class="m_head">
+        	<span class="m_title">错误信息</span>
+        	<span class="m_close">关闭</span>
+        </div>
+        <div class="m_main">
+        	对不起，没有这条记录。
+        </div>
+        <div class="m_buttons">
+        	<span class="m_ok">确定</span>
+        	<span class="m_cancel">取消</span>
+        </div>
+    </div>
+*/
+
+.tools_msg{ width:250px; border:#999 solid 1px; text-align:left; font-size:12px; background:#FFF; color:#333;word-break: normal; word-wrap: break-word;
+font-size:12px; font-family: Pmingliu,verdana,arial,sans-serif; 
+}
+.tools_msg .m_head{ padding:0 10px; text-align:right; height:29px; line-height:29px; border-bottom:#999 solid 1px;
+	 background:url(images/msg/bg_floatbox_title.jpg);}
+.tools_msg .m_title{ font-weight:bold; float:left;}
+.tools_msg .m_time, .tools_msg .m_close{ text-decoration:underline; cursor:pointer;}
+.tools_msg .m_time:hover, .tools_msg .m_close:hover{ color:red; }
+.tools_msg .m_main{ padding:15px 10px; line-height:1.5em;}
+.tools_msg .m_buttons{ padding:3px 10px; text-align:center; margin:10px;}
+.tools_msg .m_ok, .tools_msg .m_cancel{ border:#CCC solid 1px; padding:3px 10px; margin:0 10px; background:url(images/msg/bg-btn.png); cursor:pointer;}
+.m_t_msg .m_main{ padding:15px 15px 15px 50px; background:url(images/msg/info.gif) 10px no-repeat; }
+
+.m_t_error .m_main{ padding:15px 15px 15px 50px; background:url(images/msg/error.gif) 10px no-repeat;}
+.m_t_error .m_title{ color:red;}
+
+.m_t_warn .m_main{ padding:15px 15px 15px 50px; background:url(images/msg/!.gif) 10px no-repeat;}
+.m_t_warn .m_title{ color:#F60;}
+
+.m_t_confirm .m_main{ padding:15px 15px 15px 50px; background:url(images/msg/!.gif) 10px no-repeat;}
+.m_t_box .m_main{ padding:15px 15px 15px 15px;}
+/* msg end */
+
+
+/* tab插件 2012.01.09 =================================================== */
+.fn-panel{display:none; padding:15px 10px; border:1px solid #999; border-top:0; background-color:#fff; overflow-y:visible; height:auto; }
+.fn-tabs{border-bottom:1px solid #666;height:30px;list-style:none;margin:0!important;padding:0}
+.fn-tabs a{background:url(images/jtools/tabs/blue.png) no-repeat -420px 0;color:#333;display:block;font-size:11px;height:30px;line-height:30px;margin:0;padding:0;position:relative;text-align:center;text-decoration:none;top:1px;width:134px}
+.fn-tabs a.current,.fn-tabs a.current:hover,.fn-tabs li.current a{background-position:-420px -62px;color:#000!important;cursor:default!important}
+.fn-tabs a:active{outline:none}
+.fn-tabs a:hover{background-position:-420px -31px;color:#fff}
+.fn-tabs li{float:left;list-style-image:none!important;margin:0!important;padding:0;text-indent:0}
+
+ul.fn-tabs{border-bottom:1px solid #666;height:30px;list-style:none;margin:0!important;padding:0}
+ul.fn-tabs a{color:#333;display:block;font-size:11px;height:30px;line-height:30px;margin:0;padding:0;position:relative;text-align:center;text-decoration:none;top:1px;width:134px}
+ul.fn-tabs a.current,ul.fn-tabs a.current:hover,ul.fn-tabs li.current a{background-position:-420px -62px;color:#000!important;cursor:default!important}
+/*
+ul.fn-tabs a.l{background-position:-247px 0;width:174px}
+ul.fn-tabs a.l.current{background-position:-247px -62px}
+ul.fn-tabs a.l:hover{background-position:-247px -31px}
+ul.fn-tabs a.s{background-position:-553px 0;width:81px}
+ul.fn-tabs a.s.current{background-position:-553px -62px}
+ul.fn-tabs a.s:hover{background-position:-553px -31px}
+ul.fn-tabs a.xl{background-position:0 0;width:248px}
+ul.fn-tabs a.xl.current{background-position:0 -62px}
+ul.fn-tabs a.xl:hover{background-position:0 -31px}
+ul.fn-tabs a:active{outline:none}
+ul.fn-tabs a:hover{background-position:-420px -31px;color:#fff}
+ul.fn-tabs li{float:left;list-style-image:none!important;margin:0!important;padding:0;text-indent:0}
+*/
+
+/* dateinput插件 2012.01.09 =================================================== */
+#fwb_calcurrent{background-color:#498CE2;color:#fff}
+#fwb_caldays{border-bottom:1px solid #ddd;border-top:1px solid #ddd;height:14px; padding:5px 0 5px 0; background:#EEEE99;}
+#fwb_caldays span{display:block;float:left;text-align:center;width:28px}
+#fwb_calhead{height:22px;padding:2px 0}
+#fwb_calnext,#fwb_calprev{background:transparent url(images/jtools/dateinput/prev.gif) no-repeat scroll center center;cursor:pointer;display:block;float:left;height:20px;width:20px}
+#fwb_calnext{background-image:url(images/jtools/dateinput/next.gif);float:right}
+#fwb_calprev.fwb_caldisabled,#fwb_calnext.fwb_caldisabled{visibility:hidden}
+#fwb_calroot{-moz-border-radius-:5px;-moz-box-shadow-:0 0 15px #666;-webkit-border-radius-:5px;-webkit-box-shadow-:0 0 15px #666;background-color:#fff;border:1px solid #ccc;font-size:11px;margin-top:-1px;padding:2px;width:202px;z-index:10000}
+#fwb_caltitle{color:#0150D1;float:left;font-size:14px;line-height:25px;text-align:center;text-shadow-:0 1px 0 #ddd;width:155px}
+#fwb_caltitle select{font-size:12px; font-weight:bold; font-family:"Times New Roman", Times, serif;}
+#fwb_caltoday{background-color:#333;color:#fff}
+#fwb_calweeks{background-color:#fff;margin-top:4px}
+.fwb_calweek{clear:left;height:22px}
+.fwb_calweek a{-moz-border-radius:3px;-webkit-border-radius:3px;color:#666;display:block;float:left;font-size:11px;height:20px;line-height:20px;margin-left:1px;text-align:center;text-decoration:none;width:27px}
+.fwb_calweek a:hover,.fwb_calfocus{background-color:#ddd}
+.fwb_date{-moz-box-shadow-:0 0 10px #eee inset;-webkit-box-shadow-:0 0 10px #eee inset;border-:1px solid #ccc;border:1px solid #ccc;font-size-:18px;padding-:4px; background: url(images/jtools/dateinput/icon.jpg) no-repeat right 0;}
+a.fwb_caldisabled{background-color:#efefef!important;color:#ccc!important;cursor:default}
+a.fwb_caloff{color:#ccc}
+a.fwb_caloff:hover{background-color:#f5f5fa}
+a.fwb_calsun{color:red}
+
+
+/* 模块 */
+.fn-queryModule{ margin:5px 0 0 0;}
+.fn-queryModule form{ margin:0;}
+.fn-queryModule table{ border: 1px solid #99BBE8; border-collapse: collapse; margin-top: 5px; width:100%;}
+.fn-queryModule table td{ border: 1px solid #99BBE8;
+	font-size: 12px;
+	height: 20px;
+	padding: 5px !important;
+}
+.fn-queryModule table tr.tr-btns{ text-align:center;}
+.fn-queryModule table tr.tr-btns button{ margin:0 10px;}
+.fn-queryModule table td.td-label{ text-align:right;}
+
+.fn-toolsModule { border: 1px solid #99BBE8; border-collapse: collapse; margin: 1px 0 5px 0; padding:5px; text-align:center;}
+.fn-editModule, .fn-viewModule, .fn-addModule{ padding:2px;}
+.fn-listModule{ display:none; }
+
+.fn-bankacc-tip{ padding:3px; margin:-2px 0; text-align:center; font-size:12px; 
+	font-weight:bold; border:#666 solid 1px; font-size:12px; color:#333; background:#F9F9F9;
+}
+
+
+.button{ cursor:pointer;}
+.error {
+    border-radius: 4px 4px 4px 4px;
+    margin: 0 0 2px;
+    padding: 2px 6px;
+    background-color: #FFFE36;
+    border: 1px solid #E1E16D;
+    box-shadow: 0 0 6px #DDDDDD;
+    color: #000000;
+    display: none;
+    font-size: 11px;
+    height: 15px;
+}
+
+.fn-combo-lazyLoad {
+    border: 1px solid #A4BED4;
+    background: url("images/fn-combo-lazy-arrow.png") no-repeat right center;
+    height: 18px;
+    line-height: 18px;
+    padding-left:2px;
+    cursor:pointer;
+}
+.fn-combo-lazyLoad-text{
+    font-size: 12px;
+    border:none;
+    height: 18px;
+    line-height: 18px;
+    padding-left:2px;
+    background:#FFF;
+}

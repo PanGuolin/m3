@@ -12,7 +12,7 @@ import com.m3.patchbuild.BaseDAO;
 public class UserDAO extends BaseDAO {
 
 	public List<User> listAllUser() {
-		return (List<User>)super.listAll();
+		return (List<User>)super.list(null);
 	}
 
 	@Override

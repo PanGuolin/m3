@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--By Supcan TreeList -->
+<TreeList>
+	<Properties Title="订单明细表" isShowRuler="true" HeaderFontIndex="2" pageRows="20" addRowAble="true" key="id" deleteRowAble="true" rowHeight="25" curSelBackColor="#33aaccee;borderWidth=1;borderRound=9;borderColor=#55aaff"></Properties>	
+	<Fonts>
+		<Font faceName="Tahoma,Arial, Helvetica, sans-serif"/>
+		<Font />
+		<Font faceName="微软雅黑" bold="1"/>
+		<Font bold="true" />
+	</Fonts>
+	<Cols>
+		<Col name="id"      width="150"  isHide="true" datatype="int">ID</Col>
+        <Col name="country"     width="100" >国家</Col>
+        <Col name="dgpcountry"     width="100" >父国家</Col>
+		<Col name="orderid"      width="70" align="center">订单号</Col>
+		<Col name="customerid"   width="70">客户号</Col>
+		<Col name="orderdate"    width="80" datatype="date">销售日期</Col>
+		<Col name="requireddate" width="80" datatype="date">接单日期</Col>
+		<Col name="btn"      width="80" datatype="double" decimal="2">货重</Col>
+		<Col name="shipname"     width="200">船名</Col>
+		<Col name="shipcity"     width="120">城市</Col>		
+		<Col name="shipaddress"  width="300">地址</Col>	
+		<Col name="operation"  width="200" sortAble="false"  edittype="button"  buttonText="删 除,查 看,编 辑">操作</Col>
+	</Cols>
+</TreeList>

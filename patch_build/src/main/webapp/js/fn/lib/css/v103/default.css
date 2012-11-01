@@ -1,0 +1,175 @@
+@import url(../base.css);
+@import url(../text.css);
+
+/*文字排版*/
+
+.bt_f10{font-size:12px}
+
+.bt_f12{font-size:12px}
+ 
+.bt_f13{font-size:13px}
+ 
+.bt_f14{font-size:14px}
+ 
+.bt_f16{font-size:16px}
+ 
+.bt_f20{font-size:20px}
+ 
+.bt_fb{font-weight:bold}
+ 
+.bt_fn{font-weight:normal}
+ 
+.bt_t2{text-indent:2em}
+ 
+.bt_lh150{line-height:150%}
+ 
+.bt_lh180{line-height:180%}
+ 
+.bt_lh200{line-height:200%}
+ 
+.bt_unl{text-decoration:underline;}
+ 
+.bt_no_unl{text-decoration:none;}
+ 
+/*定位*/
+ 
+.bt_tl{text-align:left}
+ 
+.bt_tc{text-align:center}
+ 
+.bt_tr{text-align:right}
+ 
+.bt_bc{margin-left:auto;margin-right:auto;}
+ 
+.bt_fl{float:left;display:inline}
+ 
+.bt_fr{float:right;display:inline}
+ 
+.bt_cb{clear:both}
+ 
+.bt_cl{clear:left}
+ 
+.bt_cr{clear:right}
+ 
+.bt_clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+ 
+.bt_clearfix{display:inline-block}* html .clearfix{height:1%}.clearfix{display:block}
+ 
+.bt_vm{vertical-align:middle}
+ 
+.bt_pr{position:relative}
+ 
+.bt_pa{position:absolute}
+ 
+.bt_abs-right{position:absolute;right:0}
+ 
+.bt_zoom{zoom:1}
+ 
+.bt_hidden{visibility:hidden}
+ 
+.bt_none{display:none}
+
+/*
+  外边距
+*/
+.bt_m0{ margin:0px;}
+.bt_m5{ margin:5px;}
+.bt_m10{ margin:10px;}
+.bt_m20{ margin:20px;}
+.bt_m50{ margin:50px;}
+.bt_m100{ margin:100px;}
+
+.bt_mt5{ margin-top:5px;}
+.bt_mt10{ margin-top:10px;}
+.bt_mt20{ margin-top:20px;}
+.bt_mt50{ margin-top:50px;}
+.bt_mt100{ margin-top:100px;}
+
+.bt_mr5{ margin-right:5px;}
+.bt_mr10{ margin-right:10px;}
+.bt_mr20{ margin-right:20px;}
+.bt_mr50{ margin-right:50px;}
+.bt_mr100{ margin-right:100px;}
+
+.bt_mb5{ margin-bottom:5px;}
+.bt_mb10{ margin-bottom:10px;}
+.bt_mb20{ margin-bottom:20px;}
+.bt_mb50{ margin-bottom:50px;}
+.bt_mb100{ margin-bottom:100px;}
+
+.bt_ml5{ margin-left:5px;}
+.bt_ml10{ margin-left:10px;}
+.bt_ml20{ margin-left:20px;}
+.bt_ml50{ margin-left:50px;}
+.bt_ml100{ margin-left:100px;}
+
+/*
+  内边距
+*/
+.bt_p0{ padding:0px;}
+.bt_p5{ padding:5px;}
+.bt_p10{ padding:10px;}
+.bt_p20{ padding:20px;}
+.bt_p50{ padding:50px;}
+.bt_p100{ padding:100px;}
+
+.bt_pt5{ padding-top:5px;}
+.bt_pt10{ padding-top:10px;}
+.bt_pt20{ padding-top:20px;}
+.bt_pt50{ padding-top:50px;}
+.bt_pt100{ padding-top:100px;}
+
+.bt_pr5{ padding-right:5px;}
+.bt_pr10{ padding-right:10px;}
+.bt_pr20{ padding-right:20px;}
+.bt_pr50{ padding-right:50px;}
+.bt_pr100{ padding-right:100px;}
+
+.bt_pb5{ padding-bottom:5px;}
+.bt_pb10{ padding-bottom:10px;}
+.bt_pb20{ padding-bottom:20px;}
+.bt_pb50{ padding-bottom:50px;}
+.bt_pb100{ padding-bottom:100px;}
+
+.bt_pl5{ padding-left:5px;}
+.bt_pl10{ padding-left:10px;}
+.bt_pl20{ padding-left:20px;}
+.bt_pl50{ padding-left:50px;}
+.bt_pl100{ padding-left:100px;}
+
+
+/*
+  页面路径导航  
+*/
+.bt_path{
+	background: url(images/v13_bg_btnav_white_20x22.jpg) center top repeat-x;
+    line-height:22px; height:22px; padding:0 5px; color:#000; font-size:10px;
+}
+
+
+/*
+  按钮
+*/
+.bt_btn {
+    cursor: pointer;
+    background-color: #FFFFFF;
+    background-image: url("images/bt_btn.gif");
+    border: 1px solid #99BBE8;
+    height: 24px;
+    margin-left: 3px;
+    padding-top: 0 !important;
+}
+
+/*
+  不可用的 
+*/
+.bt_disabled{ color:#999; }
+
+
+/*
+  表格（form）  
+*/
+.bt_form table, table.bt_form{ border-collapse: collapse; width:100%;}
+.bt_form table td, table.bt_form td{ border:#99BBE8 solid 1px; padding:3px;}
+.bt_form table td.bt_lable, table.bt_form td.bt_label{ text-align:right; font-weight:bold;}
+.bt_form table td.bt_required, table.bt_form td.bt_required{ color:#F00; }

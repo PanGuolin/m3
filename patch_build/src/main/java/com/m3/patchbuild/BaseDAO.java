@@ -30,14 +30,23 @@ public abstract class BaseDAO {
 	 * 查找所有的业务对象
 	 * @return
 	 */
-	public List<?> listAll() {
+	public List<?> list(BaseQuery query) {
 		try {
-			return HibernateUtil.openSession()
-					.createCriteria(getInfoClass()).list();
+			Criteria criter = HibernateUtil.openSession().createCriteria(getInfoClass());
+			HibernateUtil.apply(query, criter);
+			beforeList(query, criter);
+			return criter.list();
 		} finally {
 			HibernateUtil.closeSession();
 		}
 	}
+	
+	/**
+	 * 在查询之前根据具体类设置额外条件，由子类实现 
+	 * @param criter
+	 */
+	protected void beforeList(BaseQuery query, Criteria criter) {};
+	
 	
 	public Object findByBillNo(Map<String, Object> billNo) {
 		try { 

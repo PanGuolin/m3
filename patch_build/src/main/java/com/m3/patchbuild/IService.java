@@ -1,5 +1,7 @@
 package com.m3.patchbuild;
 
+import java.util.List;
+
 /**
  * 服务接口
  * @author pangl
@@ -15,4 +17,6 @@ public interface IService extends Cloneable{
 	public IBussInfo findInfoByUuid(String uuid);
 	
 	public IService clone();
+	
+	public List<? extends IBussInfo> list(BaseQuery query);
 }

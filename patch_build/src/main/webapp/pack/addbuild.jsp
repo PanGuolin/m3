@@ -40,54 +40,5 @@
 			</table>
  		</s:form>
 	</div>
-	
-	
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/showmessages.css" type="text/css" />
-	<div id="messageTitle"><div>你有新消息</div></div>
-	<div id="messageDiv"></div>
-	<div id="messageContent"></div>
-	<script type="text/javascript">
-	
-	function fetchMsg() {
-		$.get("${pageContext.request.contextPath}/msg/fnmsg.action", handleMsgData, "json");
-	}
-	
-	function handleMsgData(data, status) {
-		if (status != "success" || !data.ids.length) {
-			hideMsg();
-		}
-  		var ids = data.ids.split(";");
-  		$("#messageTitle>div").text("你有" + ids.length + "条新消息");
-  		var htm = "";
-  		for (var i=0; i<ids.length; i++) {
-  			if (i > 10) break;
-  			var dt = data[ids[i]];
-  			htm += "<div class='subj'><a href='#'>" + dt.subject.substring(8) + "</a></div><div class='op'><a href='#' tips='忽略'>X</a></div>";
-		}
-		$("#messageContent").html(htm);
-		$("#messageTitle").show();
-		$("#messageTitle").click(function(){
-  			$("#messageContent").toggle();
-  			fetchMsg();
-		});
-		
-	}
-	
-	function hideMsg() {
-		$("#messageTitle").hide();
-  		$("#messageDiv").hide();
-  		$("#messageContent").hide();
-	}
-	function showMsg() {
-		$("#messageTitle").show();
-  		$("#messageDiv").show();
-  		$("#messageContent").show();
-	}
-	
-	$(document).ready(function(){
-		fetchMsg();
-		setInterval("fetchMsg()",5000);
-	});
-	</script>
 </body>
 </html>

@@ -16,31 +16,8 @@ CREATE TABLE Msg_Message
    Sender               char(30),
    MessageType          int,
    status               int,
+   Notifiers			varchar(400),
+   Recievers			varchar(400),
+   Attachments			varchar(400),
    constraint PK_MSG_MESSAGE primary key clustered (UUID)
-);
-
-/*==============================================================*/
-/* Table: Msg_Attachment                                        */
-/*==============================================================*/
-DROP TABLE IF EXISTS Msg_Attachment;
-create table Msg_Attachment 
-(
-   MessageId            char(36)                       not null,
-   Attachments          varchar(300)                   not null
-);
-
-DROP TABLE IF EXISTS Msg_Notifier;
-create table Msg_Notifier 
-(
-   MessageId            char(36)                       not null,
-   Notifiers            varchar(30)                    not null,
-   constraint PK_MSG_NOTIFIER primary key clustered (MessageId, Notifiers)
-);
-
-DROP TABLE IF EXISTS Msg_Reciever;
-create table Msg_Reciever 
-(
-   MessageId            char(36)                       not null,
-   Recievers            varchar(30)                    not null,
-   constraint PK_MSG_RECIEVER primary key clustered (MessageId, Recievers)
 );

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.m3.common.StringUtil;
 import com.m3.patchbuild.AbstractService;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.pack.Pack;
@@ -123,26 +124,29 @@ public class MessageService extends AbstractService {
 		msg.setContent(HtmlTemplateService.getTemplate("sc_content_" + bp.getStatus().name(), bp));
 		msg.setSendTime(new Date());
 		msg.setMessageType(0);
-		msg.setAttachments(attachments);
+		msg.setAttachments(StringUtil.join(attachments, ";"));
 
 		if (toUsers != null) {
-			Set<String> userIds = new HashSet<String>();
+			StringBuilder sb = new StringBuilder();
 			for (User u : toUsers) {
-				userIds.add(u.getUserId());
+				if (sb.length() > 0) sb.append(";");
+				sb.append(u.getUserId());
 			}
-			msg.setRecievers(userIds);
+			msg.setRecievers(sb.toString());
 		}
 
 		if (ccUsers != null) {
-			Set<String> userIds = new HashSet<String>();
+			StringBuilder sb = new StringBuilder();
 			for (User u : ccUsers) {
-				userIds.add(u.getUserId());
+				if (sb.length() > 0) sb.append(";");
+				sb.append(u.getUserId());
 			}
-			msg.setNotifiers(userIds);
+			msg.setNotifiers(sb.toString());
 		}
 		getDao().saveInfo(msg);
 		
 		MailService.sendMessage(msg);
+		UserMessageQueue.messageSended(msg);
 	}
 
 }

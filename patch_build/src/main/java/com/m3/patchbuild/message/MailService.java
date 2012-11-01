@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.m3.common.EncodeUtil;
+import com.m3.common.StringUtil;
 import com.m3.common.mail.MailInfo;
 import com.m3.common.mail.MailServer;
 import com.m3.patchbuild.BussFactory;
@@ -38,23 +39,23 @@ public class MailService {
 			mail.setContent(msg.getContent());
 			mail.setSubject(msg.getSubject());
 			
-			if (!msg.getAttachments().isEmpty()) {
+			if (msg.getAttachments() != null) {
 				Set<File> files = new HashSet<File>();
-				for (String s : msg.getAttachments()) {
+				for (String s : msg.getAttachments().split(";")) {
 					files.add(new File(s));
 				}
 				mail.setAttachments(files);
 			}
 			
 			UserService userService = (UserService)BussFactory.getService(User.class);
-			if (!msg.getRecievers().isEmpty()) {
-				List<User> users = userService.listByUserId(msg.getRecievers());
+			if (msg.getRecievers() != null) {
+				List<User> users = userService.listByUserId(StringUtil.split2Set(msg.getRecievers(), ";"));
 				for (User usr : users) {
 					mail.addToAddress(usr.getEmail(), usr.getUsername());
 				}
 			}
-			if (!msg.getNotifiers().isEmpty()) {
-				List<User> users = userService.listByUserId(msg.getNotifiers());
+			if (msg.getNotifiers() != null) {
+				List<User> users = userService.listByUserId(StringUtil.split2Set(msg.getNotifiers(), ";"));
 				for (User usr : users) {
 					mail.addCcAddress(usr.getEmail(), usr.getUsername());
 				}

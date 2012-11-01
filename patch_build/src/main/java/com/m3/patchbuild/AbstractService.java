@@ -1,5 +1,7 @@
 package com.m3.patchbuild;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 public class AbstractService implements IService{
@@ -26,5 +28,10 @@ public class AbstractService implements IService{
 
 	public IBussInfo findInfoByUuid(String uuid) {
 		return (IBussInfo)dao.findByUuid(uuid);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<? extends IBussInfo> list(BaseQuery query) {
+		return (List<? extends IBussInfo>) dao.list(query);
 	}
 }
