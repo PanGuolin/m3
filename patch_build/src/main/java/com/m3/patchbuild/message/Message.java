@@ -1,17 +1,14 @@
 package com.m3.patchbuild.message;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CollectionTable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -27,19 +24,19 @@ import com.m3.patchbuild.IBussInfo;
 @Table(name="Msg_Message")
 public class Message implements IBussInfo{
 	
-	public static final int TYPE_VIEW = 1;
-	public static final int TYPE_DEAL = 1 >> 1;
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
 	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
 	@Column(name = "uuid", unique = true)
-	private String uuid;
+	private String uuid;//唯一ID
 	
-	private String notifiers = null;//消息通知人，以分号连接
+	private String groudId; //消息分组ID
 	
-	private String recievers;//消息接收人列表，以分号连接
-
-	private String attachments; //附件列表，以分号连接
+	private String owner; //拥有者
+	
+	private String ownType; //拥有类型: notifier -通知, reciever -接收人
+	
+	private boolean attached; //是否有附件
 	
 	@Column(name="bussType")
 	private String bussType; //业务类别
@@ -50,14 +47,8 @@ public class Message implements IBussInfo{
 	@Column(name="subject")
 	private String subject; //消息主题
 	
-	@Column(name="content")
-	private String content; //消息内容
-	
 	@Column(name="messageType")
 	private int messageType; //消息类型
-	
-	@Column(name="operator")
-	private String operator; //处理人
 	
 	@Column(name="operateTime")
 	private Date operateTime;//处理时间
@@ -70,6 +61,11 @@ public class Message implements IBussInfo{
 	
 	@Column(name="status")
 	private int status; //消息状态
+	
+	//@OneToOne(fetch=FetchType.LAZY, optional = true, cascade = CascadeType.ALL, mappedBy = "messageId")
+	@ManyToOne(optional=true, targetEntity=MessageDetail.class,  cascade = CascadeType.ALL)
+	@JoinColumn(name="messageId")
+	private MessageDetail detail;
 
 	public String getUuid() {
 		return uuid;
@@ -77,6 +73,38 @@ public class Message implements IBussInfo{
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public String getGroudId() {
+		return groudId;
+	}
+
+	public void setGroudId(String groudId) {
+		this.groudId = groudId;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getOwnType() {
+		return ownType;
+	}
+
+	public void setOwnType(String ownType) {
+		this.ownType = ownType;
+	}
+
+	public boolean isAttached() {
+		return attached;
+	}
+
+	public void setAttached(boolean attached) {
+		this.attached = attached;
 	}
 
 	public String getBussType() {
@@ -103,13 +131,6 @@ public class Message implements IBussInfo{
 		this.subject = subject;
 	}
 
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
 
 	public int getMessageType() {
 		return messageType;
@@ -117,14 +138,6 @@ public class Message implements IBussInfo{
 
 	public void setMessageType(int messageType) {
 		this.messageType = messageType;
-	}
-
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
 	}
 
 	public Date getOperateTime() {
@@ -159,28 +172,12 @@ public class Message implements IBussInfo{
 		this.status = status;
 	}
 
-	public String getNotifiers() {
-		return notifiers;
+	public MessageDetail getDetail() {
+		return detail;
 	}
 
-	public void setNotifiers(String notifiers) {
-		this.notifiers = notifiers;
-	}
-
-	public String getRecievers() {
-		return recievers;
-	}
-
-	public void setRecievers(String recievers) {
-		this.recievers = recievers;
-	}
-
-	public String getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(String attachments) {
-		this.attachments = attachments;
+	public void setDetail(MessageDetail detail) {
+		this.detail = detail;
 	}
 
 }
