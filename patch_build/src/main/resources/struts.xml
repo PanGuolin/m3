@@ -24,7 +24,7 @@
 	</package>
 	<package name="pack" extends="patchbuild" namespace="/pack">
 		<action name="addBuild" class="com.m3.patchbuild.pack.action.AddBuildAction">
-			<result name="success" >/pack/addbuild.jsp</result>
+			<result name="success" type="redirect">/msg/mymsg.jsp</result>
 			<result name="next" >/pack/addbuild.jsp</result>
 			<result name="error">/pack/addbuild.jsp</result>
 		</action>

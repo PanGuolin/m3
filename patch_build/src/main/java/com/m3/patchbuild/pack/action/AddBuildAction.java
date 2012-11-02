@@ -60,6 +60,7 @@ public class AddBuildAction extends BaseAction{
 				sb.append(s + ";\n");
 			}
 			this.files = sb.toString();
+			return "next";
 		} else {
 			if (StringUtil.isEmpty(files)) {
 				setTips("不能构建空的包");
@@ -73,8 +74,9 @@ public class AddBuildAction extends BaseAction{
 				set.add(s);
 			}
 			((PackService)BussFactory.getService(Pack.class)).prepareBuild(pack, set);
+			return SUCCESS;
 		}
-		return SUCCESS;
+		
 	}
 
 	public Pack getPack() {

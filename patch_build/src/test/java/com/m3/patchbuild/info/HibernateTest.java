@@ -11,7 +11,7 @@ import org.hibernate.cfg.Configuration;
 
 import com.m3.patchbuild.message.Message;
 import com.m3.patchbuild.message.MessageDetail;
-import com.m3.patchbuild.message.MessageSendRec;
+import com.m3.patchbuild.message.MessageReciever;
 
 public class HibernateTest extends TestCase{
 	
@@ -27,12 +27,10 @@ public class HibernateTest extends TestCase{
 		detail.setContent("test Content");
 		message.setDetail(detail);
 		
-		MessageSendRec rec = new MessageSendRec();
+		MessageReciever rec = new MessageReciever();
 		rec.setUserId("developer");
 		rec.setMessage(message);
-		Set<MessageSendRec> set = new HashSet<MessageSendRec>();
-		set.add(rec);
-		message.setSendRecords(set);
+		message.getRecievers().add(rec);
 		
 //		message.getSendRecords().add(rec);
 		

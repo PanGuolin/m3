@@ -7,7 +7,7 @@
 <html>
 <head>
 	<title>补丁构建管理系统</title>
-	<link rel="stylesheet" href="${basePath}/css/simple.css" type="text/css" />
+	<link rel="stylesheet" href="${basePath}/css/base.css" type="text/css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
 </head>
 <body>

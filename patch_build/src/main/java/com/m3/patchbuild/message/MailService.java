@@ -1,19 +1,9 @@
 package com.m3.patchbuild.message;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import com.m3.common.EncodeUtil;
-import com.m3.common.StringUtil;
-import com.m3.common.mail.MailInfo;
 import com.m3.common.mail.MailServer;
-import com.m3.patchbuild.BussFactory;
-import com.m3.patchbuild.user.User;
-import com.m3.patchbuild.user.UserService;
 
 /**
  * 发送邮件业务接口

@@ -11,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,7 +18,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.m3.patchbuild.IBussInfo;
-import com.m3.patchbuild.user.User;
 
 /**
  * 消息对象
@@ -72,16 +69,8 @@ public class Message implements IBussInfo {
 	private MessageDetail detail;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "message",  cascade = CascadeType.ALL) 
-	private Set<MessageSendRec> sendRecords = new HashSet<MessageSendRec>();
+	private Set<MessageReciever> recievers = new HashSet<MessageReciever>();
 	
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name="Msg_Reciever", joinColumns={@JoinColumn(name="messageId")}, inverseJoinColumns={@JoinColumn(name="userId")})
-	private Set<User> recievers = new HashSet<User>();
-	
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name="Msg_Notifier", joinColumns={@JoinColumn(name="messageId")}, inverseJoinColumns={@JoinColumn(name="userId")})
-	private Set<User> notifiers = new HashSet<User>();
-
 	public String getUuid() {
 		return uuid;
 	}
@@ -178,27 +167,11 @@ public class Message implements IBussInfo {
 		this.detail = detail;
 	}
 
-	public Set<User> getRecievers() {
+	public Set<MessageReciever> getRecievers() {
 		return recievers;
 	}
 
-	public void setRecievers(Set<User> recievers) {
+	public void setRecievers(Set<MessageReciever> recievers) {
 		this.recievers = recievers;
-	}
-
-	public Set<User> getNotifiers() {
-		return notifiers;
-	}
-
-	public void setNotifiers(Set<User> notifiers) {
-		this.notifiers = notifiers;
-	}
-
-	public Set<MessageSendRec> getSendRecords() {
-		return sendRecords;
-	}
-
-	public void setSendRecords(Set<MessageSendRec> sendRecords) {
-		this.sendRecords = sendRecords;
 	}
 }

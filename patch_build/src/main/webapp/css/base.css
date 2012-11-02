@@ -17,6 +17,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 	margin:0;padding:0;
 }
 
+body {text-align:center;}
 /* 重设 HTML5 标签, IE 需要在 js 中 createElement(TAG) */
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { 
     display:block;
@@ -109,31 +110,12 @@ ins,a {
 	text-decoration:none;
 }
 
-/* 清理浮动 */
-.fn-clear:after {
-	visibility:hidden;
-	display:block;
-	font-size:0;
-	content:" ";
-	clear:both;
-	height:0;
-}
-.fn-clear {
-	zoom:1; /* for IE6 IE7 */
-}
 
-/* 隐藏, 通常用来与 JS 配合 */
-body .fn-hide {
-	display:none;
-}
-
-/* 设置内联, 减少浮动带来的bug */
-.fn-left,.fn-right {
-	display:inline;
-}
-.fn-left {
-	float:left;
-}
-.fn-right {
-	float:right;
-}
+#outterDiv {margin-left:auto;margin-right:auto; width:960px; text-align:left;}
+#titleDiv {background:#369; line-height:30px; text-align:left;color:#FFF;font-weight:bold; }
+#formDiv {border:1px solid #69C;}
+#linkDiv {text-align:right; margin-bottom:3px;}
+#linkDiv a { text-decoration:none; margin-left:5px;}
+#errorDiv {text-align:left;color: red;}
+.r {text-align:right;}
+.l {text-align:left;}

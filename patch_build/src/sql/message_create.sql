@@ -37,28 +37,12 @@ create table Msg_MessageDtl
    constraint PK_MSG_MESSAGEDTL primary key clustered (UUID)
 );
 
-DROP TABLE IF EXISTS Msg_Notifier;
-create table Msg_Notifier 
-(
-   MessageId            char(36)                       not null,
-   UserId               char(36)                       not null,
-   constraint PK_MSG_NOTIFIER primary key clustered (MessageId, UserId)
-);
-
-DROP TABLE IF EXISTS Msg_Reciever;
-create table Msg_Reciever 
-(
-   MessageId            char(36)                       not null,
-   UserId               char(36)                       not null,
-   constraint PK_MSG_RECIEVER primary key clustered (MessageId, UserId)
-);
-
 
 /*==============================================================*/
 /* Table: Msg_MessageSend                                       */
 /*==============================================================*/
-DROP TABLE IF EXISTS Msg_SendRecord;
-create table Msg_SendRecord 
+DROP TABLE IF EXISTS Msg_Reciever;
+create table Msg_Reciever 
 (
    UUID                 char(36)                       not null,
    MessageId            char(36)                       not null,

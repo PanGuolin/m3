@@ -1,6 +1,5 @@
 package com.m3.patchbuild.message;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -130,34 +129,34 @@ public class MessageService extends AbstractService {
 		msg.setDetail(detail);
 		msg.setSender("System");
 		msg.setSendTime(new Date());
-		msg.setStatus(0);
+		msg.setStatus(IStateful.STATE_NORMAL);
 		msg.setSubject(HtmlTemplateService.getTemplate("sc_subject_" + bp.getStatus().name(), bp));
 		msg.setMessageType(0);
-		getDao().expiredByBussInfo(bp);
-		getDao().saveInfo(msg);
 		
-		List<MessageSendRec> list = new ArrayList<MessageSendRec>();
 		if (toUsers != null) {
 			for (User u : toUsers) {
-				list.add(newRec(msg.getUuid(), u, MessageSendRec.SEND_TYPE_TO));
+				MessageReciever rec = new MessageReciever();
+				rec.setMessage(msg);
+				rec.setSendType(MessageReciever.SEND_TYPE_TO);
+				rec.setStatus(IStateful.STATE_NORMAL);
+				rec.setUserId(u.getUserId());
+				msg.getRecievers().add(rec);
 			}
 		}
 		if (ccUsers != null) {
 			for (User u : ccUsers) {
-				list.add(newRec(msg.getUuid(), u, MessageSendRec.SEND_TYPE_CC));
+				MessageReciever rec = new MessageReciever();
+				rec.setMessage(msg);
+				rec.setSendType(MessageReciever.SEND_TYPE_CC);
+				rec.setStatus(IStateful.STATE_NORMAL);
+				rec.setUserId(u.getUserId());
+				msg.getRecievers().add(rec);
 			}
 		}
-		getDao().saveBatch(list);
+		getDao().expiredByBussInfo(bp);
+		getDao().saveInfo(msg);
 		UserMessageQueue.messageSended(msg);
 	}
 	
-	private MessageSendRec newRec(String msgId, User u, int type) {
-		MessageSendRec rec = new MessageSendRec();
-		rec.setMessageId(msgId);
-		rec.setSendType(type);
-		rec.setUserId(u.getUserId());
-		rec.setStatus(IStateful.STATE_NORMAL);
-		return rec;
-	}
 
 }

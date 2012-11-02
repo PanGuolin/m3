@@ -1,22 +1,13 @@
 <%@page language="java" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="s" uri="/struts-tags" %>
-<%@ page isELIgnored="false" %>
 <%@page import="com.m3.patchbuild.branch.BranchService" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!doctype html>
-<html>
-<head>
-	<title>补丁构建管理系统 -请求构建</title>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/com.css" type="text/css" />
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
-</head>
-<body class="simple"> 
+<%@ include file="../include/header.jsp" %>
+
 	<div id="outterDiv">
 		<div id="errorDiv">${tips}</div>
 		<s:form action="/pack/addBuild.action" method="POST" theme="simple"> 
-			<s:set value="@com.m3.patchbuild.branch.BuildBranchService@listAllBranch()" name="branchs"/>
-			<table>
+			<s:set value="@com.m3.patchbuild.branch.BranchService@listAllBranch()" name="branchs"/>
+			<table style="width:100%">
 				<tr>
 					<td class="r">请选择构建分支:</td>
 					<td><s:select name="pack.branch.branch" multiple="false" list="#branchs" listKey="branch" listValue="name"/> </td>
@@ -32,7 +23,7 @@
 					<td colspan="6">待构建的文件列表:</td>
 				</tr>
 				<tr>
-					<td colspan="6"><s:textarea name="files" style="width:100%; height:300px;"/></td>
+					<td colspan="6"><s:textarea name="files" style="width:100%; height:400px;"/></td>
 				</tr>
 				<tr>
 					<td colspan="6" class="r"><s:submit value="提交构建" name="build"/></td>
@@ -40,5 +31,5 @@
 			</table>
  		</s:form>
 	</div>
-</body>
-</html>
+	
+<%@ include file="../include/footer.jsp"%>

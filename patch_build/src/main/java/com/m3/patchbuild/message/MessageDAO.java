@@ -1,11 +1,10 @@
 package com.m3.patchbuild.message;
 
-import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.ContextUtil;
@@ -49,17 +48,22 @@ public class MessageDAO extends BaseDAO{
 	public List<?> list(BaseQuery query) {
 		
 		StringBuilder sql = new StringBuilder();
-		sql.append(" FROM Message msg LEFT JOIN fetch msg.sendRecords rec Where rec.userId=:userId");
+		sql.append(" FROM Message msg LEFT JOIN msg.recievers rec Where rec.userId=:userId");
+		MessageQuery q = (MessageQuery)query;
 		
 		try {
 			Session sess = HibernateUtil.openSession();
 			if (query != null) {
-				BigInteger size = (BigInteger) sess.createQuery("SELECT count(*) " + sql.toString())
+				Long size = (Long) sess.createQuery("SELECT count(*) " + sql.toString())
 						.setParameter("userId", ContextUtil.getUserId())
 						.uniqueResult();
-				System.out.println(size);
+				query.setTotalSize(size.longValue());
+				if (size.longValue() == 0)
+					return new ArrayList<Message>();
 			}
-			return null;
+			return sess.createQuery(" FROM Message msg LEFT JOIN fetch msg.recievers rec Where rec.userId=:userId")
+					.setParameter("userId", ContextUtil.getUserId())
+					.list();
 		} finally {
 			HibernateUtil.closeSession();
 		}
@@ -89,11 +93,11 @@ public class MessageDAO extends BaseDAO{
 		String uuid = info.getUuid();
 		try {
 			HibernateUtil.openSession()
-				.createQuery("UPDATE Message SET status = :status WHERE bussType=:bussType AND bussId=:bussId")
+				.createQuery("UPDATE Message SET status = :status WHERE bussType=:bussType AND bussId=:bussId AND status=:oldStatus")
 				.setParameter("status", IStateful.STATE_INVALID)
 				.setParameter("bussType", type)
 				.setParameter("bussId", uuid)
-				.setParameter("status", IStateful.STATE_NORMAL)
+				.setParameter("oldStatus", IStateful.STATE_NORMAL)
 				.executeUpdate();
 		} finally {
 			HibernateUtil.closeSession();

@@ -19,8 +19,8 @@ import com.m3.patchbuild.IStateful;
  *
  */
 @Entity
-@Table(name="Msg_SendRecord")
-public class MessageSendRec implements IStateful{
+@Table(name="Msg_Reciever")
+public class MessageReciever implements IStateful{
 	
 	public static final int SEND_TYPE_CC = 1; //抄送给
 	
@@ -58,8 +58,6 @@ public class MessageSendRec implements IStateful{
 		this.uuid = uuid;
 	}
 
-
-
 	public int getSendType() {
 		return sendType;
 	}
@@ -83,6 +81,5 @@ public class MessageSendRec implements IStateful{
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
 	
 }

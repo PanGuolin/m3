@@ -1,5 +1,6 @@
 package com.m3.patchbuild;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +42,8 @@ public abstract class BaseDAO {
 			if (query != null) {
 				criter = sess.createCriteria(getInfoClass());
 				beforeList(query, criter);
-				long count = (long) criter.setProjection(Projections.rowCount()).uniqueResult();
-				query.setTotalSize(count);
+				BigInteger count = (BigInteger) criter.setProjection(Projections.rowCount()).uniqueResult();
+				query.setTotalSize(count.longValue());
 			}
 			return result;
 		} finally {
