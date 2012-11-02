@@ -169,10 +169,6 @@ if(window.fn) (function($){
 		name: "css/v103",
 		css: ["{fn}/../../css/main1.css", "{fn}/lib/css/v103/v103.css"]
 	});
-	// 立即调用
-	if(fn.path.indexOf("js/fn/") > -1){
-		fn.use("css/v103");
-	};
 	
 	
 	// 拜特v10.3默认样式

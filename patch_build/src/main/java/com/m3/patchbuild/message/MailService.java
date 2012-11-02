@@ -34,7 +34,7 @@ public class MailService {
 			return;
 		}
 		
-		try {
+/*		try {
 			MailInfo mail = new MailInfo();
 			mail.setContent(msg.getContent());
 			mail.setSubject(msg.getSubject());
@@ -60,10 +60,10 @@ public class MailService {
 					mail.addCcAddress(usr.getEmail(), usr.getUsername());
 				}
 			}
-			mailServer.sendMail(mail);
-		} catch (Throwable t) {
+			mailServer.sendMail(mail);*/
+/*		} catch (Throwable t) {
 			logger.error("发送邮件失败!", t);
-		}
+		}*/
 	}
 	
 	/**

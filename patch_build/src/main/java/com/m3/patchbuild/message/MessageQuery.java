@@ -9,37 +9,30 @@ import com.m3.patchbuild.BaseQuery;
  */
 public class MessageQuery extends BaseQuery{
 	
-	private boolean includeNotifer = true; //是否包含通知人
+	public static int NT_RECIEVER = 0; //接收消息
+	public static int NT_NOTIFIER = 1; //通知消息
 	
-	private boolean includeReciever = true; //是否包含接收人
+	public static int STATUS_NOR = 0; //正常状态
 	
-	private boolean includeDealed = false; //是否包含已处理
+	public static int STATUS_INCLUD_EXPIR = 1; //包含处理过的
+	
+	private int status = 0; //消息状态，默认为0，即正常状态
+	private int nt = 0; //消息类型，0-过滤接收消息，1-过滤通知消息
 
-	public boolean isIncludeNotifer() {
-		return includeNotifer;
+	public int getStatus() {
+		return status;
 	}
 
-	public void setIncludeNotifer(boolean includeNotifer) {
-		this.includeNotifer = includeNotifer;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
-	public boolean isIncludeReciever() {
-		return includeReciever;
+	public int getNt() {
+		return nt;
 	}
 
-	public void setIncludeReciever(boolean includeReciever) {
-		this.includeReciever = includeReciever;
-	}
-
-	public boolean isIncludeDealed() {
-		return includeDealed;
-	}
-
-	public void setIncludeDealed(boolean includeDealed) {
-		this.includeDealed = includeDealed;
+	public void setNt(int nt) {
+		this.nt = nt;
 	}
 	
-	
-	
-
 }

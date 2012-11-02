@@ -6,6 +6,7 @@ import com.m3.common.ContextUtil;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.message.IMessageConsumer;
 import com.m3.patchbuild.message.Message;
+import com.m3.patchbuild.user.User;
 
 /**
  * Action 消息消费者
@@ -34,6 +35,14 @@ public class ActionMessageConsumer implements IMessageConsumer{
 		String userId = ContextUtil.getUserId();
 		if (StringUtil.isEmpty(userId))
 			return false;
-		return message.getNotifiers().contains(userId) || message.getRecievers().contains(userId);
+		for (User u : message.getNotifiers()) {
+			if (userId.equals(u.getUserId()))
+				return true;
+		}
+		for (User u : message.getRecievers()) {
+			if (userId.equals(u.getUserId()))
+				return true;
+		}
+		return false;
 	}
 }

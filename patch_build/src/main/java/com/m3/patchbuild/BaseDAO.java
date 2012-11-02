@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.HibernateUtil;
@@ -32,10 +33,18 @@ public abstract class BaseDAO {
 	 */
 	public List<?> list(BaseQuery query) {
 		try {
-			Criteria criter = HibernateUtil.openSession().createCriteria(getInfoClass());
-			HibernateUtil.apply(query, criter);
+			Session sess = HibernateUtil.openSession();
+			Criteria criter = sess.createCriteria(getInfoClass());
+			//HibernateUtil.apply(query, criter);
 			beforeList(query, criter);
-			return criter.list();
+			List <?> result = criter.list();
+			if (query != null) {
+				criter = sess.createCriteria(getInfoClass());
+				beforeList(query, criter);
+				long count = (long) criter.setProjection(Projections.rowCount()).uniqueResult();
+				query.setTotalSize(count);
+			}
+			return result;
 		} finally {
 			HibernateUtil.closeSession();
 		}

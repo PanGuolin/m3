@@ -6,11 +6,8 @@
 <%pageContext.setAttribute("basePath", request.getContextPath());%>
 <html>
 <head>
-	<title>补丁构建管理系统 -用户注册</title>
+	<title>补丁构建管理系统</title>
 	<link rel="stylesheet" href="${basePath}/css/simple.css" type="text/css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="${basePath}/css/ui.jqgrid.css" />
-	<script type="text/javascript" src="${basePath}/js/jquery.js"></script>
-	<script type="text/javascript" src="${basePath}/js/grid.locale-cn.js"></script>
-	<script type="text/javascript" src="${basePath}/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>
 </head>
 <body>

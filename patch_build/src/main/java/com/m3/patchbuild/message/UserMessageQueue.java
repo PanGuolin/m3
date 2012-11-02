@@ -91,10 +91,12 @@ public class UserMessageQueue {
 	 */
 	private void consume(IMessageConsumer consumer) throws Exception{
 		lastActived = System.currentTimeMillis();
-		if (lastThread != null && lastThread != Thread.currentThread()) {
-			lastThread.interrupt();
+		synchronized (this) {
+			if (lastThread != null && lastThread != Thread.currentThread()) {
+				lastThread.interrupt();
+			}
+			lastThread = Thread.currentThread();
 		}
-		lastThread = Thread.currentThread();
 		
 		while(true) {
 			Message message = null;
@@ -104,6 +106,10 @@ public class UserMessageQueue {
 			}
 			if (message != null) {
 				if (consumer.accept(message)) {
+					synchronized (this) {
+						if (lastThread == Thread.currentThread())
+							lastThread = null;
+					}
 					consumer.consume(message);
 					return;
 				} else {

@@ -22,8 +22,6 @@ public class MessageDetail {
 	@Column(name = "uuid", unique = true)
 	private String uuid; //唯一ID
 	
-	private String messageId;//所属消息ID
-	
 	private String attachments; //附件列表，多个附件用分号连接
 	
 	private String content; //内容
@@ -34,14 +32,6 @@ public class MessageDetail {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-	public String getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(String messageId) {
-		this.messageId = messageId;
 	}
 
 	public String getAttachments() {

@@ -1,5 +1,6 @@
 package com.m3.patchbuild.message;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.AbstractService;
 import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.IStateful;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRole;
@@ -117,36 +119,45 @@ public class MessageService extends AbstractService {
 				&& (ccUsers == null || ccUsers.isEmpty()))
 			return;
 
+		MessageDetail detail = new MessageDetail();
+		detail.setAttachments(StringUtil.join(attachments, ";"));
+		detail.setContent(HtmlTemplateService.getTemplate("sc_content_" + bp.getStatus().name(), bp));
+		
 		Message msg = new Message();
+		msg.setAttached(!attachments.isEmpty());
 		msg.setBussId(bp.getUuid());
 		msg.setBussType(BussFactory.getBussType(Pack.class));
-		msg.setSubject(HtmlTemplateService.getTemplate("sc_subject_" + bp.getStatus().name(), bp));
-		msg.setContent(HtmlTemplateService.getTemplate("sc_content_" + bp.getStatus().name(), bp));
+		msg.setDetail(detail);
+		msg.setSender("System");
 		msg.setSendTime(new Date());
+		msg.setStatus(0);
+		msg.setSubject(HtmlTemplateService.getTemplate("sc_subject_" + bp.getStatus().name(), bp));
 		msg.setMessageType(0);
-		msg.setAttachments(StringUtil.join(attachments, ";"));
-
-		if (toUsers != null) {
-			StringBuilder sb = new StringBuilder();
-			for (User u : toUsers) {
-				if (sb.length() > 0) sb.append(";");
-				sb.append(u.getUserId());
-			}
-			msg.setRecievers(sb.toString());
-		}
-
-		if (ccUsers != null) {
-			StringBuilder sb = new StringBuilder();
-			for (User u : ccUsers) {
-				if (sb.length() > 0) sb.append(";");
-				sb.append(u.getUserId());
-			}
-			msg.setNotifiers(sb.toString());
-		}
+		getDao().expiredByBussInfo(bp);
 		getDao().saveInfo(msg);
 		
-		MailService.sendMessage(msg);
+		List<MessageSendRec> list = new ArrayList<MessageSendRec>();
+		if (toUsers != null) {
+			for (User u : toUsers) {
+				list.add(newRec(msg.getUuid(), u, MessageSendRec.SEND_TYPE_TO));
+			}
+		}
+		if (ccUsers != null) {
+			for (User u : ccUsers) {
+				list.add(newRec(msg.getUuid(), u, MessageSendRec.SEND_TYPE_CC));
+			}
+		}
+		getDao().saveBatch(list);
 		UserMessageQueue.messageSended(msg);
+	}
+	
+	private MessageSendRec newRec(String msgId, User u, int type) {
+		MessageSendRec rec = new MessageSendRec();
+		rec.setMessageId(msgId);
+		rec.setSendType(type);
+		rec.setUserId(u.getUserId());
+		rec.setStatus(IStateful.STATE_NORMAL);
+		return rec;
 	}
 
 }

@@ -14,6 +14,8 @@ public class BaseQuery {
 	private int pageSize = -1;
 	private List<QOrder> orders = new ArrayList<QOrder>();
 	
+	private long totalSize = 0; //查询结果总数量
+	
 	
 	public int getPageIndex() {
 		return pageIndex;
@@ -45,4 +47,11 @@ public class BaseQuery {
 	public List<QOrder> getOrders() {
 		return orders;
 	}
+	public long getTotalSize() {
+		return totalSize;
+	}
+	public void setTotalSize(long totalSize) {
+		this.totalSize = totalSize;
+	}
+	
 }

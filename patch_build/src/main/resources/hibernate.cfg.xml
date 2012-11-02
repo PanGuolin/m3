@@ -8,7 +8,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.username">patchbuild</property>
         <property name="hibernate.connection.password">patchbuild</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/patch_build?generateSimpleParameterMetadata=true</property>
+        <property name="connection.url">jdbc:mysql://localhost:3307/patch_build?generateSimpleParameterMetadata=true</property>
         <property name="connection.useUnicode">true</property>
     	<property name="connection.characterEncoding">UTF-8</property>
     	<property name="hibernate.connection.provider_class"> org.hibernate.connection.C3P0ConnectionProvider </property>
@@ -29,6 +29,7 @@
         <mapping class="com.m3.patchbuild.patch.Patch" />
         <mapping class="com.m3.patchbuild.message.Message" />
         <mapping class="com.m3.patchbuild.message.MessageDetail" />
+        <mapping class="com.m3.patchbuild.message.MessageSendRec" />
         
         <mapping resource="common.hbm.xml"/>
         

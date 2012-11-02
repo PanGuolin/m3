@@ -3465,7 +3465,7 @@ if(fn.widgetBase){
 			ins = {
 				plugin: "fwb_datagrid",
 				element: el,
-				opts: $.extend({page:1, pageSize:10}, fn.tagAttrs(elem, "page,columns,fitColumns,frozenColumns,idField,loadMsg,nowrap,pageList,pageNumber,pageSize,pagination,rownumbers,singleSelect,striped"), opt, {cache: false}),
+				opts: $.extend({page:1, pageSize:10}, fn.tagAttrs(elem, "page,columns,fitColumns,frozenColumns,idField,loadMsg,nowrap,pageList,pageNumber,pageSize,pagination,rownumbers,singleSelect,striped,pageIndexParam,pageSizeParam"), opt, {cache: false}),
 				methods: {}
 			};
 		
@@ -3581,7 +3581,16 @@ if(fn.widgetBase){
 					opts.queryParams = $.extend({}, postData);
 				};
 			};
-			//
+			
+			// 自定义page和rows参数
+			if(opts.pageIndexParam){
+				postData[opts.pageIndexParam] = postData.page;
+				delete postData.page;
+			};
+			if(opts.pageSizeParam){
+				postData[opts.pageSizeParam] = postData.rows;
+				delete postData.rows;
+			};
 			
 			ins.showLoadingMsg();
 			ins._post(url, postData, function(json){

@@ -1,19 +1,26 @@
 package com.m3.patchbuild.message;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.user.User;
 
 /**
  * 消息对象
@@ -22,19 +29,13 @@ import com.m3.patchbuild.IBussInfo;
  */
 @Entity
 @Table(name="Msg_Message")
-public class Message implements IBussInfo{
+public class Message implements IBussInfo {
 	
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
 	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
 	@Column(name = "uuid", unique = true)
 	private String uuid;//唯一ID
-	
-	private String groudId; //消息分组ID
-	
-	private String owner; //拥有者
-	
-	private String ownType; //拥有类型: notifier -通知, reciever -接收人
 	
 	private boolean attached; //是否有附件
 	
@@ -53,6 +54,8 @@ public class Message implements IBussInfo{
 	@Column(name="operateTime")
 	private Date operateTime;//处理时间
 	
+	private String operator; //处理人
+	
 	@Column(name="sender")
 	private String sender; //发送人
 	
@@ -62,10 +65,22 @@ public class Message implements IBussInfo{
 	@Column(name="status")
 	private int status; //消息状态
 	
+	
 	//@OneToOne(fetch=FetchType.LAZY, optional = true, cascade = CascadeType.ALL, mappedBy = "messageId")
 	@ManyToOne(optional=true, targetEntity=MessageDetail.class,  cascade = CascadeType.ALL)
-	@JoinColumn(name="messageId")
+	@JoinColumn(name="DetailId")
 	private MessageDetail detail;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "message",  cascade = CascadeType.ALL) 
+	private Set<MessageSendRec> sendRecords = new HashSet<MessageSendRec>();
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name="Msg_Reciever", joinColumns={@JoinColumn(name="messageId")}, inverseJoinColumns={@JoinColumn(name="userId")})
+	private Set<User> recievers = new HashSet<User>();
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name="Msg_Notifier", joinColumns={@JoinColumn(name="messageId")}, inverseJoinColumns={@JoinColumn(name="userId")})
+	private Set<User> notifiers = new HashSet<User>();
 
 	public String getUuid() {
 		return uuid;
@@ -73,30 +88,6 @@ public class Message implements IBussInfo{
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-	public String getGroudId() {
-		return groudId;
-	}
-
-	public void setGroudId(String groudId) {
-		this.groudId = groudId;
-	}
-
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public String getOwnType() {
-		return ownType;
-	}
-
-	public void setOwnType(String ownType) {
-		this.ownType = ownType;
 	}
 
 	public boolean isAttached() {
@@ -131,7 +122,6 @@ public class Message implements IBussInfo{
 		this.subject = subject;
 	}
 
-
 	public int getMessageType() {
 		return messageType;
 	}
@@ -146,6 +136,14 @@ public class Message implements IBussInfo{
 
 	public void setOperateTime(Date operateTime) {
 		this.operateTime = operateTime;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 	public String getSender() {
@@ -180,4 +178,27 @@ public class Message implements IBussInfo{
 		this.detail = detail;
 	}
 
+	public Set<User> getRecievers() {
+		return recievers;
+	}
+
+	public void setRecievers(Set<User> recievers) {
+		this.recievers = recievers;
+	}
+
+	public Set<User> getNotifiers() {
+		return notifiers;
+	}
+
+	public void setNotifiers(Set<User> notifiers) {
+		this.notifiers = notifiers;
+	}
+
+	public Set<MessageSendRec> getSendRecords() {
+		return sendRecords;
+	}
+
+	public void setSendRecords(Set<MessageSendRec> sendRecords) {
+		this.sendRecords = sendRecords;
+	}
 }
