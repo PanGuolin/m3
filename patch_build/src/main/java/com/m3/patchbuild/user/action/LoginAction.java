@@ -1,5 +1,6 @@
 package com.m3.patchbuild.user.action;
 
+import com.m3.common.ContextUtil;
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.user.User;
@@ -19,7 +20,7 @@ public class LoginAction extends BaseAction {
 			return ERROR;
 		}
 		
-		super.userLogin(user);
+		ContextUtil.userLogin(user);
 		return SUCCESS;
 	}
 

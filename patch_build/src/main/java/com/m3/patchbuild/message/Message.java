@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.attached.Attachment;
 
 /**
  * 消息对象
@@ -27,6 +28,8 @@ import com.m3.patchbuild.IBussInfo;
 @Entity
 @Table(name="Msg_Message")
 public class Message implements IBussInfo {
+	
+	public static final int MESSAGE_TYPE_TASK = 0; //消息类型：任务
 	
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")

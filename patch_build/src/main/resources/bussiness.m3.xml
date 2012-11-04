@@ -36,4 +36,10 @@
         <service>com.m3.patchbuild.message.MessageService</service>
         <singleton>true</singleton>
     </buss>
+    <buss>
+        <type>attachment</type>
+        <info>com.m3.patchbuild.attached.Attachment</info>
+        <service>com.m3.patchbuild.attached.AttachmentService</service>
+        <singleton>true</singleton>
+    </buss>
 </busslist>

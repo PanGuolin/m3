@@ -47,21 +47,25 @@ public class MessageDAO extends BaseDAO{
 	@Override
 	public List<?> list(BaseQuery query) {
 		
-		StringBuilder sql = new StringBuilder();
-		sql.append(" FROM Message msg LEFT JOIN msg.recievers rec Where rec.userId=:userId");
+		StringBuilder sb = new StringBuilder();
+		sb.append(" FROM Message msg LEFT JOIN fetch msg.recievers rec Where rec.userId=:userId AND msg.status=0");
 		MessageQuery q = (MessageQuery)query;
+		
+		sb.append(" AND rec.sendType=" + (q.getNt() == 1 ? "1" : "0"));
 		
 		try {
 			Session sess = HibernateUtil.openSession();
 			if (query != null) {
-				Long size = (Long) sess.createQuery("SELECT count(*) " + sql.toString())
+				String sql = sb.toString();
+				sql = "SELECT count(*) " + sql.replaceAll("fetch", "");
+				Long size = (Long) sess.createQuery(sql)
 						.setParameter("userId", ContextUtil.getUserId())
 						.uniqueResult();
 				query.setTotalSize(size.longValue());
 				if (size.longValue() == 0)
 					return new ArrayList<Message>();
 			}
-			return sess.createQuery(" FROM Message msg LEFT JOIN fetch msg.recievers rec Where rec.userId=:userId")
+			return sess.createQuery(sb.toString())
 					.setParameter("userId", ContextUtil.getUserId())
 					.list();
 		} finally {
@@ -104,4 +108,24 @@ public class MessageDAO extends BaseDAO{
 		}
 	}
 	
+	/**
+	 * 获取某个用户未处理（未读）的消息数量
+	 * @param userId
+	 * @param toType 消息发送类型，true : 通知消息， false: 关注消息
+	 * @return
+	 */
+	public int countUserMessage(String userId, boolean toType) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT count(*) FROM Message msg LEFT JOIN fetch msg.recievers rec Where rec.userId=:userId AND msg.status=0 AND rec.sendType=:sendType");
+		try {
+			Session sess = HibernateUtil.openSession();
+			Long size = (Long) sess.createQuery(sb.toString())
+					.setParameter("userId", ContextUtil.getUserId())
+					.setParameter("sendType", toType ? MessageReciever.SEND_TYPE_TO : MessageReciever.SEND_TYPE_CC)
+					.uniqueResult();
+			return size.intValue();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
 }

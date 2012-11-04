@@ -13,11 +13,11 @@ public abstract class BaseQueryAction extends BaseAction{
 		this.query = query;
 	}
 
-	public BaseQuery getQuery() {
+	public BaseQuery getQ() {
 		return query;
 	}
 
-	public void setQuery(BaseQuery query) {
+	public void setQ(BaseQuery query) {
 		this.query = query;
 	}
 

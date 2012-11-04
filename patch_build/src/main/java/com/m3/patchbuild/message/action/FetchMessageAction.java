@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.struts2.ServletActionContext;
 
+import com.m3.common.ContextUtil;
 import com.m3.patchbuild.BaseQueryAction;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.message.Message;
@@ -34,9 +35,9 @@ public class FetchMessageAction extends BaseQueryAction  {
 	protected String doExecute() throws Exception {
 		if (TYPE_NEWEST.equals(t)) {
 			String id = ServletActionContext.getRequest().getSession().getId();
-			UserMessageQueue.consume(id, new ActionMessageConsumer(dataMap));
+			UserMessageQueue.consume(id, ContextUtil.getUserId(), new ActionMessageConsumer(dataMap));
 		} else if (TYPE_NEWALL.equals(t)) {
-			MessageQuery query = (MessageQuery) getQuery();
+			MessageQuery query = (MessageQuery) getQ();
 			MessageService msgService = (MessageService)BussFactory.getService(Message.class);
 			List<Message> msgs = (List<Message>) msgService.list(query);
 			dataMap.put("total", query.getTotalSize());

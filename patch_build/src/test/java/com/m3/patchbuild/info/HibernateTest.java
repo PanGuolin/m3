@@ -1,5 +1,6 @@
 package com.m3.patchbuild.info;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import com.m3.patchbuild.attached.Attachment;
 import com.m3.patchbuild.message.Message;
 import com.m3.patchbuild.message.MessageDetail;
 import com.m3.patchbuild.message.MessageReciever;
@@ -31,6 +33,14 @@ public class HibernateTest extends TestCase{
 		rec.setUserId("developer");
 		rec.setMessage(message);
 		message.getRecievers().add(rec);
+		sess.save(message);
+		
+		Attachment att = new Attachment();
+		att.setFileUuid("testuuid");
+		att.setCreateTime(new Date());
+		att.setFileName("fileName");
+		att.setBussId(message.getUuid());
+		sess.save(att);
 		
 //		message.getSendRecords().add(rec);
 		

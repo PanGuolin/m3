@@ -33,8 +33,8 @@ public class FunctionPermService extends AbstractService{
 	 * @param permNo
 	 * @return
 	 */
-	public List<String> listRoleByAction(Class<?> actionClass) {
-		return getDAO().listRoleByAction(actionClass);
+	public List<String> listRoleByPath(String path) {
+		return getDAO().listRoleByPath(path);
 	}
 
 }

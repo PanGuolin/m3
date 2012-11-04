@@ -46,11 +46,11 @@ public class FunctionPermDAO extends BaseDAO{
 		}
 	}
 
-	public List<String> listRoleByAction(Class<?> actionClass) {
+	public List<String> listRoleByPath(String path) {
 		try { 
 			return HibernateUtil.openSession().createSQLQuery(
 					"select r.roleName from SYS_RolePermission r left join SYS_FunctionPerm f on r.permCode = f.code where f.info=:info")
-					.setParameter("info", actionClass.getName())
+					.setParameter("info", path)
 					.list();
 		} finally {
 			HibernateUtil.closeSession();

@@ -18,6 +18,10 @@ public class MessageQuery extends BaseQuery{
 	
 	private int status = 0; //消息状态，默认为0，即正常状态
 	private int nt = 0; //消息类型，0-过滤接收消息，1-过滤通知消息
+	
+	public MessageQuery() {
+		this.descOrder("sendTime");
+	}
 
 	public int getStatus() {
 		return status;

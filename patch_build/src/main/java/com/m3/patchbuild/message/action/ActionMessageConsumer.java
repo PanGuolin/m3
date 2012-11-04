@@ -3,10 +3,10 @@ package com.m3.patchbuild.message.action;
 import java.util.Map;
 
 import com.m3.common.ContextUtil;
-import com.m3.common.StringUtil;
+import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.message.IMessageConsumer;
 import com.m3.patchbuild.message.Message;
-import com.m3.patchbuild.message.MessageReciever;
+import com.m3.patchbuild.message.MessageService;
 
 /**
  * Action 消息消费者
@@ -14,6 +14,8 @@ import com.m3.patchbuild.message.MessageReciever;
  *
  */
 public class ActionMessageConsumer implements IMessageConsumer{
+	
+	private static final MessageService msgService = (MessageService)BussFactory.getService(Message.class);
 
 	private Map<String, Object> dataMap;
 	
@@ -21,24 +23,11 @@ public class ActionMessageConsumer implements IMessageConsumer{
 		this.dataMap = dataMap;
 	}
 	
+	/**
+	 * 消息一条消息
+	 */
 	public void consume(Message message) throws Exception {
 		dataMap.put("message", message);
 	}
 
-	/**
-	 * 是否接受指定消息，如果接受说明可以让本队列的消费者消费，否则不进入队列
-	 * @param message
-	 * @return
-	 */
-	public boolean accept(Message message) {
-		String userId = ContextUtil.getUserId();
-		if (StringUtil.isEmpty(userId))
-			return false;
-		for (MessageReciever rec : message.getRecievers()) {
-			if (userId.equals(rec.getUserId())) {
-				return true;
-			}
-		}
-		return false;
-	}
 }

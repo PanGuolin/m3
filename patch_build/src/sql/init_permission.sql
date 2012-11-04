@@ -22,6 +22,9 @@ create table SYS_RolePermission
 
 INSERT INTO SYS_FunctionPerm(UUID, code, perName, info, type) VALUES(uuid(), 'AddBuild', '请求构建', 'com.m3.patchbuild.pack.action.AddBuildAction', 0);
 INSERT INTO SYS_FunctionPerm(UUID, code, perName, info, type) VALUES(uuid(), 'FetchMessage', '查看消息列表', 'com.m3.patchbuild.message.action.FetchMessageAction', 0);
+INSERT INTO SYS_FunctionPerm(UUID, code, perName, info, type) VALUES(uuid(), 'MyMessage', '我的消息', 'msg/mymsg.jsp', 0);
 
 INSERT INTO SYS_RolePermission(roleName, permCode) VALUES('[LoginedUser]', 'AddBuild');
 INSERT INTO SYS_RolePermission(roleName, permCode) VALUES('[LoginedUser]', 'FetchMessage');
+INSERT INTO SYS_RolePermission(roleName, permCode) VALUES('[LoginedUser]', 'MyMessage');
+

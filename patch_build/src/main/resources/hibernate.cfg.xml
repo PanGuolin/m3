@@ -30,6 +30,7 @@
         <mapping class="com.m3.patchbuild.message.Message" />
         <mapping class="com.m3.patchbuild.message.MessageDetail" />
         <mapping class="com.m3.patchbuild.message.MessageReciever" />
+        <mapping class="com.m3.patchbuild.attached.Attachment" />
         
         <mapping resource="common.hbm.xml"/>
         

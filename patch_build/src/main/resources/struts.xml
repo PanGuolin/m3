@@ -8,13 +8,16 @@
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
 	<package name="patchbuild" extends="struts-default">
 	    <global-results>
-	        <result name="login">/index.jsp</result>
+	        <result name="login">/user/login.jsp</result>
 	    </global-results>
 	</package>
-	<package name="user" extends="patchbuild">
+	<package name="user" extends="patchbuild" namespace="/user">
 		<action name="login" class="com.m3.patchbuild.user.action.LoginAction">
-			<result name="error">/index.jsp</result>
-			<result name="success">/user/myfp.jsp</result>
+			<result name="error">/user/login.jsp</result>
+			<result name="success" type="redirect">/msg/mymsg.jsp</result>
+		</action>
+		
+		<action name="logout" class="com.m3.patchbuild.user.action.LogoutAction">
 		</action>
 		
 		<action name="importFromSvn" class="com.m3.patchbuild.user.action.ImportUserFromSVN">

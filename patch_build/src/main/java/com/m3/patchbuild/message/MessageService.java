@@ -1,14 +1,20 @@
 package com.m3.patchbuild.message;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jboss.logging.Logger;
+
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.AbstractService;
 import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.IStateful;
+import com.m3.patchbuild.attached.Attachment;
+import com.m3.patchbuild.attached.AttachmentService;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRole;
@@ -21,7 +27,7 @@ import com.m3.patchbuild.user.UserService;
  * 
  */
 public class MessageService extends AbstractService {
-	//private static final Logger logger = Logger.getLogger(MailServer.class);
+	private static final Logger logger = Logger.getLogger(MessageService.class);
 
 	public MessageService() {
 		super(new MessageDAO());
@@ -102,7 +108,16 @@ public class MessageService extends AbstractService {
 		}
 		sendMessage(bp, toUsers, ccUsers, attachments);
 	}
-
+	
+	/**
+	 * 读取未处理的消息(任务消息)
+	 * @param userId
+	 * @return
+	 */
+	public int countMessage(String userId, boolean toType) {
+		return getDao().countUserMessage(userId, toType);
+	}
+	
 	/**
 	 * 发送邮件
 	 * 
@@ -123,7 +138,7 @@ public class MessageService extends AbstractService {
 		detail.setContent(HtmlTemplateService.getTemplate("sc_content_" + bp.getStatus().name(), bp));
 		
 		Message msg = new Message();
-		msg.setAttached(!attachments.isEmpty());
+		msg.setAttached(attachments != null && !attachments.isEmpty());
 		msg.setBussId(bp.getUuid());
 		msg.setBussType(BussFactory.getBussType(Pack.class));
 		msg.setDetail(detail);
@@ -155,6 +170,16 @@ public class MessageService extends AbstractService {
 		}
 		getDao().expiredByBussInfo(bp);
 		getDao().saveInfo(msg);
+		if (msg.isAttached()) {
+			AttachmentService attService = (AttachmentService)BussFactory.getService(Attachment.class);
+			try {
+				for (String att : attachments) {
+					attService.createAttachment(new File(att), msg, true);
+				}
+			} catch (IOException ex) {
+				logger.error("保存附件时出错", ex);
+			}
+		}
 		UserMessageQueue.messageSended(msg);
 	}
 	

@@ -24,13 +24,13 @@ public class UserMessageQueue {
 	 * @param consumer
 	 * @throws Exception
 	 */
-	public static void consume(Object queueId,  IMessageConsumer consumer) throws Exception{
+	public static void consume(Object queueId,  String userId, IMessageConsumer consumer) throws Exception{
 		UserMessageQueue queue = queues.get(queueId);
 		if (queue == null) {
 			synchronized (queues) {
 				queue = queues.get(queueId);
 				if (queue == null) {
-					queue = new UserMessageQueue(queueId);
+					queue = new UserMessageQueue(userId);
 					queues.put(queueId, queue);
 				}
 			}
@@ -49,7 +49,7 @@ public class UserMessageQueue {
 			if (System.currentTimeMillis() - queue.lastActived > expiredTime) {//过期的队列将被移除
 				expiredList.add(key);
 			} else {
-				queue.handleMessage(message);
+				queue.accept(message);
 			}
 		}
 		for (Object key : expiredList) {
@@ -68,15 +68,28 @@ public class UserMessageQueue {
 	
 	private Thread lastThread = null; //上一次消费线程，防止失效的线程进行消费
 	
-	private UserMessageQueue(Object uuid) {
+	private String userId;
+	
+	private UserMessageQueue(String userId) {
 		this.lastActived = System.currentTimeMillis();
+		this.userId = userId;
 	}
 	
 	/**
-	 * 消息发送时触发 
+	 * 接受一个消息并返回是否接收成功
 	 * @param message
 	 */
-	private void handleMessage(Message message) {
+	private boolean accept(Message message) {
+		boolean acceptable = false;
+		for (MessageReciever rec : message.getRecievers()) {
+			if (userId.equals(rec.getUserId())) {
+				acceptable = true;
+				break;
+			}
+		}
+		if (!acceptable) {
+			return false;
+		}
 		synchronized (messageQueue) {
 			while (messageQueue.size() >= maxQueueLength) {
 				messageQueue.remove(0);
@@ -84,6 +97,7 @@ public class UserMessageQueue {
 			messageQueue.add(message);
 			messageQueue.notifyAll();
 		}
+		return true;
 	}
 
 	/**
@@ -105,16 +119,12 @@ public class UserMessageQueue {
 					message = messageQueue.remove(0);
 			}
 			if (message != null) {
-				if (consumer.accept(message)) {
-					synchronized (this) {
-						if (lastThread == Thread.currentThread())
-							lastThread = null;
-					}
-					consumer.consume(message);
-					return;
-				} else {
-					continue;
+				synchronized (this) {
+					if (lastThread == Thread.currentThread())
+						lastThread = null;
 				}
+				consumer.consume(message);
+				return;
 			} else {
 				synchronized (messageQueue) { 
 					try {

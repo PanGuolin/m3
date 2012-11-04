@@ -4495,10 +4495,10 @@ dir: 目录</a:Comment>
 <o:Column Id="o203">
 <a:ObjectID>59691A68-0EF4-468B-B16F-0A6145805ECD</a:ObjectID>
 <a:Name>用户ID</a:Name>
-<a:Code>UserId</a:Code>
+<a:Code>Recievers</a:Code>
 <a:CreationDate>1351561410</a:CreationDate>
 <a:Creator>pangl</a:Creator>
-<a:ModificationDate>1351561425</a:ModificationDate>
+<a:ModificationDate>1351567194</a:ModificationDate>
 <a:Modifier>pangl</a:Modifier>
 <a:DataType>varchar(30)</a:DataType>
 <a:Length>30</a:Length>
@@ -4551,10 +4551,10 @@ dir: 目录</a:Comment>
 <o:Column Id="o206">
 <a:ObjectID>13F4EDF6-F504-4A7A-A130-745A223FC8C4</a:ObjectID>
 <a:Name>用户ID</a:Name>
-<a:Code>UserId</a:Code>
+<a:Code>Notifiers</a:Code>
 <a:CreationDate>1351561501</a:CreationDate>
 <a:Creator>pangl</a:Creator>
-<a:ModificationDate>1351561787</a:ModificationDate>
+<a:ModificationDate>1351567205</a:ModificationDate>
 <a:Modifier>pangl</a:Modifier>
 <a:DataType>varchar(30)</a:DataType>
 <a:Length>30</a:Length>
@@ -4607,10 +4607,10 @@ dir: 目录</a:Comment>
 <o:Column Id="o209">
 <a:ObjectID>CAB904FA-8900-4205-9AAE-8BB3ADE40AF7</a:ObjectID>
 <a:Name>附件URL</a:Name>
-<a:Code>url</a:Code>
+<a:Code>Attachments</a:Code>
 <a:CreationDate>1351563206</a:CreationDate>
 <a:Creator>pangl</a:Creator>
-<a:ModificationDate>1351566821</a:ModificationDate>
+<a:ModificationDate>1351567215</a:ModificationDate>
 <a:Modifier>pangl</a:Modifier>
 <a:DataType>varchar(300)</a:DataType>
 <a:Length>300</a:Length>
