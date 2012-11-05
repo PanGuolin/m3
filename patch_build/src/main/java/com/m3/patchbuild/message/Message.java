@@ -18,7 +18,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.m3.patchbuild.IBussInfo;
-import com.m3.patchbuild.attached.Attachment;
 
 /**
  * 消息对象

@@ -35,7 +35,8 @@ public class FetchMessageAction extends BaseQueryAction  {
 	protected String doExecute() throws Exception {
 		if (TYPE_NEWEST.equals(t)) {
 			String id = ServletActionContext.getRequest().getSession().getId();
-			UserMessageQueue.consume(id, ContextUtil.getUserId(), new ActionMessageConsumer(dataMap));
+			UserMessageQueue.consume(id, ContextUtil.getUserId(),
+					new ActionMessageConsumer(dataMap));
 		} else if (TYPE_NEWALL.equals(t)) {
 			MessageQuery query = (MessageQuery) getQ();
 			MessageService msgService = (MessageService)BussFactory.getService(Message.class);
