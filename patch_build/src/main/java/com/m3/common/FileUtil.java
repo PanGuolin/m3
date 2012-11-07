@@ -2,10 +2,14 @@ package com.m3.common;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * 文件相关工具类
@@ -87,5 +91,25 @@ public abstract class FileUtil {
 		input.close();
 		out.flush();
 		out.close();
+	}
+
+	public static String getTextContent(File file, String encoding) {
+		if (!file.exists())
+			return "";
+		if (encoding == null)
+			encoding = "GBK";
+		StringBuilder sb = new StringBuilder();
+		try {
+			InputStreamReader isr = new InputStreamReader(new FileInputStream(file), encoding);
+			BufferedReader reader = new BufferedReader(isr);
+			String line = null;
+			while((line = reader.readLine()) != null) {
+				sb.append(line + "\r\n");
+			}
+			reader.close();
+			return sb.toString();
+		} catch (IOException e) {
+			throw new BuildException(e);
+		}
 	}
 }

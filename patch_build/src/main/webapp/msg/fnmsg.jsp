@@ -3,7 +3,7 @@
 	<script type="text/javascript">
 		
 		var fnmsg = {
-			fetchMsg : function() {$.get("${pageContext.request.contextPath}/msg/fnmsg.action?t=n", fnmsg.handleMsgData, "json");},
+			fetchMsg : function() {$.get("${pageContext.request.contextPath}/js/fnmsg.action?t=n", fnmsg.handleMsgData, "json");},
 			
 			handleMsgData : function(data, status) {
 				var viewOrDoUrl = "${pageContext.request.contextPath}/msg/viewordo?i=";

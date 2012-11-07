@@ -1,9 +1,14 @@
 package com.m3.patchbuild.pack;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.apache.tools.ant.util.FileUtils;
 
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.branch.Branch;
@@ -14,6 +19,7 @@ import com.m3.patchbuild.branch.Branch;
  *
  */
 public class Pack implements IBussInfo{
+	private static final Logger logger = Logger.getLogger(Pack.class);
 
 	private String uuid;//唯一标识
 	private String buildNo; //构建号
@@ -221,8 +227,17 @@ public class Pack implements IBussInfo{
 	}
 	
 	public static final String BUILD_LOG = "build.log";
-	public File getBuildLog() {
+	public File getBuildLogFile() {
 		return new File(getWSRoot(), "build.log");
+	}
+	
+	public String getBuildLog() {
+		try {
+			return FileUtils.readFully(new FileReader(getBuildLogFile()));
+		} catch (IOException e) {
+			logger.error("读取日志文件时出错", e);
+			return "";
+		}
 	}
 	@Override
 	public String toString() {

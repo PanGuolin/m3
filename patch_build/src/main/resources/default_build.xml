@@ -46,6 +46,7 @@
 	<target name="copyFiles" description="组装文件">
 		<!-- Copy SQL Files -->
 		<mkdir dir="${dir.target}/sql"/>
+		<mkdir dir="${source.svn}/sql/patch"/>
 		<copy todir="${dir.target}/sql">
 			<fileset dir="${source.svn}/sql/patch">
 				<include name="*.sql"/>

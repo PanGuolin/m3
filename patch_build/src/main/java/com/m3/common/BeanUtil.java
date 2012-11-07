@@ -2,6 +2,11 @@ package com.m3.common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -61,6 +66,48 @@ public abstract class BeanUtil {
 			Method method = cls.getMethod("is" + methodName, (Class<?>[])null);
 			return method.invoke(value, (Object[])null);
 				
+		}
+	}
+	
+	/**
+	 * 将对象映射到json集合当中
+	 * @param value
+	 * @param jsonMap
+	 * @param properties
+	 * @throws Exception 
+	 */
+	@SuppressWarnings("unchecked")
+	public static void toJSON(Collection value, String[] properties, Map<String, Object> jsonMap, String rowkey) throws Exception {
+		if (value == null || properties == null || properties.length == 0)
+			return;
+		if (value instanceof Collection<?>) {
+			List<Object> list = new ArrayList<Object>();
+			Collection cols = (Collection<?>) value;
+			for (Object obj : cols) {
+				Map<String, Object> jMap = new HashMap<String, Object>();
+				toSimpleJSON(obj, jMap, properties);
+				list.add(jMap);
+			}
+			jsonMap.put(rowkey, list);
+		} else {
+			toSimpleJSON(value, jsonMap, properties);
+		}
+		
+	}
+	
+	public static void toSimpleJSON(Object value, Map<String, Object> jsonMap, String[] properties) throws Exception {
+		for (String property : properties) {
+			String[] objs = property.split("\\.");
+			Map<String, Object> curMap = jsonMap;
+			for (int i=0; i<objs.length-2; i++) {
+				Map<String, Object> objMap = (Map<String, Object>) curMap.get(objs[i]);
+				if (objMap == null) {
+					objMap = new HashMap<String, Object>();
+					curMap.put(objs[i], objMap);
+				}
+				curMap = objMap;
+			}
+			curMap.put(objs[objs.length-1], getValue(value, property));
 		}
 	}
 

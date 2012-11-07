@@ -16,29 +16,18 @@
 </head>
 <body>
 <div id="headerDiv">
-<div id="welcome">欢迎 <b>${userBean.username}</b> !你有<span id="undealmsg">0</span>条未处理任务消息和<span id="unreadmsg">0</span>条未读关注消息</div>
-<div id="menu">
-			<a href="${basePath}/msg/mymsg.jsp" id="btn_listpatch"><span class="corner"></span>我的消息</a>
-			<a href="${basePath}/manage/listbuild.jsp" id="btn_listbuild">
-				<span class="corner"></span>
-			构建包列表</a>
-			<a href="${basePath}/manage/showbuildlog.jsp" id="btn_showbuildlog">
-				<span class="corner"></span>
-			构建日志</a>
-			<a href="${basePath}/pack/addbuild.jsp" id="btn_addbuild">
-				<span class="corner"></span>
-			增加构建</a>
-			<a href="${basePath}/manage/listbuildfiles.jsp" id="btn_listbuildfiles">
-				<span class="corner"></span>
-			文件查询</a>
-			<a href="${basePath}/index.jsp" id="btn_index">
-				<span class="corner"></span>
-			切换用户</a>
-		</div>
+	<div id="welcome">欢迎 <b>${userBean.username}</b> !你有<span id="undealmsg">0</span>条未处理任务消息和<span id="unreadmsg">0</span>条未读关注消息</div>
+	<div id="menu">
+		<a href="${basePath}/msg/mymsg.jsp" id="btn_listpatch"><span class="corner"></span>我的消息</a>
+		<a href="${basePath}/manage/listbuild.jsp" id="btn_listbuild"><span class="corner"></span>构建包列表</a>
+		<a href="${basePath}/manage/showbuildlog.jsp" id="btn_showbuildlog"><span class="corner"></span>构建日志</a>
+		<a href="${basePath}/pack/addbuild.jsp" id="btn_addbuild"><span class="corner"></span>增加构建</a>
+		<a href="${basePath}/manage/listbuildfiles.jsp" id="btn_listbuildfiles"><span class="corner"></span>文件查询</a>
+		<a href="${basePath}/index.jsp" id="btn_index">	<span class="corner"></span>切换用户</a>
+	</div>
+	<div id="menubar">
+		<a href="${basePath}/user/logout">退出系统</a>
+		<img src="${basePath}/images/patch_small.png"/>
+	</div>
 </div>
-<div style="float:right; position: absolute; right:10px; top:0px;">
-<div id="menubar">
-<a href="${basePath}/user/logout">退出系统</a>
-</div>
-<img src="${basePath}/images/patch_small.png"/>
-</div>
+<div id="bodyDiv">

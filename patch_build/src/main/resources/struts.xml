@@ -31,13 +31,32 @@
 			<result name="next" >/pack/addbuild.jsp</result>
 			<result name="error">/pack/addbuild.jsp</result>
 		</action>
+		<action name="handle" class="com.m3.patchbuild.pack.action.HandlePackAction">
+		    <result name="buildfail">/pack/buildfail.jsp</result>
+		    <result name="check">/pack/check.jsp</result>
+		</action>
+		<action name="viewf" class="com.m3.patchbuild.pack.action.ViewPackFileAction">
+	     	<result name="success">/pack/viewfile.jsp</result>
+		</action>
 	</package>
-	<package name="json" extends="json-default" namespace="/msg">
+	<package name="json" extends="json-default" namespace="/js">
         <action name="fnmsg" class="com.m3.patchbuild.message.action.FetchMessageAction">
             <result type="json">
                 <param name="root">dataMap</param>
             </result>
         </action>
+        <action name="handle" class="com.m3.patchbuild.message.action.HandleMessageAction">
+   			<result name="next" type="redirectAction">
+   			    <param name="namespace">${ns}</param>  
+            	<param name="actionName">${nextAction}</param>  
+            	<param name="bussId">${bussId}</param>
+            	<param name="checkId">${checkId}</param>
+   			</result>
+		</action>
+		<action name="viewf" class="com.m3.patchbuild.pack.action.ViewPackFileAction">
+	     	<result type="json">
+               <param name="root">dataMap</param>
+         	</result>
+		</action>
 	</package>
-	
 </struts>

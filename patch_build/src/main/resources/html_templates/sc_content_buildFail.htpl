@@ -1,0 +1,4 @@
+您好！
+ &nbsp;&nbsp;&nbsp;&nbsp; <b>${BP.buildNo}</b>构建失败，请查看构建日志以获取详细信息<br/>
+ &nbsp;&nbsp;&nbsp;&nbsp; 补丁分支：<b>${BP.branch.branch}</b>，构建申请人：${BP.requester}，申请时间:${BP.requestTime}
+ 谢谢

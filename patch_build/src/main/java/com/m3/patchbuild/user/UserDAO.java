@@ -1,7 +1,7 @@
 package com.m3.patchbuild.user;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.criterion.Restrictions;
 
@@ -32,7 +32,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 	
-	public List<User> listByUserId(Set<String> userIds) {
+	public List<User> listByUserId(Collection<String> userIds) {
 		try {
 			return HibernateUtil.openSession()
 					.createCriteria(getInfoClass())

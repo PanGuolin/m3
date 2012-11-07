@@ -130,7 +130,7 @@ public class UserMessageQueue {
 					try {
 						messageQueue.wait();
 					} catch (InterruptedException e) {
-						logger.error("消息等待时出错", e);
+						logger.debug("消息等待时出错", e);
 						return;
 					}
 				}

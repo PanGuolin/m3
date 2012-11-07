@@ -1,7 +1,9 @@
 package com.m3.common;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,5 +46,16 @@ public abstract class StringUtil {
 		Set<String> set = new HashSet<String>();
 		set.addAll(Arrays.asList(str.split(sep)));
 		return set;
+	}
+	
+	/**
+	 * 格式化日期对象
+	 * @param date
+	 * @return
+	 */
+	public static String formate(Date date) {
+		if (date == null)
+			return "";
+		return new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(date);
 	}
 }

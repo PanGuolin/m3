@@ -1,4 +1,20 @@
-#menu { font-family:Arial; font-size:14px; margin-left:3px;}
+#headerDiv {
+	width:960px;
+	border-bottom: 1px solid #99BBE8;
+	text-align:left;
+	margin: 0 auto;
+	height:56px;
+	position:relative;
+}
+
+#welcome {
+	font-size:14px;
+	padding-left:20px;
+	width: 50%;
+	font-family: "Î¢ÈíÑÅºÚ", "Cambria", "ËÎÌå";
+}
+
+#menu { font-family:Arial; font-size:14px; margin-left:3px; width: 80%;}
 #menu a, #menu a:visited {
 	display: block;
 	float:left;
@@ -31,22 +47,16 @@
 	border-bottom:solid 6px #F90;
 }
 
-#welcome {
-	font-size:14px;
-	padding-left:20px;
-	font-family: "Î¢ÈíÑÅºÚ", "Cambria", "ËÎÌå";
-}
-
-#headerDiv {
-	width:100%;
-	border-bottom: 1px solid #99BBE8;
-	text-align:left;
-	margin-bottom:15px;
-	height:56px;
-}
 #undealmsg, #unreadmsg {font-weight: bold; color:blue;}
 
-#menubar { width:650px; text-align:right; display:inline; float:left; vertical-align:bottom;}
+#menubar { 
+	text-align:right; 
+	display:inline; 
+	vertical-align:bottom; 
+	position: absolute;
+	right:0px; 
+	top:0px;
+}
 
 #menubar a, #menubar a:visited {
 	display:block; 
@@ -63,4 +73,30 @@
 	color:#f00; 
 	border-top:8px solid #000; 
 	border-bottom:8px solid #000;
+}
+
+#bodyDiv {
+	width: 960px;
+	text-align:center;
+	margin: 20px auto;
+	clear: both;
+}
+
+.dataTable {
+	width:100%; 
+	border:1px solid #ccc;
+	border-collapse:collapse;
+	margin-top: 20px;
+}
+
+.dataTable td{
+	border:solid 1px #CCC;
+	line-height: 20px;
+}
+
+.dataTable th {
+	font-weight: bold;
+	background-color:#D5E2F2;
+	border:solid 1px #99BBE8;
+	line-height: 20px;
 }

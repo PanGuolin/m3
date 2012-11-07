@@ -1,6 +1,6 @@
 var mymsg = {
 	refresh : function() {
-		var url = basePath + "/msg/fnmsg.action?t=nl";
+		var url = basePath + "/js/fnmsg.action?t=nl";
 		if ($("#query_nt_v1").is(":checked")) {
 			url += "&q.nt=0";
 		} else {
@@ -30,13 +30,39 @@ var mymsg = {
 			var action = "";
 			action += "<a href='#' onclick='$msg(mymsg.data.rows[" + i + "].detail.content, {width:400});'>显示内容</a>";
 			if (isTo) {
-				action += "&nbsp; &nbsp;<a href='#' onclick=''>处理</a>";
+				action += "&nbsp; &nbsp;<a href='" + basePath + "/js/handle?i=" + row.uuid + "' onclick=''>处理</a>";
 			} else {
-				action += "&nbsp; &nbsp;<a href='#' onclick=''>忽略</a>";
+				action += "&nbsp; &nbsp;<a href='#' onclick='mymsg.ignore(" + i + ")'>忽略</a>";
 			}
+			action += "&nbsp; &nbsp;<a href='#' onclick='mymsg.checkOperators(" + i + ")'>当前操作人</a>";
 			row.action = action;
 		}
 		$get("#datagrid").loadData(data);
+	},
+	
+	checkOperators : function(index) {
+		var uuid = mymsg.data.rows[index].uuid;
+		var url =  basePath + "/js/fnmsg.action?t=qo&i=" + uuid;
+		$.get(url, mymsg.showOperators, "json");
+	}, 
+	
+	showOperators : function(data, status) {
+		var msg = "";
+		if (status != "success" || !data.rows.length) {
+			msg = "没有找到相应执行人，可能消息已过期";
+		} else {
+			msg = "当前消息处理用户列表：<br/>";
+			for (var i=0; i<data.rows.length; i++) {
+				msg += data.rows[i].userName + "[" + data.rows[i].userId + "]，&nbsp;&nbsp;";
+			}
+		}
+		$msg(msg, {title:"消息处理人"});
+	},
+	
+	ignore : function(index) {
+		var uuid = mymsg.data.rows[index].uuid;
+		var url =  basePath + "/js/fnmsg.action?t=ig&i=" + uuid;
+		$.get(url, mymsg.refresh, "json");
 	}
 };
 	
@@ -48,3 +74,4 @@ $().ready(function() {
 function booleanFormater(value, row, index) {
 	return value ? "是" : "否";
 }
+

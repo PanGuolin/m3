@@ -83,7 +83,7 @@ public class BuildThread extends Thread {
 			HibernateUtil.closeSession();
 		}
 		
-		logOut = new PrintStream(bp.getBuildLog());
+		logOut = new PrintStream(bp.getBuildLogFile());
         DefaultLogger consoleLogger = new DefaultLogger();  
         consoleLogger.setErrorPrintStream(logOut);  
         consoleLogger.setOutputPrintStream(logOut); 

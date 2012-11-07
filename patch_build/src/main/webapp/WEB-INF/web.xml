@@ -117,4 +117,7 @@
 	        <taglib-location>/WEB-INF/tld/c.tld</taglib-location>
 	    </taglib>
     </jsp-config>
+    <session-config>
+        <session-timeout>15</session-timeout>
+    </session-config>
 </web-app>

@@ -67,7 +67,7 @@ public class Message implements IBussInfo {
 	
 	//@OneToOne(fetch=FetchType.LAZY, optional = true, cascade = CascadeType.ALL, mappedBy = "messageId")
 	@ManyToOne(optional=true, targetEntity=MessageDetail.class,  cascade = CascadeType.ALL)
-	@JoinColumn(name="DetailId")
+	@JoinColumn(name="DetailId") 
 	private MessageDetail detail;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "message",  cascade = CascadeType.ALL) 

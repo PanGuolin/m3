@@ -25,6 +25,10 @@ public class MessageReciever implements IStateful{
 	public static final int SEND_TYPE_CC = 1; //抄送给
 	
 	public static final int SEND_TYPE_TO = 0; //发送给
+	
+	public static int STATUS_NORMAL = 0; //正常状态
+	
+	public static int STATUS_INGORE = -1; //忽略
 
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
@@ -49,6 +53,8 @@ public class MessageReciever implements IStateful{
 	private String userId;
 	
 	private int status;
+	
+	private String userName;
 
 	public String getUuid() {
 		return uuid;
@@ -81,5 +87,12 @@ public class MessageReciever implements IStateful{
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 }

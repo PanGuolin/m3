@@ -47,7 +47,8 @@ create table Msg_Reciever
    UUID                 char(36)                       not null,
    MessageId            char(36)                       not null,
    SendType             int                            not null,
-   UserId               char(30)                       not null,
+   UserId               varchar(30)                    not null,
+   UserName				varchar(30)					   not null,
    Status               int,
    constraint PK_MSG_MESSAGESEND primary key clustered (UUID)
 );

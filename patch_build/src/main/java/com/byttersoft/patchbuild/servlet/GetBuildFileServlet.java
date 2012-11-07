@@ -6,12 +6,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 
 import com.byttersoft.patchbuild.beans.RepositoryInfo;
 import com.byttersoft.patchbuild.service.BuildFileService;
@@ -25,6 +28,8 @@ import com.byttersoft.patchbuild.utils.UserUtil;
  *
  */
 public class GetBuildFileServlet extends HttpServlet{
+	
+	private static final Logger logger = Logger.getLogger(GetBuildFileServlet.class);
 
 	/**
 	 * 
@@ -100,12 +105,13 @@ public class GetBuildFileServlet extends HttpServlet{
 		
 		if (!f.exists() && !f.isFile())
 			throw new ServletException("文件不存在" + fileName);
-		
+		logger.info("download file:" + f.getAbsolutePath() + f.length());
 		FileInputStream fileInputStream = new FileInputStream(f);
 		if (fileInputStream != null) {
 			ServletOutputStream out = resp.getOutputStream();
 			try {
-				resp.setContentType("application/x-msdownload");
+				//resp.setContentType("application/x-msdownload");
+				resp.setContentType("application/x-download");
 				resp.setHeader("Content-Disposition", "attachment; filename=" + 
 						new String(fileName.getBytes(fileNameEncoding),"iso8859-1") + "");
 				
@@ -114,8 +120,11 @@ public class GetBuildFileServlet extends HttpServlet{
 				int len = fileInputStream.read(bs);
 				while(len != -1) {
 					out.write(bs, 0, len);
+					out.flush();
 					len = fileInputStream.read(bs);
 				}
+			} catch (Throwable t) {
+				logger.error("下载文件时出错", t);
 			} finally {
 				fileInputStream.close();
 				out.flush();

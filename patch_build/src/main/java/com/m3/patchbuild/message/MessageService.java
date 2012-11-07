@@ -67,16 +67,16 @@ public class MessageService extends AbstractService {
 		switch (bp.getStatus()) {
 		case buildFail:// 发送给requester
 			toUsers.add(reqUser);
-			attachments.add(bp.getBuildLog().getAbsolutePath());
+			attachments.add(bp.getBuildLogFile().getAbsolutePath());
 			break;
-		case builded:// 发送给testmanager,并抄送关注人
+		case builded:// 发送给designer,并抄送关注人
 			for (User user : superiors) {
-				if (user.hasRole(UserRole.testmanager)) {
+				if (user.hasRole(UserRole.designer)) {
 					toUsers.add(user);
 				}
 			}
 			if (toUsers.isEmpty())
-				toUsers.addAll(userService.findUserByRole(UserRole.testmanager));
+				toUsers.addAll(userService.findUserByRole(UserRole.designer));
 			ccUsers.add(reqUser);
 			break;
 		case checkFail:// 发送给请求人，同时抄送关注人
@@ -142,7 +142,7 @@ public class MessageService extends AbstractService {
 		msg.setBussId(bp.getUuid());
 		msg.setBussType(BussFactory.getBussType(Pack.class));
 		msg.setDetail(detail);
-		msg.setSender("System");
+		msg.setSender(bp.getRequester());
 		msg.setSendTime(new Date());
 		msg.setStatus(IStateful.STATE_NORMAL);
 		msg.setSubject(HtmlTemplateService.getTemplate("sc_subject_" + bp.getStatus().name(), bp));
@@ -155,6 +155,7 @@ public class MessageService extends AbstractService {
 				rec.setSendType(MessageReciever.SEND_TYPE_TO);
 				rec.setStatus(IStateful.STATE_NORMAL);
 				rec.setUserId(u.getUserId());
+				rec.setUserName(u.getUsername());
 				msg.getRecievers().add(rec);
 			}
 		}
@@ -165,6 +166,7 @@ public class MessageService extends AbstractService {
 				rec.setSendType(MessageReciever.SEND_TYPE_CC);
 				rec.setStatus(IStateful.STATE_NORMAL);
 				rec.setUserId(u.getUserId());
+				rec.setUserName(u.getUsername());
 				msg.getRecievers().add(rec);
 			}
 		}
@@ -181,6 +183,25 @@ public class MessageService extends AbstractService {
 			}
 		}
 		UserMessageQueue.messageSended(msg);
+	}
+
+	/**
+	 * 列出指定消息的参与人
+	 * @param i
+	 * @return
+	 */
+	public List<MessageReciever> listOperators(String msgUid) {
+		return getDao().listOperators(msgUid);
+	}
+
+	/**
+	 * 忽略一条消息
+	 * @param i
+	 * @param userId
+	 * @return
+	 */
+	public boolean ignore(String msgUid, String userId) {
+		return getDao().ignore(msgUid, userId);
 	}
 	
 

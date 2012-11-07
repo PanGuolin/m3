@@ -51,7 +51,8 @@ public class MessageDAO extends BaseDAO{
 		sb.append(" FROM Message msg LEFT JOIN fetch msg.recievers rec Where rec.userId=:userId AND msg.status=0");
 		MessageQuery q = (MessageQuery)query;
 		
-		sb.append(" AND rec.sendType=" + (q.getNt() == 1 ? "1" : "0"));
+		sb.append(" AND rec.sendType=" + (q.getNt() == 1 ? "1" : "0"))
+		.append(" AND rec.status=" + MessageReciever.STATUS_NORMAL);
 		
 		try {
 			Session sess = HibernateUtil.openSession();
@@ -124,6 +125,47 @@ public class MessageDAO extends BaseDAO{
 					.setParameter("sendType", toType ? MessageReciever.SEND_TYPE_TO : MessageReciever.SEND_TYPE_CC)
 					.uniqueResult();
 			return size.intValue();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+
+	/**
+	 * 获取消息的参与人
+	 * @param msgUid
+	 * @return
+	 */
+	public List<MessageReciever> listOperators(String msgUid) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM MessageReciever rec LEFT JOIN fetch rec.message msg Where msg.uuid=:msgUid AND msg.status=0 AND rec.sendType=:sendType");
+		try {
+			return HibernateUtil.openSession()
+				.createQuery(sb.toString())
+				.setParameter("msgUid", msgUid)
+				.setParameter("sendType", MessageReciever.SEND_TYPE_TO)
+				.list();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+
+	/**
+	 * 忽略用户的消息
+	 * @param msgUid
+	 * @param userId
+	 * @return
+	 */
+	public boolean ignore(String msgUid, String userId) {
+		try {
+			return HibernateUtil.openSession()
+					.createQuery("UPDATE MessageReciever rec SET rec.status = :status WHERE rec.message.uuid=:msgUid AND rec.sendType=:sendType AND rec.userId=:userId")
+					.setParameter("sendType", MessageReciever.SEND_TYPE_CC) //只有抄送的消息才能被忽略
+					.setParameter("status", MessageReciever.STATUS_INGORE)
+					.setParameter("msgUid", msgUid)
+					.setParameter("userId", userId)
+					.executeUpdate() == 1;
 		} finally {
 			HibernateUtil.closeSession();
 		}
