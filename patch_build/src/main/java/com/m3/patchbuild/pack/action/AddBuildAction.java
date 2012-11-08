@@ -39,7 +39,8 @@ public class AddBuildAction extends BaseAction{
 			if (StringUtil.isEmpty(keywords)) {
 				keywords = pack.getBuildNo();
 			}
-			Branch branch = BranchService.getBranch(pack.getBranch().getBranch());
+			BranchService branchService = (BranchService)BussFactory.getService(Branch.class);
+			Branch branch = branchService.getBranch(pack.getBranch().getBranch());
 			List<SVNLog> logs = SVNLogService.listByKeyword(branch, keywords);
 			List<String> list = new ArrayList<String>();
 			for (SVNLog log : logs) {

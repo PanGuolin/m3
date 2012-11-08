@@ -5,8 +5,6 @@ import java.util.UUID;
 import com.m3.common.ContextUtil;
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.BussFactory;
-import com.m3.patchbuild.IBussInfo;
-import com.m3.patchbuild.IService;
 import com.m3.patchbuild.IStateful;
 import com.m3.patchbuild.message.Message;
 import com.m3.patchbuild.message.MessageReciever;
@@ -20,9 +18,9 @@ import com.opensymphony.xwork2.ActionContext;
  */
 public class HandleMessageAction extends BaseAction{
 	
-	private static final String NEXT = "next"; //下一个页面
+	public static final String NEXT = "next"; //下一个页面
 	
-	private String ns; //处理业务的ACTION命名空间
+	private String bussType; //处理业务的ACTION命名空间
 
 	private String nextAction; //处理业务的ACTION名称 
 	
@@ -31,6 +29,8 @@ public class HandleMessageAction extends BaseAction{
 	private String i;//消息UUID
 	
 	private String checkId; //防止恶意访问的ID号
+	
+	private String t; //请求类型
 
 	@Override
 	protected String doExecute() throws Exception {
@@ -68,8 +68,8 @@ public class HandleMessageAction extends BaseAction{
 		this.checkId = UUID.randomUUID().toString();
 		ActionContext.getContext().getSession().put(checkId, true);
 		this.bussId = message.getBussId();
-		this.ns = "/pack";
-		this.nextAction = "handle";
+		this.bussType = "/" + message.getBussType();
+		//this.nextAction = "handle";
 		return NEXT;
 	}
 
@@ -93,12 +93,19 @@ public class HandleMessageAction extends BaseAction{
 		return bussId;
 	}
 
-	public String getNs() {
-		return ns;
+	public String getBussType() {
+		return bussType;
 	}
 
 	public String getCheckId() {
 		return checkId;
 	}
-	
+
+	public String getT() {
+		return t;
+	}
+
+	public void setT(String t) {
+		this.t = t;
+	}
 }

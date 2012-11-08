@@ -1,0 +1,4 @@
+分支${BP.branch.branch}上的构建包${BP.buildNo}已经检${BP.checker}检查通过，请安排测试人员进行测试<br/>
+构建人: <b>${BP.requester}</b><br/>
+构建时间:${BP.requestTime}<br/>
+检查时间:${BP.checkTime}<br/>

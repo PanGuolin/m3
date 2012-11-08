@@ -91,20 +91,28 @@ public class PackService extends AbstractService {
 	}
 	
 	
-	/**
-	 * 设计人员检查构建信息
-	 * @param bp
-	 * @param info
-	 * @throws Exception
-	 */
-	public void check(Pack bp, CheckInfo info) throws Exception {
-		bp.setChecker(info.getUser());
-		bp.setCheckTime(new Date());
-		bp.setStatus(info.isPass() ? PackStatus.checked : PackStatus.checkFail);
-		bp.setFailReason(info.isPass() ? "" : info.getMessage());
-		save(bp);
-		((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
-	}
+//	/**
+//	 * 检查构建包是否允许进入测试阶段
+//	 * @param packUid 构建包的UUID
+//	 * @param userId 用户ID
+//	 * @param failReason 失败原因，如果为null或空字符串则表示检查通过
+//	 * @throws Exception
+//	 */
+//	public void check(String packUid, String userId, String failReason) throws Exception {
+//		Pack pack = (Pack) getDao().findByUuid(packUid);
+//		if (!PackStatus.builded.equals(pack.getStatus())) {
+//			throw new IllegalBPStateException(pack, PackStatus.builded);
+//		}
+//		
+//		pack.setChecker(userId);
+//		pack.setCheckTime(new Date());
+//		pack.setFailReason(failReason);
+//		pack.setStatus(StringUtil.isEmpty(failReason) ? PackStatus.checked : PackStatus.checkFail);
+//		save(pack);
+//		
+//		MessageService msgService = (MessageService)BussFactory.getService(Message.class);
+//		msgService.statusChanged(pack);
+//	}
 	
 	/**
 	 * 查找对象
@@ -165,5 +173,4 @@ public class PackService extends AbstractService {
 			info = patchService.createPatch(branch);
 		}
 	}
-	
 }

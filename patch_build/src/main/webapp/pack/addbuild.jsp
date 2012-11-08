@@ -5,8 +5,8 @@
 
 	<div id="outterDiv">
 		<div id="errorDiv">${tips}</div>
-		<s:form action="/pack/addBuild.action" method="POST" theme="simple"> 
-			<s:set value="@com.m3.patchbuild.branch.BranchService@listAllBranch()" name="branchs"/>
+		<s:form action="/pack/addBuild.action" method="POST" theme="simple">
+			<s:set value="@com.m3.patchbuild.branch.BranchUtil@listAllBranch()" name="branchs"/>
 			<table style="width:100%">
 				<tr>
 					<td class="r">请选择构建分支:</td>

@@ -31,12 +31,27 @@
 			<result name="next" >/pack/addbuild.jsp</result>
 			<result name="error">/pack/addbuild.jsp</result>
 		</action>
-		<action name="handle" class="com.m3.patchbuild.pack.action.HandlePackAction">
-		    <result name="buildfail">/pack/buildfail.jsp</result>
-		    <result name="check">/pack/check.jsp</result>
+		<action name="handle" class="com.m3.patchbuild.pack.action.DispatchTaskAction">
+		    <result name="mode_iw">/msg/mode_inner_window.jsp</result>
+		    <result name="mode_nw">/msg/mode_new_window.jsp</result>
+		    <result name="buildFail">/pack/buildfail.jsp</result>
+		    <result name="builded">/pack/check.jsp</result>
+		    <result name="checkFail">/pack/checkfail.jsp</result>
+		    <result name="checked">/pack/assign.jsp</result>
+		    <result name="assigned">/pack/starttest.jsp</result>
+		    <result name="testing">/pack/tested.jsp</result>
+		    <result name="testFail">/pack/testFail.jsp</result>
+		    <result name="pass">/pack/publish.jsp</result>
+		    <result name="publishFail">/pack/publishFail.jsp</result>
 		</action>
 		<action name="viewf" class="com.m3.patchbuild.pack.action.ViewPackFileAction">
 	     	<result name="success">/pack/viewfile.jsp</result>
+		</action>
+		<action name="check" class="com.m3.patchbuild.pack.action.CheckPackAction">
+	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
+		</action>
+		<action name="assign" class="com.m3.patchbuild.pack.action.AssignAction">
+	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
 		</action>
 	</package>
 	<package name="json" extends="json-default" namespace="/js">
@@ -47,10 +62,12 @@
         </action>
         <action name="handle" class="com.m3.patchbuild.message.action.HandleMessageAction">
    			<result name="next" type="redirectAction">
-   			    <param name="namespace">${ns}</param>  
-            	<param name="actionName">${nextAction}</param>  
+   			    <param name="namespace">/${bussType}</param>  
+            	<param name="actionName">handle</param>  
             	<param name="bussId">${bussId}</param>
             	<param name="checkId">${checkId}</param>
+            	<param name="reqtype">${t}</param>
+            	<param name="messageId">${i}</param>
    			</result>
 		</action>
 		<action name="viewf" class="com.m3.patchbuild.pack.action.ViewPackFileAction">

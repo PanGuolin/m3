@@ -25,6 +25,13 @@
 		</tr>
 	</thead>
 </table>
-
+<div id="taskWindow" class="easyui-window" title="任务处理" data-options="iconCls:'icon-save'" style="width:400px;height:300px;"> 
+</div>
+<div id="tempDiv" style="display:none"></div>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/msg/mymsg.js"></script>
 <%@ include file="../include/footer.jsp" %>
+<script>
+fn.use("jquery/easyui");
+fn.use("jquery/form");
+$('#taskWindow').window({closed:true, onLoad:mymsg.winLoaded});
+</script>

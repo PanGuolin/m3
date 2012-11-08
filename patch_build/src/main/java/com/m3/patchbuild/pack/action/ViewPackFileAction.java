@@ -54,6 +54,8 @@ public class ViewPackFileAction extends BaseAction{
 						fileType = "js";
 					} else if ("xml".equalsIgnoreCase(sufix)) {
 						fileType = "xml";
+					} else if ("jsp".equalsIgnoreCase(sufix)) {
+						fileType = "php";
 					}
 				}
 				dataMap.put("type", fileType);

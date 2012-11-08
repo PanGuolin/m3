@@ -5,8 +5,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 
 /**
  * 用户消息对象，保存特定用户的消息对象
@@ -35,6 +33,7 @@ public class UserMessageQueue {
 				}
 			}
 		}
+		queue.userId = userId;
 		queue.consume(consumer);
 	}
 	
@@ -48,6 +47,7 @@ public class UserMessageQueue {
 			UserMessageQueue queue = queues.get(key);
 			if (System.currentTimeMillis() - queue.lastActived > expiredTime) {//过期的队列将被移除
 				expiredList.add(key);
+				queue.interruptLatest(); //中断当前线程
 			} else {
 				queue.accept(message);
 			}
@@ -58,7 +58,7 @@ public class UserMessageQueue {
 	}
 	
 	
-	private static final Logger logger  = Logger.getLogger(UserMessageQueue.class);
+	//private static final Logger logger  = Logger.getLogger(UserMessageQueue.class);
 	
 	private static int maxQueueLength = 50; //最大队列长度，默认为50条消息，注意队列中可能存在非特定消费者可消费的类型
 	
@@ -99,6 +99,17 @@ public class UserMessageQueue {
 		}
 		return true;
 	}
+	
+	/**
+	 * 中断最后一次等待的线程
+	 */
+	private void interruptLatest() {
+		synchronized (this) {
+			if (lastThread != null && lastThread != Thread.currentThread()) {
+				lastThread.interrupt();
+			}
+		}
+	}
 
 	/**
 	 * 消费一条消息
@@ -127,14 +138,16 @@ public class UserMessageQueue {
 				return;
 			} else {
 				synchronized (messageQueue) { 
-					try {
+					//try {
 						messageQueue.wait();
-					} catch (InterruptedException e) {
-						logger.debug("消息等待时出错", e);
-						return;
-					}
+					//} catch (InterruptedException e) {
+					//	logger.debug("消息等待时出错", e);
+					//	return;
+					//}
 				}
 			}
 		}
 	}
+	
+	
 }

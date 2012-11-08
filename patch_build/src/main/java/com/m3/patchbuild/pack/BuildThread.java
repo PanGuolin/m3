@@ -105,7 +105,8 @@ public class BuildThread extends Thread {
 		//如果是子分支，那么需要共享主分支的编译环境
 		boolean hasParent = branch.getParent() != null;
 		if (hasParent) {
-			Branch parent = BranchService.getBranch(branch.getParent());
+			BranchService branchService = (BranchService)BussFactory.getService(Branch.class);
+			Branch parent = branchService.getBranch(branch.getParent());
 			if (parent != null) {
 				proj.setProperty("compile.lib", parent.getWorkspace() + "/lib");
 				proj.setProperty("compile.classes", parent.getWorkspace() + "/classes");

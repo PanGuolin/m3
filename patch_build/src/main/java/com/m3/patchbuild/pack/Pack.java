@@ -3,8 +3,10 @@ package com.m3.patchbuild.pack;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -40,7 +42,7 @@ public class Pack implements IBussInfo{
 	private String comments; //构建描述
 	private String patch; //所属补丁
 	private PackStatus status = PackStatus.init; //当前状态
-	private Set<BuildFile> buildFiles = new HashSet<BuildFile>(); //构建文件列表
+	private List<BuildFile> buildFiles = new ArrayList<BuildFile>(); //构建文件列表
 	private Set<String> depends = new HashSet<String>(); //依赖其它构建包列表
 	private String failReason; //失败原因
 	
@@ -134,14 +136,12 @@ public class Pack implements IBussInfo{
 	public void setPatch(String patch) {
 		this.patch = patch;
 	}
-	public Set<BuildFile> getBuildFiles() {
-		return this.buildFiles;
+	public List<BuildFile> getBuildFiles() {
+		return buildFiles;
 	}
-	public void setBuildFiles(Set<BuildFile> buildFiles) {
-		if (buildFiles != null)
+	public void setBuildFiles(List<BuildFile> buildFiles) {
 		this.buildFiles = buildFiles;
 	}
-	
 	public void addBuildFile(BuildFile file) {
 		this.buildFiles.add(file);
 	}

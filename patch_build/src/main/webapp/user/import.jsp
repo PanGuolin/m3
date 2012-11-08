@@ -2,7 +2,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ page isELIgnored="false" %>
-<%@page import="com.m3.patchbuild.branch.BranchService" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html>
@@ -18,7 +17,7 @@
 		<div id="titleDiv">注册新用户</div>
 		<div id="formDiv">
 		<s:form action="/user/importFromSvn.action" method="POST"> 
-			<s:set value="@com.m3.patchbuild.branch.BranchService@listAllBranch()" name="branchs"/>
+			<s:set value="@com.m3.patchbuild.branch.BranchUtil@listAllBranch()" name="branchs"/>
 			<s:select name="branch" label="请选择SVN分支" multiple="false" list="#branchs" listKey="branch" listValue="name"/> 
   			<s:textfield label="登录名" name="user.userId"/>
  			<s:password label="登录口令" name="user.password" />

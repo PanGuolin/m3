@@ -13,6 +13,7 @@ public enum PackStatus {
 	checked, //检查完成
 	builded, //构建完成
 	buildFail, //构建失败
+	assigned, //已分配
 	testing, //测试中
 	pass, //测试完成
 	testFail,//测试失败
@@ -34,6 +35,7 @@ public enum PackStatus {
 			case testFail: 	return "测试打回";
 			case testing: 	return "正在测试";
 			case publishFail: return "发布失败";
+			case assigned:	return "已分配";
 		}
 		return super.toString();
 	} 

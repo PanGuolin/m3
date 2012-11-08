@@ -22,7 +22,8 @@ public class ImportUserFromSVN extends BaseAction{
 			setTips("用户已存在，请不要重复注册!");
 			return ERROR;
 		}
-		Branch bBranch = BranchService.getBranch(branch);
+		BranchService branchService = (BranchService)BussFactory.getService(Branch.class);
+		Branch bBranch = branchService.getBranch(branch);
 		if (SVNUtil.checkLogin(bBranch.getSvnUrl(), user.getUserId(), user.getPassword())) {
 			user.getRoles().clear();
 			user.addRole(UserRole.developer);

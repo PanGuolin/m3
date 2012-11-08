@@ -71,14 +71,15 @@ public class UserServiceTest extends TestCase{
 		User user = userService.findUser(userId);
 		if (user == null) {
 			user = new User();
-			user.setUserId(userId);
-			user.setUsername(userId);
-			user.setEmail(userId + "@threemickey.com");
-			user.setPassword("pswd");
-			user.addRole(role);
-			userService.save(user);
 		}
+		user.setUserId(userId);
+		user.setUsername(userId);
+		user.setEmail(userId + "@threemickey.com");
+		user.setPassword("pswd");
+		user.addRole(role);
+		userService.save(user);
 		return user;
 	}
+	
 
 }

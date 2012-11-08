@@ -2,6 +2,7 @@ package com.m3.patchbuild.branch;
 
 import java.util.List;
 
+import com.m3.patchbuild.AbstractService;
 import com.m3.patchbuild.BaseDAO;
 
 /**
@@ -9,33 +10,39 @@ import com.m3.patchbuild.BaseDAO;
  * @author MickeyMic
  *
  */
-public class BranchService {
+public class BranchService extends AbstractService{
 	
-	private static BranchDAO dao = new BranchDAO();
+	public BranchService() {
+		super(new BranchDAO());
+	}
+	
+	protected BranchDAO getDao() {
+		return (BranchDAO)super.getDao();
+	}
 	
 	/**
 	 * 获取分支对象
 	 * @param branch
 	 * @return
 	 */
-	public static Branch getBranch(String branch) {
-		return (Branch)dao.findByBillNo(BaseDAO.getBillNo("branch", branch));
+	public Branch getBranch(String branch) {
+		return (Branch)getDao().findByBillNo(BaseDAO.getBillNo("branch", branch));
 	}
 	
 	/**
 	 * 保存一个分支对象
 	 * @param branch
 	 */
-	public static void saveBranch(Branch branch) {
-		dao.saveInfo(branch);
+	public void saveBranch(Branch branch) {
+		getDao().saveInfo(branch);
 	}
 	
 	/**
 	 * 获取系统中的所有分支信息
 	 * @return
 	 */
-	public static List<Branch> listAllBranch() {
-		return dao.listAllBranch();
+	public List<Branch> listAllBranch() {
+		return getDao().listAllBranch();
 	}
 
 }

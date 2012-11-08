@@ -2,24 +2,22 @@ package com.m3.patchbuild.pack.action;
 
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.message.MessageConstant;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackService;
+import com.m3.patchbuild.pack.PackStatus;
 import com.opensymphony.xwork2.ActionContext;
 
 /**
- * 处理构建包
+ * 根据构建状态进行任务分发
  * @author pangl
  *
  */
-public class HandlePackAction extends BaseAction{
-	
-	private static final String BUILD_FAILD = "buildfail";
-	
-	private static final String CHECK = "check";//检查状态的页面跳转
-	
-	private String bussId;
-	
+public class DispatchTaskAction extends BaseAction{
+	private String bussId; //业务对象ID
 	private String checkId;
+	private String reqtype; //请求内容类型
+	private String messageId; //消息ID号
 	
 	private Pack pack; //构建包对象
 
@@ -32,13 +30,15 @@ public class HandlePackAction extends BaseAction{
 		}
 		PackService packService = (PackService)BussFactory.getService(Pack.class);
 		pack = (Pack) packService.findInfoByUuid(bussId);
-		switch(pack.getStatus()) {
-		case buildFail:
-			return BUILD_FAILD;
-		case builded:
-			return CHECK;
+		if (MessageConstant.REQTYPE_PAGEMODE.equals(reqtype)) {
+			if (PackStatus.builded.equals(pack.getStatus())) {
+				return MessageConstant.PAGETYPE_NEWWIN;//new window
+			} else {
+				return MessageConstant.PAGETYPE_INERWIN;//inner window
+			}
+		} else {
+			return pack.getStatus().name();
 		}
-		return SUCCESS;
 	}
 
 	public void setBussId(String bussId) {
@@ -56,4 +56,17 @@ public class HandlePackAction extends BaseAction{
 	public void setPack(Pack pack) {
 		this.pack = pack;
 	}
+
+	public void setReqtype(String reqtype) {
+		this.reqtype = reqtype;
+	}
+
+	public String getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
+	}
+	
 }

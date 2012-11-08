@@ -33,6 +33,11 @@
 		</table>
 		<table id="checklist" style="margin-top:20px;">
 			<caption>检查清单</caption>
+			<tr>
+				<td></td>
+				<td>全部通过<input type="checkbox" id="passAll"/></td>
+				<td></td>
+			</tr>
 			<tr class="cap">
 				<td >名称检查</td>
 				<td></td>
@@ -41,7 +46,7 @@
 			<tr>
 				<td></td>
 				<td class="r">构建包名称是否符合规范：</td>
-				<td class="l"><select name=""><option></option><option>通过</option><option>不通过</option></select></td>
+				<td class="l"><select><option></option><option>通过</option><option>不通过</option></select></td>
 			</tr>
 			<tr class="cap">
 				<td>SQL文件检查</td>
@@ -51,17 +56,17 @@
 			<tr>
 				<td></td>
 				<td class="r">SQL语法正确性：</td>
-				<td class="l"><select name=""><option></option><option>通过</option><option>不通过</option></select></td>
+				<td class="l"><select><option></option><option>通过</option><option>不通过</option></select></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td class="r">脚本可重复执行：</td>
-				<td class="l"><select name=""><option></option><option>通过</option><option>不通过</option></select></td>
+				<td class="l"><select><option></option><option>通过</option><option>不通过</option></select></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td class="r">包含各数据库脚本：</td>
-				<td class="l"><select name=""><option></option><option>通过</option><option>不通过</option></select></td>
+				<td class="l"><select><option></option><option>通过</option><option>不通过</option></select></td>
 			</tr>
 			<tr class="cap">
 				<td>其它检查项</td>
@@ -70,13 +75,13 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td class="r">是否通过：</td>
-				<td class="l"><select name=""><option>通过</option><option>不通过</option></select></td>
+				<td class="r">其它检查：</td>
+				<td class="l"><select id="otherPass"><option>通过</option><option>不通过</option></select><span style="color:#333">*不通过必须填写原因</span></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td class="r">不通过原因：</td>
-				<td class="l"><textarea cols="100" rows="5"></textarea></td>
+				<td class="l"><textarea cols="100" rows="5" id="otherReason"></textarea></td>
 			</tr>
 			<tr class="cap">
 				<td>最后检查结果:</td>
@@ -86,11 +91,15 @@
 			<tr>
 				<td></td>
 				<td class="r">当前的检查结果为：<span id="chkresult"></span></td>
-				<td style="text-align:center"><input type="button" value="提交检查结果"/></td>
+				<td style="text-align:center"><input type="button" value="提交检查结果" id="subchk" disabled="disabled"/></td>
 			</tr>
 		</table>
+		<form action="${basePath }/pack/check" id="checkForm" method="POST">
+			<input type="hidden" name="i" value="${pack.uuid }"/>
+			<input type="hidden" name="r" id="failreason" value=""/>
+		</form>
 	</div> 
-    <div id="fileSource" class="easyui-window" title="SourceWindow" data-options="iconCls:'icon-save'" style="width:800px;height:600px;"> 
+    <div id="fileSource" class="easyui-window" title="查看源文件" data-options="iconCls:'icon-save'" style="width:800px;height:600px;"> 
     </div> 
     
 <script type="text/javascript" src="${basePath}/js/pack/check.js"></script>
@@ -100,17 +109,12 @@
 <script type="text/javascript" src="${basePath}/js/syh/shBrushJava.js"></script>
 <script type="text/javascript" src="${basePath}/js/syh/shBrushSql.js"></script>
 <script type="text/javascript" src="${basePath}/js/syh/shBrushXml.js"></script>
+<script type="text/javascript" src="${basePath}/js/syh/shBrushPhp.js"></script>
 <link type="text/css" rel="stylesheet" href="${basePath}/css/syh/shCore.css"/>
 <link type="text/css" rel="Stylesheet" href="${basePath}/css/syh/shThemeDefault.css" />
 <%@ include file="../include/footer.jsp" %>
 <script>
 fn.use("jquery/easyui");
 $('#fileSource').window({closed:true});
-$().ready(function(){
-	for (var p in SyntaxHighlighter) {
-		//alert(p + "=" + SyntaxHighlighter[p]);
-	}});
-	
-	
-	
+$().ready(checkObj.attach);
 </script>

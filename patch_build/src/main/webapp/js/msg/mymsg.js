@@ -30,7 +30,7 @@ var mymsg = {
 			var action = "";
 			action += "<a href='#' onclick='$msg(mymsg.data.rows[" + i + "].detail.content, {width:400});'>显示内容</a>";
 			if (isTo) {
-				action += "&nbsp; &nbsp;<a href='" + basePath + "/js/handle?i=" + row.uuid + "' onclick=''>处理</a>";
+				action += "&nbsp; &nbsp;<a href='#' onclick='mymsg.doTask(" + i + ")'>处理</a>";
 			} else {
 				action += "&nbsp; &nbsp;<a href='#' onclick='mymsg.ignore(" + i + ")'>忽略</a>";
 			}
@@ -58,11 +58,54 @@ var mymsg = {
 		}
 		$msg(msg, {title:"消息处理人"});
 	},
-	
+	//忽略消息
 	ignore : function(index) {
 		var uuid = mymsg.data.rows[index].uuid;
 		var url =  basePath + "/js/fnmsg.action?t=ig&i=" + uuid;
 		$.get(url, mymsg.refresh, "json");
+	},
+	//处理任务
+	doTask : function(index) {
+		var uuid = mymsg.data.rows[index].uuid;
+		var url = basePath + "/js/handle?t=pm&i=" + uuid;
+		$.get(url, mymsg.openWin, "html");
+		//$('#taskWindow').window('refresh', url);
+		//$('#taskWindow').window({content:'sss0'});
+		//$('#taskWindow').window('open');
+	},
+	openWin : function(data, status) {
+		if (status != "success") {
+			return;
+		}
+		var temp = $("#tempDiv").html(data);
+		var url = basePath + "/js/handle?t=pc&i=" + temp.find('#uuid').text();
+		var mode = temp.find('#modetype').text();
+		if (mode == "mode_iw") {
+			
+			$('#taskWindow').window('open');
+			$('#taskWindow').window('refresh', url);
+			//alert($('#taskWindow').window('body').html());
+		} else {
+			location.href = url;
+		}
+	},
+	winLoaded : function() {
+
+		
+		var subms = $('#taskWindow').window('body').find('form');
+		if (subms.length) {alert('ok');
+			subms.ajaxForm(function() {
+				alert('ok')
+			})
+//			return false;
+//			
+//			subms.click(function() {
+//				var _t = $(this);
+//				var _f = _t.closest('FORM');
+//				_f.ajaxForm(); 
+//				return false;
+//			});
+		}
 	}
 };
 	

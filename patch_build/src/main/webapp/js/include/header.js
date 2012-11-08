@@ -8,8 +8,10 @@ var fnmsg = {
 		handleMsgData : function(data, status) {
 			var viewOrDoUrl = basePath + "/msg/viewordo?i=";
 			if (status == "success" ) {
-				//if (data.unread) $("#unreadmsg").html(data.unread);
-				//if (data.undeal) $("#undealmsg").html(data.undeal);
+				//var sStatus = data.status;
+				//if (-1 == sStatus)  {//线程被中断
+				//	
+				//}
 					
 				var msgObj = data["message"];
 				if (msgObj) {

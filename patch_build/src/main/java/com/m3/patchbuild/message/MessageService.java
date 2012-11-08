@@ -59,54 +59,68 @@ public class MessageService extends AbstractService {
 		
 		UserService userService = (UserService) BussFactory.getService(User.class);
 		User reqUser = userService.findUser(bp.getRequester());
-		Set<User> toUsers = new HashSet<User>();
-		Set<User> ccUsers = reqUser.getFollowers();
+		
+		Set<User> ccUsers = new HashSet<User>();
+		ccUsers.addAll(reqUser.getFollowers());
+		ccUsers.add(reqUser);
+		
 		Set<String> attachments = new HashSet<String>();
 		Set<User> superiors = reqUser.getSuperiors();
-
+		String sendUser = "System.";
+		Set<User> toUsers = new HashSet<User>();
 		switch (bp.getStatus()) {
 		case buildFail:// 发送给requester
 			toUsers.add(reqUser);
 			attachments.add(bp.getBuildLogFile().getAbsolutePath());
+			sendUser = bp.getRequester();
 			break;
 		case builded:// 发送给designer,并抄送关注人
-			for (User user : superiors) {
-				if (user.hasRole(UserRole.designer)) {
-					toUsers.add(user);
-				}
-			}
-			if (toUsers.isEmpty())
-				toUsers.addAll(userService.findUserByRole(UserRole.designer));
-			ccUsers.add(reqUser);
+			fillToUsers(reqUser, UserRole.designer, toUsers);
+			sendUser = bp.getRequester();
 			break;
 		case checkFail:// 发送给请求人，同时抄送关注人
 			toUsers.add(reqUser);
+			sendUser = bp.getChecker();
 			break;
-		
+		case checked:
+			fillToUsers(reqUser, UserRole.testmanager, toUsers);
+			sendUser = bp.getChecker();
+			break;
+		case assigned:
+			User user = userService.findUser(bp.getTester());
+			toUsers.add(user);
+			sendUser = bp.getAssigner();
 		case pass:// 发送给deployer，并抄送关注人
-			for (User user : superiors) {
-				if (user.hasRole(UserRole.deployer)) {
-					toUsers.add(user);
-				}
-			}
-			if (toUsers.isEmpty())
-				toUsers.addAll(userService.findUserByRole(UserRole.deployer));
-			ccUsers.add(reqUser);
+			fillToUsers(reqUser, UserRole.deployer, toUsers);
+			sendUser = bp.getTester();
 			break;
 		case testFail:// 发送给开发，并抄送关注人
-			toUsers.add(reqUser);
+			sendUser = bp.getTester();
 			break;
 		case testing:// 仅发送给开发
 			toUsers.add(reqUser);
 			ccUsers.clear();
+			sendUser = bp.getAssigner();
 			break;
 		case published:
-			toUsers.add(reqUser);
+			sendUser = bp.getDeployer();
 			break;
 		default:
 			return;
 		}
-		sendMessage(bp, toUsers, ccUsers, attachments);
+		sendMessage(bp, toUsers, ccUsers, attachments, sendUser);
+	}
+	
+	private void fillToUsers(User reqUser, String role, Set<User> toUsers) {
+		UserService userService = (UserService) BussFactory.getService(User.class);
+		Set<User> superiors = reqUser.getSuperiors();
+		for (User user : superiors) {
+			if (user.hasRole(role)) {
+				toUsers.add(user);
+			}
+		}
+		if (toUsers.isEmpty())
+			toUsers.addAll(userService.findUserByRole(role));
 	}
 	
 	/**
@@ -128,7 +142,7 @@ public class MessageService extends AbstractService {
 	 * @param from
 	 * @throws Exception
 	 */
-	private void sendMessage(Pack bp, Set<User> toUsers,Set<User> ccUsers, Set<String> attachments) {
+	private void sendMessage(Pack bp, Set<User> toUsers,Set<User> ccUsers, Set<String> attachments, String sendUser) {
 		if ((toUsers == null || toUsers.isEmpty())
 				&& (ccUsers == null || ccUsers.isEmpty()))
 			return;
@@ -142,7 +156,7 @@ public class MessageService extends AbstractService {
 		msg.setBussId(bp.getUuid());
 		msg.setBussType(BussFactory.getBussType(Pack.class));
 		msg.setDetail(detail);
-		msg.setSender(bp.getRequester());
+		msg.setSender(sendUser);
 		msg.setSendTime(new Date());
 		msg.setStatus(IStateful.STATE_NORMAL);
 		msg.setSubject(HtmlTemplateService.getTemplate("sc_subject_" + bp.getStatus().name(), bp));

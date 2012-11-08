@@ -30,11 +30,11 @@
 				<param name="type">12</param>
 			</type>
 		</property>
-		<set name="buildFiles" cascade="all" lazy="false" inverse="false">
+		<bag name="buildFiles" cascade="all" lazy="false" inverse="false" order-by="url">
     		<key column="buildNo" property-ref="buildNo"/>
-    		<one-to-many class="com.m3.patchbuild.pack.BuildFile"/>
-		</set>
-       <set name="depends" table="PB_BuildPackDepend" cascade="all">
+    		<one-to-many class="com.m3.patchbuild.pack.BuildFile" />
+		</bag>
+       <set name="depends" table="PB_BuildPackDepend" cascade="all" >
        		<key column="buildUuid"/>
        		<element type="string" column="dependNo"/>
        </set>
