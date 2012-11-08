@@ -90,21 +90,12 @@ var mymsg = {
 		}
 	},
 	winLoaded : function() {
-
-		
 		var subms = $('#taskWindow').window('body').find('form');
-		if (subms.length) {alert('ok');
+		if (subms.length) {
 			subms.ajaxForm(function() {
-				alert('ok')
-			})
-//			return false;
-//			
-//			subms.click(function() {
-//				var _t = $(this);
-//				var _f = _t.closest('FORM');
-//				_f.ajaxForm(); 
-//				return false;
-//			});
+				$('#taskWindow').window('close');
+				mymsg.refresh();
+			});
 		}
 	}
 };

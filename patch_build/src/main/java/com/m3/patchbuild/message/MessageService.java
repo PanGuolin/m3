@@ -97,9 +97,9 @@ public class MessageService extends AbstractService {
 		case testFail:// 发送给开发，并抄送关注人
 			sendUser = bp.getTester();
 			break;
-		case testing:// 仅发送给开发
-			toUsers.add(reqUser);
-			ccUsers.clear();
+		case testing:
+			toUsers.add(userService.findUser(bp.getTester()));
+			ccUsers.add(reqUser);
 			sendUser = bp.getAssigner();
 			break;
 		case published:

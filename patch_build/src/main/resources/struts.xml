@@ -53,6 +53,9 @@
 		<action name="assign" class="com.m3.patchbuild.pack.action.AssignAction">
 	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
 		</action>
+		<action name="starttest" class="com.m3.patchbuild.pack.action.StartTestAction">
+	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
+		</action>
 	</package>
 	<package name="json" extends="json-default" namespace="/js">
         <action name="fnmsg" class="com.m3.patchbuild.message.action.FetchMessageAction">
