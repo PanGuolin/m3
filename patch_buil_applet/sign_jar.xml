@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="GBK" ?>
+<project name="publishApplication" basedir="." default="publish">
+	
+	<property name="dir.project" 	value="."/>
+	<property name="dir.target" 	value="E:\web_server\apache-tomcat-5.5.35\webapps\patch"/>
+	<property name="dir.jdk"		value="E:\Program Files\Java\jdk1.5.0_22"/>
+	<property name="dir.ws"			value="${dir.target}/install"/>
+	<property name="storepass"		value="patch2012"/>
+	<property name="alias"			value="PatchBuildSys"/>
+	<property name="dname"			value="CN=PatchBuil, OU=M3, O=Three Mickey, L=ShenZhen, ST=Guangdong,C=China"/>
+	<property name="keypass"		value="MichaelPan2012"/>
+		
+	<property name="file.keystore"		value="${dir.ws}/pb.keystore"/>
+	<property name="file.cer"			value="${dir.ws}/pb.cer"/>
+	<property name="file.jar"			value="${dir.ws}/pb.jar"/>
+	<target name="publish">
+		<unjar dest="${dir.project}/bin">
+			<fileset dir="${dir.project}/lib">
+				<include name="*.jar"/>
+			</fileset>
+		</unjar>
+		<jar destfile="${file.jar}">
+			<fileset dir="${dir.project}/bin"/>
+		</jar>
+		
+		<delete file="${file.keystore}"/>
+		<delete file="${file.cer}"/>
+		<exec executable="${dir.jdk}/bin\keytool">
+			<arg line="-genkey"/>
+			<arg line="-v" />
+			<arg line="-alias ${alias}" />
+			<arg line='-dname "${dname}"  ' />
+			<arg line="-keypass ${keypass}"/>
+			<arg line="-keystore ${file.keystore}"/>
+			<arg line="-storepass ${storepass}"/>
+		</exec>
+		
+		<exec executable="${dir.jdk}/bin\keytool">
+			<arg line="-export"/>
+			<arg line="-keystore ${file.keystore}"/>
+			<arg line="-storepass ${storepass}"/>
+			<arg line="-alias ${alias}"/>
+			<arg line="-file ${file.cer}"/>
+		</exec>
+		
+		<exec dir="${dir.ws}" executable="${dir.jdk}/bin\jarsigner.exe">
+			<arg line="-keystore ${file.keystore}" />
+			<arg line="-storepass ${storepass}" />
+			<arg line="-keypass ${keypass}"/>
+			<arg line="${file.jar}" />
+			<arg line="${alias}" />
+		</exec>
+	</target>
+</project>
