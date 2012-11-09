@@ -1,5 +1,6 @@
 package com.m3.patchbuild.applet;
 import java.applet.Applet;
+import java.io.File;
 
 import netscape.javascript.JSObject;
 
@@ -16,5 +17,20 @@ public class InstallPack extends Applet{
 		JSObject window=JSObject.getWindow(this); // 获取JavaScript窗口句柄，引用当前文档窗口     
 		window.eval("alert(\"" + hello + "\")");
 	}
+	
+	private String webdir;
+	public void setWebDir(String webdir) {
+		JSObject window=JSObject.getWindow(this); 
+		File file = new File(webdir);
+		File[] fs = file.listFiles();
+		for (File f : fs) {
+			window.eval("alert('" + f.getAbsolutePath() + "')");
+		}
+		this.webdir = webdir;
+		
+		
+	}
+	
+	
 
 }

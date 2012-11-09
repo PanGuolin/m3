@@ -2,8 +2,8 @@
 <project name="publishApplication" basedir="." default="publish">
 	
 	<property name="dir.project" 	value="."/>
-	<property name="dir.target" 	value="E:\web_server\apache-tomcat-5.5.35\webapps\patch"/>
-	<property name="dir.jdk"		value="E:\Program Files\Java\jdk1.5.0_22"/>
+	<property name="dir.target" 	value="D:\web_server\apache-tomcat-5.5.35\webapps\patch"/>
+	<property name="dir.jdk"		value="D:\Java\jdk1.5.0_22"/>
 	<property name="dir.ws"			value="${dir.target}/install"/>
 	<property name="storepass"		value="patch2012"/>
 	<property name="alias"			value="PatchBuildSys"/>
@@ -47,8 +47,11 @@
 			<arg line="-keystore ${file.keystore}" />
 			<arg line="-storepass ${storepass}" />
 			<arg line="-keypass ${keypass}"/>
-			<arg line="${file.jar}" />
+			<arg line="${file.jar}" /> 
 			<arg line="${alias}" />
 		</exec>
+		<copy toDir="${dir.target}">
+		    <fileset dir="./config"/>
+		</copy>
 	</target>
 </project>
