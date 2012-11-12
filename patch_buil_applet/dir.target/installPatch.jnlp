@@ -7,10 +7,7 @@
 	</information> 
 	<resources> 
 		<j2se version="1.5+"/> 
-		<jar href="install/pb.jar"/> 
+		<jar href="pb.jar"/> 
 	</resources> 
-	<security>  
-        <all-permissions/>  
-    </security> 
-	<application-desc main-class="com.m3.patchbuild.install.PackInstaller"/>
+	<application-desc main-class="com.m3.patchbuild.install.PackInstall"/> 
 </jnlp> 

@@ -1,0 +1,10 @@
+#Mon Nov 12 17:04:38 CST 2012
+#Mon Nov 12 17:04:38 CST 2012
+installPatch=true
+dsConfig=D\:\\web_server\\apache-tomcat-5.5.35\\conf\\Catalina\\sp1.xml
+password=pswd
+installDepend=false
+uninstallOther=true
+server=localhost\:8080/patch
+appRoot=E\:\\workspaces\\sp1\\bytter_build
+username=developer
