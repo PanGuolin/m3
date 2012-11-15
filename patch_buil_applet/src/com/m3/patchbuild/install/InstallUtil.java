@@ -295,8 +295,17 @@ public abstract class InstallUtil {
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Cookie", sessionid);
 		Map<String, List<String>> headers = con.getHeaderFields();
-		List<String> name = headers.get("Content-Disposition");
-		File toFile = new File(downDir, name.get(0));
+		List<String> name = headers.get("Content-Disposition");//[attachment;filename="BFS.zip"]
+		String fileName = name.get(0);
+		if(fileName.indexOf("filename=") != -1) {
+			fileName = fileName.substring(fileName.indexOf("filename=") + "filename=".length());
+		}
+		fileName = fileName.trim();
+		if (fileName.startsWith("\""))
+			fileName = fileName.substring(1);
+		if (fileName.endsWith("\""))
+			fileName = fileName.substring(0, fileName.length()-1);
+		File toFile = new File(downDir, fileName);
 		InputStream in = con.getInputStream();
 		FileOutputStream out = new FileOutputStream(toFile);
 		byte[] bs = new byte[1024];
