@@ -1,6 +1,8 @@
 package com.m3.patchbuild.message;
 
-import com.m3.patchbuild.BaseQuery;
+import org.hibernate.Criteria;
+
+import com.m3.common.query.BaseQuery;
 
 /**
  * 消息查询对象
@@ -37,6 +39,10 @@ public class MessageQuery extends BaseQuery{
 
 	public void setNt(int nt) {
 		this.nt = nt;
+	}
+
+	@Override
+	protected void doBeforeQuery(Criteria criteria) {
 	}
 	
 }

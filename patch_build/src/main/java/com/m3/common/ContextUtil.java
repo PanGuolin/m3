@@ -6,11 +6,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.branch.Branch;
+import com.m3.patchbuild.branch.IBranchService;
 import com.m3.patchbuild.user.FunctionPerm;
-import com.m3.patchbuild.user.FunctionPermService;
+import com.m3.patchbuild.user.IFunctionPermService;
+import com.m3.patchbuild.user.IUserRole;
 import com.m3.patchbuild.user.User;
-import com.m3.patchbuild.user.UserRole;
 import com.opensymphony.xwork2.ActionContext;
 
 /**
@@ -21,6 +23,8 @@ import com.opensymphony.xwork2.ActionContext;
 public abstract class ContextUtil {
 	
 	public static final String KEY_USREID = "userId";
+	
+	public static final String KEY_SESSION_BRANCH = "currentBranch";
 	
 	private volatile static ThreadLocal<Map<String, Object>> values = new ThreadLocal<Map<String,Object>>();
 
@@ -47,6 +51,13 @@ public abstract class ContextUtil {
 	public static void setUserId(String userId) {
 		setValue(KEY_USREID, userId);
 	}
+	public static Branch getCurrentBranch() {
+		return (Branch)ActionContext.getContext().getSession().get(KEY_SESSION_BRANCH);
+	}
+	
+	public static void setBranch(Branch branch) {
+		ActionContext.getContext().getSession().put(KEY_SESSION_BRANCH, branch);
+	}
 	
 	
 	public static final String KEY_TIPS = "tips"; //保存提示信息的KEY
@@ -54,9 +65,9 @@ public abstract class ContextUtil {
 	 * 保存提示信息到当前用户的上下文环境中
 	 * @param tips
 	 */
-	public static void setTips(HttpServletRequest request, String tips) {
+	public static String setTips(HttpServletRequest request, String tips) {
 		if (tips == null)
-			return;
+			return getTips(request);
 		if (request == null) {
 			String old = (String) ActionContext.getContext().get(KEY_TIPS);
 			if (!StringUtil.isEmpty(old)) {
@@ -70,6 +81,7 @@ public abstract class ContextUtil {
 			}
 			request.setAttribute(KEY_TIPS, tips);
 		}
+		return tips;
 	}
 	
 	public static String getTips(HttpServletRequest request) {
@@ -90,6 +102,14 @@ public abstract class ContextUtil {
 	public static void userLogin(User user) {
 		Map<String, Object> map = ActionContext.getContext().getSession();
 		map.put(KEY_SESSION_USER, user);
+		if (getCurrentBranch() == null) {
+			IBranchService branchService = (IBranchService)BussFactory.getService(Branch.class);
+			map.put(KEY_SESSION_BRANCH, branchService.getBranch(user.getMainBranch()));
+		}
+	}
+	
+	public static User getLoginUser() {
+		return getLoginUser(null);
 	}
 	
 	/**
@@ -103,14 +123,20 @@ public abstract class ContextUtil {
 			return (User)ActionContext.getContext().getSession().get(KEY_SESSION_USER);
 	}
 	
+	private static Map<String, List<String>> roleMap = new HashMap<String, List<String>>();
 	/**
 	 * 检查用户权限
 	 * @param path
 	 * @return
 	 */
 	public static boolean checkPermission(HttpServletRequest request, String path) {
-		FunctionPermService fpService = (FunctionPermService)BussFactory.getService(FunctionPerm.class);
-		List<String> roles = fpService.listRoleByPath(path);
+		List<String> roles = roleMap.get(path);
+		if (roles == null) {
+			IFunctionPermService fpService = (IFunctionPermService)BussFactory.getService(FunctionPerm.class);
+			roles = fpService.listRoleByPath(path);
+			roleMap.put(path, roles);
+		}
+		
 		User user = getLoginUser(request);
 		if (roles != null && !roles.isEmpty()) {
 			if (user == null) {
@@ -118,12 +144,13 @@ public abstract class ContextUtil {
 				return false;
 			}
 			boolean hasRole = false;
+			Branch branch = getCurrentBranch();
 			for (String role : roles) {
-				if (UserRole.loginedUser.equals(role)) {
+				if (IUserRole.loginedUser.equals(role)) {
 					hasRole = true;
 					break;
 				}
-				if (user.hasRole(role)) {
+				if (user.hasRole(branch.getBranch(), role)) {
 					hasRole = true;
 					break;
 				}
@@ -143,7 +170,9 @@ public abstract class ContextUtil {
 	 */
 	public static void logout() {
 		Map<String, Object> map = ActionContext.getContext().getSession();
-		map.put(KEY_SESSION_USER, null);
+		map.remove(KEY_SESSION_USER);
+		map.remove(KEY_SESSION_BRANCH);
+		setValue(KEY_USREID, null);
 	}
 
 }

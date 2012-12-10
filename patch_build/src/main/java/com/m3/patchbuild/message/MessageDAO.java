@@ -3,17 +3,15 @@ package com.m3.patchbuild.message;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.ContextUtil;
 import com.m3.common.HibernateUtil;
+import com.m3.common.query.BaseQuery;
 import com.m3.patchbuild.BaseDAO;
-import com.m3.patchbuild.BaseQuery;
-import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.IStateful;
+import com.m3.patchbuild.base.BussFactory;
 
 /**
  * 消息DAO
@@ -22,13 +20,11 @@ import com.m3.patchbuild.IStateful;
  */
 @SuppressWarnings("unchecked")
 public class MessageDAO extends BaseDAO{
-
-	@Override
-	protected Class<?> getInfoClass() {
-		return Message.class;
+	
+	public MessageDAO() {
+		super(Message.class);
 	}
 
-	
 	public List<Message> fetchNew(String userId) {
 		try {
 			return HibernateUtil.openSession().createQuery("FROM Message Where operator is null" +
@@ -41,18 +37,15 @@ public class MessageDAO extends BaseDAO{
 		}
 	}
 
-	
-	
-
-	@Override
-	public List<?> list(BaseQuery query) {
+	public List<Message> list(BaseQuery query) {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(" FROM Message msg LEFT JOIN fetch msg.recievers rec Where rec.userId=:userId AND msg.status=0");
 		MessageQuery q = (MessageQuery)query;
 		
 		sb.append(" AND rec.sendType=" + (q.getNt() == 1 ? "1" : "0"))
-		.append(" AND rec.status=" + MessageReciever.STATUS_NORMAL);
+		.append(" AND rec.status=" + MessageReciever.STATUS_NORMAL)
+		.append(" ORDER BY sendTime DESC");
 		
 		try {
 			Session sess = HibernateUtil.openSession();
@@ -75,23 +68,23 @@ public class MessageDAO extends BaseDAO{
 	}
 
 
-	@Override
-	protected void beforeList(BaseQuery query, Criteria criter) {
-		MessageQuery q = (MessageQuery)query;
-		if (q.getStatus() == MessageQuery.STATUS_NOR) {
-			criter.add(Restrictions.eq("status", IStateful.STATE_NORMAL));
-		} else if (q.getStatus() == MessageQuery.STATUS_INCLUD_EXPIR) {
-			
-		}
-		
-		if (q.getNt() == MessageQuery.NT_NOTIFIER) {
-			criter.createAlias("notifiers", "notifiers")
-			.add(Restrictions.eq("notifiers.userId", ContextUtil.getUserId())); 
-		} else if (q.getNt() == MessageQuery.NT_RECIEVER) {
-			criter.createAlias("recievers", "recievers")
-			.add(Restrictions.eq("recievers.userId", ContextUtil.getUserId())); 
-		}
-	}
+//	@Override
+//	protected void beforeList(BaseQuery query, Criteria criter) {
+//		MessageQuery q = (MessageQuery)query;
+//		if (q.getStatus() == MessageQuery.STATUS_NOR) {
+//			criter.add(Restrictions.eq("status", IStateful.STATE_NORMAL));
+//		} else if (q.getStatus() == MessageQuery.STATUS_INCLUD_EXPIR) {
+//			
+//		}
+//		
+//		if (q.getNt() == MessageQuery.NT_NOTIFIER) {
+//			criter.createAlias("notifiers", "notifiers")
+//			.add(Restrictions.eq("notifiers.userId", ContextUtil.getUserId())); 
+//		} else if (q.getNt() == MessageQuery.NT_RECIEVER) {
+//			criter.createAlias("recievers", "recievers")
+//			.add(Restrictions.eq("recievers.userId", ContextUtil.getUserId())); 
+//		}
+//	}
 	
 	public void expiredByBussInfo(IBussInfo info) {
 		String type = BussFactory.getBussType(info.getClass());
@@ -166,6 +159,22 @@ public class MessageDAO extends BaseDAO{
 					.setParameter("msgUid", msgUid)
 					.setParameter("userId", userId)
 					.executeUpdate() == 1;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public List<MessageReciever> listOperatorsByBuss(String bizType,
+			String bizId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM MessageReciever rec LEFT JOIN fetch rec.message msg Where msg.bussType=:bizType AND msg.bussId=:bizId AND msg.status=0 AND rec.sendType=:sendType");
+		try {
+			return HibernateUtil.openSession()
+				.createQuery(sb.toString())
+				.setParameter("bizType", bizType)
+				.setParameter("bizId", bizId)
+				.setParameter("sendType", MessageReciever.SEND_TYPE_TO)
+				.list();
 		} finally {
 			HibernateUtil.closeSession();
 		}

@@ -1,0 +1,5 @@
+构建包构建失败：${pack.buildNo}
+您好！
+ <b>${pack.buildNo}</b>构建失败，请查看构建日志以获取详细信息<br/>
+补丁分支：<b>${pack.branch.branch}</b>，构建申请人：${requester.username}，申请时间:${pack.requestTime}<br/>
+ 谢谢

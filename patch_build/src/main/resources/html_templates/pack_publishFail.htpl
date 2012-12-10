@@ -1,0 +1,2 @@
+构建包发布失败:${pack.buildNo}
+构建包${pack.buildNo} -[${pack.branch.branch}]发布失败，请重新发布

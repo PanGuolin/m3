@@ -1,4 +1,0 @@
-您好！
- &nbsp;&nbsp;&nbsp;&nbsp; <b>${BP.buildNo}</b>已成功构建，补丁分支：<b>${BP.branch.branch}</b>，构建申请人：${BP.requester}
- &nbsp;&nbsp;&nbsp;&nbsp; 只有设计师检查通过的补丁才能进入测试，如果您是该申请人的对应设计师，请登录系统进行检查
- 谢谢

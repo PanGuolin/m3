@@ -3,6 +3,7 @@ package com.m3.patchbuild.user;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.HibernateUtil;
@@ -11,22 +12,29 @@ import com.m3.patchbuild.BaseDAO;
 @SuppressWarnings("unchecked")
 public class UserDAO extends BaseDAO {
 
+	public UserDAO() {
+		super(User.class);
+	}
+
 	public List<User> listAllUser() {
 		return (List<User>)super.list(null);
 	}
 
-	@Override
-	protected Class<?> getInfoClass() {
-		return User.class;
-	}
 	
-	public List<User> findByRole(String role) {
+	public List<User> findByRole(String branch, String role) {
 		try {
-			return HibernateUtil.openSession()
-					.createSQLQuery("select {user.*} from PB_User user inner join PB_UserRole role on user.uuid = role.Useruuid and role.roles = :role")
+			StringBuilder sb = new StringBuilder();
+			sb.append("select {user.*} from PB_User user inner join User_UserRole role " +
+							" on user.uuid = role.userId and role.roleId = :role");
+			if (branch != null)
+				sb.append(" and role.branch = :branch");
+			Query query = HibernateUtil.openSession()
+					.createSQLQuery(sb.toString())
 					.addEntity("user", User.class)
-					.setParameter("role", role)
-					.list();
+					.setParameter("role", role);
+			if (branch != null)
+				query.setParameter("branch", branch);
+			return query.list();
 		} finally {
 			HibernateUtil.closeSession();
 		}
@@ -35,9 +43,39 @@ public class UserDAO extends BaseDAO {
 	public List<User> listByUserId(Collection<String> userIds) {
 		try {
 			return HibernateUtil.openSession()
-					.createCriteria(getInfoClass())
+					.createCriteria(bizClass)
 					.add(Restrictions.in("userId", userIds))
 					.list();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public List<User> findFollows(String userId) {
+		try {
+			return HibernateUtil.openSession()
+					.createQuery("from User u where :userId=any(select f.userId from u.followers f)")
+					//.createQuery("from User u left join fetch followers f where f.userId=:userId")
+					.setParameter("userId", userId)
+					.list();
+					//.createCriteria(getInfoClass())
+					//.add(Restrictions.eq("follows", userId))
+					//.list();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public List<User> findMemebers(String userId) {
+		try {
+			return HibernateUtil.openSession()
+					.createQuery("from User u where :userId=any(select s.userId from u.superiors s)")
+					//.createQuery("from User u left join fetch followers f where f.userId=:userId")
+					.setParameter("userId", userId)
+					.list();
+					//.createCriteria(getInfoClass())
+					//.add(Restrictions.eq("follows", userId))
+					//.list();
 		} finally {
 			HibernateUtil.closeSession();
 		}

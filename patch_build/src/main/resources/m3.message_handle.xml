@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<handlers>
+    <handler>
+        <info>com.m3.patchbuild.user.RegisterReq</info>
+        <action>/user/handleRegisterReq</action>
+        <viewmode>mode_iw</viewmode>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.user.ResetPassReq</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/user/handleResetPass.jsp</input>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.user.ChangeRoleReq</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/user/handleChangeRole.jsp</input>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/pack/request.jsp</input>
+        <condition>'${_info.status#name}' == 'request'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_nw</viewmode>
+        <input>/pack/check.jsp</input>
+        <condition>'${_info.status#name}' == 'builded'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_nw</viewmode>
+        <input>/pack/buildfail.jsp</input>
+        <condition>'${_info.status#name}' == 'buildFail'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/pack/checkfail.jsp</input>
+        <condition>'${_info.status#name}' == 'checkFail'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/pack/assign.jsp</input>
+        <condition>'${_info.status#name}' == 'checked'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/pack/starttest.jsp</input>
+        <condition>'${_info.status#name}' == 'assigned'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_nw</viewmode>
+        <input>/pack/handletest.jsp</input>
+        <condition>'${_info.status#name}' == 'testing'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_nw</viewmode>
+        <action>/pack/publish</action>
+        <input>/pack/publish.jsp</input>
+        <condition>'${_info.status#name}' == 'pass'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/pack/publishfail.jsp</input>
+        <condition>'${_info.status#name}' == 'publishFail'</condition>
+    </handler>
+    <handler>
+        <info>com.m3.patchbuild.pack.Pack</info>
+        <viewmode>mode_iw</viewmode>
+        <input>/pack/testfail.jsp</input>
+        <condition>'${_info.status#name}' == 'testFail'</condition>
+    </handler>
+</handlers>

@@ -1,10 +1,10 @@
 package com.m3.patchbuild;
 
-import com.m3.patchbuild.BussFactory;
-import com.m3.patchbuild.IService;
-import com.m3.patchbuild.pack.PackService;
-
 import junit.framework.TestCase;
+
+import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.base.IService;
+import com.m3.patchbuild.pack.IPackService;
 
 /**
  * test case for BussFacotry
@@ -15,6 +15,6 @@ public class BussFactoryTest extends TestCase {
 
 	public void test_common() throws Exception {
 		IService service = BussFactory.getService("pack");
-		assertEquals(PackService.class, service.getClass());
+		assertEquals(IPackService.class, service.getClass());
 	}
 }

@@ -6,12 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Order;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-
-import com.m3.patchbuild.BaseQuery;
-import com.m3.patchbuild.QOrder;
 
 /**
  * Hibernate工具类
@@ -116,24 +114,42 @@ public class HibernateUtil {
 		
 	}
 	
-	/**
-	 * 将查询信息应用到hibernate的Criteria对象
-	 * @param query
-	 * @param criteria
-	 */
-	public static void apply(BaseQuery query, Criteria criteria) {
-		if (query == null)
-			return;
-		if (query.getPageIndex() > -1 && query.getPageSize() > 0) {
-			criteria.setFirstResult(query.getPageIndex()-1 * query.getPageSize())
-				.setMaxResults(query.getPageSize());
+//	/**
+//	 * 将查询信息应用到hibernate的Criteria对象
+//	 * @param query
+//	 * @param criteria
+//	 */
+//	public static void apply(BaseQuery query, Criteria criteria) {
+//		if (query == null)
+//			return;
+//		if (query.getPageIndex() > -1 && query.getPageSize() > 0) {
+//			criteria.setFirstResult(query.getPageIndex()-1 * query.getPageSize())
+//				.setMaxResults(query.getPageSize());
+//		}
+//		for (QOrder order : query.getOrders()) {
+//			if (order.isDesc())
+//				criteria.addOrder(Order.desc(order.getPropertyName()));
+//			else
+//				criteria.addOrder(Order.asc(order.getPropertyName()));
+//		}
+//	}
+	
+	public static Criteria queryEq(Criteria criteria, String property, Object value) {
+		if (value == null)
+			return criteria;
+		if (value instanceof String) {
+			String s = ((String)value).trim();
+			if (s.length() == 0)
+				return criteria;
+			value = s;
 		}
-		for (QOrder order : query.getOrders()) {
-			if (order.isDesc())
-				criteria.addOrder(Order.desc(order.getPropertyName()));
-			else
-				criteria.addOrder(Order.asc(order.getPropertyName()));
-		}
-		
+		criteria.add(Restrictions.eq(property, value));
+		return criteria;
+	}
+	
+	public static Criteria queryLike(Criteria criteria, String property, String value) {
+		if (!StringUtil.isEmpty(value))
+			criteria.add(Restrictions.like(property, value, MatchMode.ANYWHERE));
+		return criteria;
 	}
 }

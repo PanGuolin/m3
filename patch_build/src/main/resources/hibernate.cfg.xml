@@ -28,9 +28,14 @@
         <mapping class="com.m3.patchbuild.svn.SVNLog" />
         <mapping class="com.m3.patchbuild.patch.Patch" />
         <mapping class="com.m3.patchbuild.message.Message" />
-        <mapping class="com.m3.patchbuild.message.MessageDetail" />
+<!--         <mapping class="com.m3.patchbuild.message.MessageDetail" /> -->
         <mapping class="com.m3.patchbuild.message.MessageReciever" />
         <mapping class="com.m3.patchbuild.attached.Attachment" />
+        <mapping class="com.m3.patchbuild.pack.Bug" />
+        <mapping class="com.m3.patchbuild.user.ResetPassReq" />
+        <mapping class="com.m3.patchbuild.user.RegisterReq" />
+        <mapping class="com.m3.patchbuild.user.ChangeRoleReq" />
+        <mapping class="com.m3.patchbuild.user.UserRole" />
 <!--         <mapping class="com.m3.patchbuild.info.Bird" /> -->
 <!--         <mapping class="com.m3.patchbuild.info.Dog" /> -->
 <!--         <mapping class="com.m3.patchbuild.info.SuperDog" /> -->

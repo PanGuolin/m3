@@ -3,27 +3,29 @@
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.m3.patchbuild.pack">
-	<class name="Pack" table="PB_BuildPack">
+	<class name="Pack" table="Pack_Pack">
 		<id name="uuid" column="UUID" unsaved-value="null">
 			<generator class="uuid2"/>
 		</id>
-		<property name="buildNo" 		column="buildNo" 	type="string"/>
-		<property name="keywords" 		column="keywords" 	type="string"/>
-		<property name="requester" 		column="requester" 	type="string"/>
+		<property name="buildNo" 		column="buildNo" 		type="string"/>
+		<property name="keywords" 		column="keywords" 		type="string"/>
+		<property name="requester" 		column="requester" 		type="string"/>
 		<property name="requestTime" 	column="requestTime" 	type="timestamp"/>
-		<property name="checker" 		column="checker" 	type="string"/>
-		<property name="checkTime" 		column="checkTime" 	type="timestamp"/>
-		<property name="assigner"		column="assigner"	type="string"/>
+		<property name="buildTime"		column="buildTime"		type="timestamp"/>
+		<property name="checker" 		column="checker" 		type="string"/>
+		<property name="checkTime" 		column="checkTime" 		type="timestamp"/>
+		<property name="assigner"		column="assigner"		type="string"/>
 		<property name="assignTime" 	column="assignTime" 	type="timestamp"/>
-		<property name="tester" 		column="tester" 	type="string"/>
-		<property name="testTime" 		column="testTime" 	type="timestamp"/>
-		<property name="passTime" 		column="passTime" 	type="timestamp"/>
-		<property name="deployer" 		column="deployer" 	type="string"/>
-		<property name="deployTime"		column="deployTime"	type="timestamp"/>
-		<property name="patch"			column="patch"		type="string"/>
-		<property name="customers"		column="customers"	type="string"/>
-		<property name="comments"		column="comments" 	type="string"/>
+		<property name="tester" 		column="tester" 		type="string"/>
+		<property name="testTime" 		column="testTime" 		type="timestamp"/>
+		<property name="passTime" 		column="passTime" 		type="timestamp"/>
+		<property name="deployer" 		column="deployer" 		type="string"/>
+		<property name="deployTime"		column="deployTime"		type="timestamp"/>
+		<property name="patch"			column="patch"			type="string"/>
+		<property name="customers"		column="customers"		type="string"/>
+		<property name="comments"		column="comments" 		type="string"/>
 		<property name="failReason"		column="failReason" 	type="string" lazy="true"/>
+		<property name="libfiles"		column="libFiles"		type="string"/>
 		<property name="status"			column="status">
 			<type name="org.hibernate.type.EnumType">
 				<param name="enumClass">com.m3.patchbuild.pack.PackStatus</param>
@@ -31,15 +33,24 @@
 			</type>
 		</property>
 		<bag name="buildFiles" cascade="all" lazy="false" inverse="false" order-by="url">
-    		<key column="buildNo" property-ref="buildNo"/>
+    		<key column="packUid"/>
     		<one-to-many class="com.m3.patchbuild.pack.BuildFile" />
 		</bag>
-       <set name="depends" table="PB_BuildPackDepend" cascade="all" >
-       		<key column="buildUuid"/>
-       		<element type="string" column="dependNo"/>
-       </set>
+		<set name="depends" lazy="false" table="Pack_Depend" cascade="all">
+		    <key column="packUid"/>
+		    <many-to-many class="com.m3.patchbuild.pack.Pack" column="dependUid"/>
+		</set>
+<!--        <set name="depends" table="Pack_Depend" cascade="all" lazy="false"> -->
+<!--        		<key column="packUid"/> -->
+<!--        		<element type="string" column="dependUid"/> -->
+<!--        </set> -->
        <many-to-one name="branch" column="branch" 
    			class="com.m3.patchbuild.branch.Branch" fetch="join" 
    			property-ref="branch"/>
+       
+       <bag name="bugs" cascade="all" lazy="false" inverse="false" order-by="createTime">
+    		<key column="buildNo" property-ref="buildNo"/>
+    		<one-to-many class="com.m3.patchbuild.pack.Bug" />
+		</bag> 
 	</class>
 </hibernate-mapping>

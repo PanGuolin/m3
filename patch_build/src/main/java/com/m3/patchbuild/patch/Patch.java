@@ -1,20 +1,20 @@
 package com.m3.patchbuild.patch;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import com.m3.patchbuild.IBussInfo;
+import com.m3.common.StringUtil;
+import com.m3.patchbuild.base.BaseBussInfo;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.pack.Pack;
 
@@ -24,14 +24,8 @@ import com.m3.patchbuild.pack.Pack;
  *
  */
 @Entity
-@Table(name="PB_Patch")
-public class Patch implements IBussInfo{
-	
-	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
-	@Column(name = "uuid", unique = true)
-	private String uuid; //唯一标识
+@Table(name="Patch_Patch")
+public class Patch extends BaseBussInfo {
 	
 	@Column(name="name")
 	private String name; //补丁名称
@@ -46,19 +40,13 @@ public class Patch implements IBussInfo{
 	@Column(name="packCount")
 	private int packCount; //包含构建包数量 
 	
+	private String builds;
+	
 	@Column(name="md5")
 	private String md5; //md5信息
 	
 	@Column(name="createTime")
 	private Date createTime;
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
 
 	public String getName() {
 		return name;
@@ -133,4 +121,22 @@ public class Patch implements IBussInfo{
 	public File getPublishWS(Pack bp) {
 		return new File(getWSRoot(), bp.getBuildNo());
 	}
+
+	public String getBuilds() {
+		return builds;
+	}
+
+	public void setBuilds(String builds) {
+		this.builds = builds;
+	}
+	
+	public void addBuild(String buildNo) {
+		if (builds == null)
+			this.builds = buildNo;
+		Set<String> set = new HashSet<String>();
+		set.addAll(Arrays.asList(builds.split(";")));
+		set.add(buildNo);
+		builds = StringUtil.join(set, ";");
+	}
+	
 }

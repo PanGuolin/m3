@@ -1,0 +1,3 @@
+构建包测试打回：${pack.buildNo}
+你提交的构建包${pack.buildNo} -[${pack.branch.branch}]测试不通过，请修改BUG并重新构建<br/>
+测试人员${tester.username}

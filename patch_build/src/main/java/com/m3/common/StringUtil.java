@@ -42,6 +42,10 @@ public abstract class StringUtil {
 		return sb.toString();
 	}
 	
+	public static String join(String[] strs, String sep) {
+		return join(Arrays.asList(strs), sep);
+	}
+	
 	public static Set<String> split2Set(String str, String sep) {
 		Set<String> set = new HashSet<String>();
 		set.addAll(Arrays.asList(str.split(sep)));

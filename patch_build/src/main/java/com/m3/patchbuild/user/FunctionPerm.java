@@ -8,14 +8,10 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseBussInfo;
 
 /**
  * 功能权限
@@ -24,13 +20,7 @@ import com.m3.patchbuild.IBussInfo;
  */
 @Entity
 @Table(name="Sys_FunctionPerm")
-public class FunctionPerm implements IBussInfo{
-	
-	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
-	@Column(name = "uuid", unique = true)
-	private String uuid;
+public class FunctionPerm  extends BaseBussInfo {
 
 	@Column(name="code")
 	private String code;
@@ -47,14 +37,6 @@ public class FunctionPerm implements IBussInfo{
 	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name = "SYS_RolePermission", joinColumns = @JoinColumn(name = "roleName"))
 	private Set<String> roles = new HashSet<String>(); //用户角色集合
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
 
 	public String getCode() {
 		return code;

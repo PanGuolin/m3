@@ -2,21 +2,18 @@ package com.m3.patchbuild.user;
 
 import java.util.List;
 
-import com.m3.patchbuild.AbstractService;
+import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseService;
 
 /**
  * 功能权限服务类
  * @author pangl
  *
  */
-public class FunctionPermService extends AbstractService{
+public class FunctionPermService extends BaseService implements IFunctionPermService{
 
+	private FunctionPermDAO dao = new FunctionPermDAO();
 	public FunctionPermService() {
-		super(new FunctionPermDAO());
-	}
-	
-	protected FunctionPermDAO getDAO() {
-		return (FunctionPermDAO)super.getDao();
 	}
 	
 	/**
@@ -25,7 +22,7 @@ public class FunctionPermService extends AbstractService{
 	 * @return
 	 */
 	public List<String> listRoleByPerm(String permCode) {
-		return getDAO().listRoleByPerm(permCode);
+		return dao.listRoleByPerm(permCode);
 	}
 	
 	/**
@@ -34,7 +31,13 @@ public class FunctionPermService extends AbstractService{
 	 * @return
 	 */
 	public List<String> listRoleByPath(String path) {
-		return getDAO().listRoleByPath(path);
+		return dao.listRoleByPath(path);
+	}
+
+	@Override
+	public Class<? extends IBussInfo> doGetBizClass() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

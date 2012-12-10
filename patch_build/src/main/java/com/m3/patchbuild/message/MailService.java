@@ -15,7 +15,7 @@ public class MailService {
 	private static final String MailServerName = "PatchBuildSystem";
 	private static MailServerDAO dao = new MailServerDAO();
 	
-	private static volatile MailServer mailServer = null;
+	//private static volatile MailServer mailServer = null;
 	
 	public static void sendMessage(Message msg) {
 		MailServer mailServer = getMailServer();
@@ -60,29 +60,29 @@ public class MailService {
 	 * 获取邮件服务器信息
 	 * @return
 	 */
-	public static MailServer getMailServer() {if (true)return null;
-		if (mailServer == null) {
-			synchronized (MailServer.class) {
-				
-				MailServer preServer = (MailServer) dao.findByNo(MailServerName);
-				if (preServer != null) {
-					mailServer = new MailServer();
-					//mailServer.setDebug(true);
-					mailServer.setHost(preServer.getHost());
-					mailServer.setName(preServer.getName());
-					try {
-						mailServer.setPassword(EncodeUtil.decrypt(preServer.getPassword()));
-					} catch (Exception e) {
-						mailServer.setPassword(preServer.getPassword());
-						logger.error("解密用户口令时出错", e);
-					}
-					mailServer.setSmtpPort(preServer.getSmtpPort());
-					mailServer.setUser(preServer.getUser());
-					mailServer.setUseSSL(preServer.isUseSSL());
-				}
-			}
-		}
-		return mailServer;
+	public static MailServer getMailServer() {return null;
+//		if (mailServer == null) {
+//			synchronized (MailServer.class) {
+//				
+//				MailServer preServer = (MailServer) dao.findByNo(MailServerName);
+//				if (preServer != null) {
+//					mailServer = new MailServer();
+//					//mailServer.setDebug(true);
+//					mailServer.setHost(preServer.getHost());
+//					mailServer.setName(preServer.getName());
+//					try {
+//						mailServer.setPassword(EncodeUtil.decrypt(preServer.getPassword()));
+//					} catch (Exception e) {
+//						mailServer.setPassword(preServer.getPassword());
+//						logger.error("解密用户口令时出错", e);
+//					}
+//					mailServer.setSmtpPort(preServer.getSmtpPort());
+//					mailServer.setUser(preServer.getUser());
+//					mailServer.setUseSSL(preServer.isUseSSL());
+//				}
+//			}
+//		}
+//		return mailServer;
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class MailService {
 			throw e;
 		}
 		dao.saveInfo(server);
-		mailServer = server;
+		//mailServer = server;
 	}
 
 }

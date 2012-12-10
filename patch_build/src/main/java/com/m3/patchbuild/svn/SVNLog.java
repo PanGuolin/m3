@@ -4,9 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.m3.patchbuild.base.BaseBussInfo;
 
 /**
  * SVN修改日志对象
@@ -15,13 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="PB_SVNLog")
-public class SVNLog {
-
-	@Id
-    @GeneratedValue(generator="my-uuid")
-    @org.hibernate.annotations.GenericGenerator(name="my-uuid", strategy="uuid")
-	@Column(name = "uuid", unique = true)
-	private String uuid;
+public class SVNLog extends BaseBussInfo{
 	
 	@Column(name="branch")
 	private String branch;//所属分支名称
@@ -46,14 +40,6 @@ public class SVNLog {
 	
 	@Column(name="log") //文件日志信息
 	private String logMessage;
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
 
 	public String getBranch() {
 		return branch;

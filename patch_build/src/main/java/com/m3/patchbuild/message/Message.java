@@ -8,16 +8,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseBussInfo;
 
 /**
  * 消息对象
@@ -26,17 +20,9 @@ import com.m3.patchbuild.IBussInfo;
  */
 @Entity
 @Table(name="Msg_Message")
-public class Message implements IBussInfo {
+public class Message  extends BaseBussInfo {
 	
 	public static final int MESSAGE_TYPE_TASK = 0; //消息类型：任务
-	
-	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
-	@Column(name = "uuid", unique = true)
-	private String uuid;//唯一ID
-	
-	private boolean attached; //是否有附件
 	
 	@Column(name="bussType")
 	private String bussType; //业务类别
@@ -64,31 +50,11 @@ public class Message implements IBussInfo {
 	@Column(name="status")
 	private int status; //消息状态
 	
-	
-	//@OneToOne(fetch=FetchType.LAZY, optional = true, cascade = CascadeType.ALL, mappedBy = "messageId")
-	@ManyToOne(optional=true, targetEntity=MessageDetail.class,  cascade = CascadeType.ALL)
-	@JoinColumn(name="DetailId") 
-	private MessageDetail detail;
-	
+	private String content; //消息主体
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "message",  cascade = CascadeType.ALL) 
 	private Set<MessageReciever> recievers = new HashSet<MessageReciever>();
 	
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
-	public boolean isAttached() {
-		return attached;
-	}
-
-	public void setAttached(boolean attached) {
-		this.attached = attached;
-	}
-
 	public String getBussType() {
 		return bussType;
 	}
@@ -161,14 +127,6 @@ public class Message implements IBussInfo {
 		this.status = status;
 	}
 
-	public MessageDetail getDetail() {
-		return detail;
-	}
-
-	public void setDetail(MessageDetail detail) {
-		this.detail = detail;
-	}
-
 	public Set<MessageReciever> getRecievers() {
 		return recievers;
 	}
@@ -176,4 +134,14 @@ public class Message implements IBussInfo {
 	public void setRecievers(Set<MessageReciever> recievers) {
 		this.recievers = recievers;
 	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	
 }

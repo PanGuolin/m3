@@ -17,12 +17,15 @@ public class UserMessageQueue {
 	private static volatile Map<Object, UserMessageQueue> queues = new Hashtable<Object, UserMessageQueue>(); //全局消息分类队列
 	
 	/**
-	 * 开始消费一个特定队列中的消息
+	 * 开始消费一个指定队列中的消息
 	 * @param queueId
 	 * @param consumer
 	 * @throws Exception
 	 */
-	public static void consume(Object queueId,  String userId, IMessageConsumer consumer) throws Exception{
+	public static void consume(Object queueId,  String userId, 
+			IMessageConsumer consumer) throws Exception{
+		if (userId == null)
+			return;
 		UserMessageQueue queue = queues.get(queueId);
 		if (queue == null) {
 			synchronized (queues) {
@@ -32,8 +35,14 @@ public class UserMessageQueue {
 					queues.put(queueId, queue);
 				}
 			}
+			queue = new UserMessageQueue(userId);
+			queues.put(queueId, queue);
 		}
-		queue.userId = userId;
+		//session的用户已经发生变化，则应当清除旧消息
+		if (!userId.equals(queue.userId)) {
+			queue.messageQueue.clear();
+			queue.userId = userId;
+		}
 		queue.consume(consumer);
 	}
 	
@@ -45,15 +54,18 @@ public class UserMessageQueue {
 		List<Object> expiredList = new ArrayList<Object>();
 		for (Object key : queues.keySet()) {
 			UserMessageQueue queue = queues.get(key);
-			if (System.currentTimeMillis() - queue.lastActived > expiredTime) {//过期的队列将被移除
+			if (System.currentTimeMillis() - queue.lastActived > expiredTime) {
+				//过期的队列将被移除
 				expiredList.add(key);
 				queue.interruptLatest(); //中断当前线程
 			} else {
 				queue.accept(message);
 			}
 		}
-		for (Object key : expiredList) {
-			queues.remove(key);
+		synchronized (queues) {
+			for (Object key : expiredList) {
+				queues.remove(key);
+			}
 		}
 	}
 	
@@ -138,12 +150,7 @@ public class UserMessageQueue {
 				return;
 			} else {
 				synchronized (messageQueue) { 
-					//try {
-						messageQueue.wait();
-					//} catch (InterruptedException e) {
-					//	logger.debug("消息等待时出错", e);
-					//	return;
-					//}
+					messageQueue.wait();
 				}
 			}
 		}

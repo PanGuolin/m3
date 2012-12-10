@@ -1,0 +1,5 @@
+构建包已构建成功：${pack.buildNo}
+您好！
+<b>${pack.buildNo}</b>已成功构建，补丁分支：<b>${pack.branch.branch}</b>，构建申请人：${requester.username}<br/>
+ 只有设计师检查通过的补丁才能进入测试，如果您是该申请人的对应设计师，请登录系统进行检查
+ 谢谢

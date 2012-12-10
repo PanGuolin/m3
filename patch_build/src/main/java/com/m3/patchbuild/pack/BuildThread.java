@@ -1,8 +1,13 @@
 package com.m3.patchbuild.pack;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Set;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.DefaultLogger;
@@ -11,11 +16,15 @@ import org.apache.tools.ant.ProjectHelper;
 
 import com.m3.common.FileUtil;
 import com.m3.common.HibernateUtil;
-import com.m3.common.SVNUtil;
-import com.m3.patchbuild.BussFactory;
+import com.m3.common.StringUtil;
+import com.m3.patchbuild.SysParam;
+import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BranchService;
-import com.m3.patchbuild.svn.SVNLogService;
+import com.m3.patchbuild.branch.IBranchService;
+import com.m3.patchbuild.message.IHandleService;
+import com.m3.patchbuild.svn.ISVNLogService;
+import com.m3.patchbuild.svn.SVNLog;
+import com.m3.patchbuild.svn.SVNUtil;
 
 /**
  * 构建包组装线程
@@ -27,40 +36,45 @@ public class BuildThread extends Thread {
 	
 	private Logger logger = Logger.getLogger(BuildThread.class);
 	private Pack bp = null;
-	private Set<String> files;
 	private PrintStream logOut = null;
 	private Project proj = new Project();
+	private PrintStream sysOut = null;
 	
 	BuildThread() {
 		super("Build Pack Thead");
 		this.setDaemon(true);
 	}
 	
-	public synchronized void startBuild(Pack bp, Set<String> files) {
+	public synchronized void startBuild(Pack bp) {
 		this.bp = bp;
-		this.files = files;
 		this.start();
 	}
 
 	@Override
 	public void run() {
-		
+		IHandleService packService = (IHandleService)BussFactory.getService(Pack.class);
+		PackHandleContext context = (PackHandleContext) packService.newContext();
+		context.setOldStatus(bp.getStatus());
 		try {
 			doBuild();
-			bp.setStatus(PackStatus.builded);
 			proj.fireBuildFinished(null);
 		} catch (Throwable e) {
-			proj.fireBuildFinished(e);
+			if (logOut != null)
+				e.printStackTrace(new PrintStream(this.logOut));
+			context.setException(e);
 			logger.error("执行构建时出错", e);
-			bp.setStatus(PackStatus.buildFail);
+//			bp.setStatus(PackStatus.buildFail);
 		} finally {
 			try {
 				if (logOut != null) {
 					logOut.flush();
 					logOut.close();
 				}
+				if (sysOut != null) {
+					System.setOut(sysOut);
+				}
 				BuildService.buildComplete(bp);
-				((PackService)BussFactory.getService(Pack.class)).builded(bp);
+				packService.handle(bp, context);
 			} finally {
 			}
 		}
@@ -72,18 +86,50 @@ public class BuildThread extends Thread {
 		HibernateUtil.openSession();
 		Branch branch = null;
 		try {
-			PackService packService = (PackService)BussFactory.getService(Pack.class);
+			IPackService packService = (IPackService)BussFactory.getService(Pack.class);
 			bp = packService.find(bp.getBranch().getBranch(), bp.getBuildNo());
+			File logFile = bp.getBuildLogFile();
+			logFile.getParentFile().mkdirs();
+			logOut = new PrintStream(logFile);
 			branch = bp.getBranch();
 			File bpRoot = new File(bp.getWSRoot(), Branch.DIR_SVN);
 			FileUtil.emptyDir(bpRoot);
+			List<String> files = Arrays.asList(bp.getFilePaths());
 			SVNUtil.getFile(branch.getSvnUrl(), branch.getSvnUser(), branch.getSvnPassword(), bpRoot, files);
-			SVNLogService.fillBuildPack(bp, files);
+			ISVNLogService logService = (ISVNLogService) BussFactory.getService(SVNLog.class);
+			logService.fillBuildPack(bp);
 		} finally {
 			HibernateUtil.closeSession();
 		}
 		
-		logOut = new PrintStream(bp.getBuildLogFile());
+		if (!StringUtil.isEmpty(bp.getLibfiles())) {
+			String[] files = bp.getLibfiles().split(";");
+			String rootUrl = SysParam.getLibRootURL();
+			if (!rootUrl.endsWith("/"))
+				rootUrl = rootUrl + "/";
+			for (String file : files) {
+				file = file.replaceAll("\\\\", "/").trim();
+				if (file.startsWith("/"))
+					file = file.substring(1);
+				String name = file;
+				if (name.indexOf('/') != -1) {
+					name = name.substring(name.lastIndexOf('/') + 1);
+				}
+				URL url = new URL(rootUrl + file);
+				InputStream input = url.openStream();
+				File toFile = new File(bp.getWSRoot(), "/lib/" + name);
+				toFile.getParentFile().mkdirs();
+				OutputStream output = new FileOutputStream(toFile);
+				byte[] bs = new byte[1024];
+				int len;
+				while((len = input.read(bs)) != -1) {
+					output.write(bs, 0, len);
+				}
+				input.close();
+				output.close();
+			}
+		}
+		
         DefaultLogger consoleLogger = new DefaultLogger();  
         consoleLogger.setErrorPrintStream(logOut);  
         consoleLogger.setOutputPrintStream(logOut); 
@@ -94,9 +140,10 @@ public class BuildThread extends Thread {
 			antFile = new File(BuildThread.class.getResource(DEFAULT_ANT_FILE).getFile());
 		}
 		
-		
         //输出信息级别  
-        proj.addBuildListener(consoleLogger);  
+        proj.addBuildListener(consoleLogger); 
+        proj.setProperty("-logFile", "c:\\ant_log.txt");
+   
 		proj.fireBuildStarted();
 		proj.init();
 		proj.setProperty("dir.branch", branch.getWorkspace());
@@ -105,7 +152,7 @@ public class BuildThread extends Thread {
 		//如果是子分支，那么需要共享主分支的编译环境
 		boolean hasParent = branch.getParent() != null;
 		if (hasParent) {
-			BranchService branchService = (BranchService)BussFactory.getService(Branch.class);
+			IBranchService branchService = (IBranchService)BussFactory.getService(Branch.class);
 			Branch parent = branchService.getBranch(branch.getParent());
 			if (parent != null) {
 				proj.setProperty("compile.lib", parent.getWorkspace() + "/lib");
@@ -119,6 +166,9 @@ public class BuildThread extends Thread {
 			proj.setProperty("compile.classes", branch.getWorkspace() + "/classes");
 		}
 		
+		sysOut = System.out;
+		System.setOut(logOut);
+		System.setErr(logOut);
 		ProjectHelper helper = ProjectHelper.getProjectHelper();
 		helper.parse(proj, antFile);
 		proj.executeTarget(proj.getDefaultTarget());

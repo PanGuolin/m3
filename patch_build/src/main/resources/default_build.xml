@@ -24,29 +24,33 @@
 	</target>
 
 	<target name="compileJava" description="编译JAVA文件">
-		<mkdir dir="${dir.target}/src"/>
-		<mkdir dir="${dir.target}/web/WEB-INF/classes"/>
-		<copy todir="${dir.target}/src">
-			<fileset dir="${source.svn}" >
-				<include name="*/src/main/java/**/*.java"/>
-			</fileset>
-			<regexpmapper from="(.*)/src/main/java/(.*)\.java" to="\2.java" casesensitive="no" handledirsep="true"/>
-		</copy>
-		
-		<javac srcdir="${dir.target}/src" 
-			encoding="GBK" 
-			destdir="${dir.target}/web/WEB-INF/classes"
-			classpathref="java.compile.path"
-			source="1.5"
-			target="1.5">
-		</javac>
-		<delete dir="${dir.target}/src"/>
-	</target>
+			<mkdir dir="${dir.target}/src"/>
+			<mkdir dir="${dir.target}/web/WEB-INF/classes"/>
+			<copy todir="${dir.target}/src">
+				<fileset dir="${source.svn}" >
+					<include name="*/src/main/java/**/*.java"/>
+				</fileset>
+				<regexpmapper from="(.*)/src/main/java/(.*)\.java" to="\2.java" casesensitive="no" handledirsep="true"/>
+			</copy>
+			<javac srcdir="${dir.target}/src" 
+				encoding="GBK" 
+				destdir="${dir.target}/web/WEB-INF/classes"
+				classpathref="java.compile.path"
+				source="1.5"
+				target="1.5"
+				verbose="true"
+				>
+			</javac>
+			<delete dir="${dir.target}/src"/>
+		</target>
 	
 	<target name="copyFiles" description="组装文件">
 		<!-- Copy SQL Files -->
 		<mkdir dir="${dir.target}/sql"/>
 		<mkdir dir="${source.svn}/sql/patch"/>
+		<mkdir dir="${dir.build}/lib"/>
+		<mkdir dir="${dir.target}/web/WEB-INF/lib"/>
+		
 		<copy todir="${dir.target}/sql">
 			<fileset dir="${source.svn}/sql/patch">
 				<include name="*.sql"/>
@@ -59,6 +63,10 @@
 			</fileset>
 			<regexpmapper from="(.*)/src/main/resources/(.*)" to="\2" casesensitive="no" handledirsep="true"/>
 		</copy>
+		<copy todir="${dir.target}/web/WEB-INF/lib">
+			<fileset dir="${dir.build}/lib"/>
+		</copy>
+		
 		<!-- copy web files -->
 		<copy todir="${dir.target}/web/">
 			<fileset dir="${source.svn}" >

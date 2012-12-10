@@ -3,7 +3,6 @@ package com.m3.patchbuild.user;
 import java.util.List;
 
 import com.m3.common.HibernateUtil;
-import com.m3.patchbuild.BaseDAO;
 
 /**
  * 功能权限DAO
@@ -11,13 +10,8 @@ import com.m3.patchbuild.BaseDAO;
  *
  */
 @SuppressWarnings("unchecked")
-public class FunctionPermDAO extends BaseDAO{
+public class FunctionPermDAO {
 	
-	@Override
-	protected Class<?> getInfoClass() {
-		return FunctionPerm.class;
-	}
-
 	/**
 	 * 列出拥有某功能权限的所有角色
 	 * @param permNo

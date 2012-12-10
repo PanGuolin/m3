@@ -6,11 +6,11 @@ import java.util.Map;
 
 import com.m3.common.FileUtil;
 import com.m3.patchbuild.BaseAction;
-import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.pack.BuildFile;
+import com.m3.patchbuild.pack.IPackService;
 import com.m3.patchbuild.pack.Pack;
-import com.m3.patchbuild.pack.PackService;
 
 /**
  * 查看构建包中的文件内容
@@ -28,8 +28,8 @@ public class ViewPackFileAction extends BaseAction{
 	protected String doExecute() throws Exception {
 		String packUid = i.substring(0, 36);
 		String fileUid = i.substring(36);
-		PackService packService = (PackService)BussFactory.getService(Pack.class);
-		Pack pack = (Pack) packService.findInfoByUuid(packUid);
+		IPackService packService = (IPackService)BussFactory.getService(Pack.class);
+		Pack pack = (Pack) packService.findByUuid(packUid);
 		for (BuildFile f : pack.getBuildFiles()) {
 			if (fileUid.equals(f.getUuid())) {
 				File bpRoot = new File(pack.getWSRoot(), Branch.DIR_SVN);

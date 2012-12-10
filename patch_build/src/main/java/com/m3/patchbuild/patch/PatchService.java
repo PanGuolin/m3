@@ -2,26 +2,25 @@ package com.m3.patchbuild.patch;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
-import com.m3.patchbuild.AbstractService;
-import com.m3.patchbuild.BaseDAO;
+import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseService;
+import com.m3.patchbuild.base.DaoUtil;
 import com.m3.patchbuild.branch.Branch;
+import com.m3.patchbuild.patch.action.PatchQuery;
 
 /**
  * 补丁业务接口
  * @author MickeyMic
  *
  */
-public abstract class PatchService extends AbstractService{
+public class PatchService extends BaseService implements IPatchService{
 	
 	public PatchService() {
-		super(new PatchDao());
 	}
 
 
-	public PatchDao getDao() {
-		return (PatchDao)super.getDao();
-	}
 	/**
 	 * 返回某一天的补丁
 	 * @param branch
@@ -32,7 +31,6 @@ public abstract class PatchService extends AbstractService{
 		return getPatch(branch, getPatchName(branch, date));
 	}
 	
-	
 	public Patch createPatch(Branch branch) {
 		Date date = new Date();
 		Patch info = new Patch();
@@ -40,7 +38,7 @@ public abstract class PatchService extends AbstractService{
 		info.setLastModify(date);
 		info.setCreateTime(date);
 		info.setName(getPatchName(branch, date));
-		getDao().saveInfo(info);
+		DaoUtil.saveInfo(info);
 		return info;
 	}
 	
@@ -51,9 +49,9 @@ public abstract class PatchService extends AbstractService{
 	 * @return
 	 */
 	public Patch getPatch(Branch branch, String name) {
-		return (Patch)getDao().findByBillNo(
-				BaseDAO.getBillNo("branch", branch)
-				.setValue("name", name)); 
+		return (Patch) DaoUtil.findByBillNo(getBizClass(), 
+				new String[]{"branch", "name"},
+				new Object[]{branch, name});
 	}
 	
 	/**
@@ -71,6 +69,23 @@ public abstract class PatchService extends AbstractService{
 		version = version.replaceAll("MM", new SimpleDateFormat("MM").format(date));
 		version = version.replaceAll("mm", new SimpleDateFormat("mm").format(date));
 		return version;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public List<Patch> query(PatchQuery q) {
+		return (List<Patch>) DaoUtil.list(getBizClass(), q);
+	}
+
+
+	public void save(Patch patch) {
+		DaoUtil.saveInfo(patch);
+	}
+
+
+	@Override
+	public Class<? extends IBussInfo> doGetBizClass() {
+		return Patch.class;
 	}
 
 }

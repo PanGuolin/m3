@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+     <service class="com.m3.patchbuild.user.ResetPassReqService">
+         <function method="saveInfo(com.m3.patchbuild.IBussInfo)">
+              <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.handleTime}' == 'null'">
+                <arguments>
+                    <reciever>#role(admin)</reciever>
+                    <notifier>${_P0.requester}</notifier>
+                    <subject><![CDATA[密码重置:${_P0.requester.userId}]]></subject>
+        			<content><![CDATA[用户:${_P0.requester.userId}申请密码重置，请审批。]]></content>
+                </arguments>
+            </handler>
+         </function>
+         
+         <function method="handle(com.m3.patchbuild.IBussInfo, java.lang.Object)">
+             <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" advice="beforeX">
+               <arguments>
+                   <accept>#role(admin)</accept>
+                   <error><![CDATA[你没有管理员(admin)的权限]]></error>
+                </arguments>
+           	 </handler>
+              <handler class="com.m3.patchbuild.aop.handler.MessageHandler">
+                <arguments>
+                    <notifier>${_P0.requester}</notifier>
+                    <notifier>${_P0.handleUser}</notifier>
+                    <subject><![CDATA[密码重置已处理:${_P0.accepted}, ${_P0.requester}]]></subject>
+        			<content><![CDATA[你申请的密码重置已经处理，处理结果:${_P0.accepted}]]></content>
+                </arguments>
+            </handler>
+         </function>
+    </service>
+    
+    <service class="com.m3.patchbuild.user.ChangeRoleReqService">  
+        <function method="saveInfo(com.m3.patchbuild.IBussInfo)">
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.handleTime}' == 'null'">
+                <arguments>
+                    <reciever>#role(admin, ${_P0.branch})</reciever>
+                    <notifier>${_P0.requester}</notifier>
+                    <subject><![CDATA[用户申请改变角色：${_P0.requester}]]></subject>
+        			<content><![CDATA[用户${_P0.requester}申请改变角色，新角色列表:${_P0.newRoles}]]></content>
+                </arguments>
+            </handler>
+        </function>
+        
+        <function method="handle(com.m3.patchbuild.IBussInfo, java.lang.Object)">
+           <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" advice="beforeX">
+               <arguments>
+                   <accept>#role(admin, ${_P0.branch})</accept>
+                   <error><![CDATA[你没有管理员(admin)的权限]]></error>
+                </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler">
+                <arguments>
+                    <notifier>${_P0.requester}</notifier>
+                    <notifier>${_P0.handleUser}</notifier>
+                    <subject><![CDATA[角色变更已处理：${_P0.accepted}, ${_P0.requester}]]></subject>
+        			<content><![CDATA[用户${_P0.requester}的角色变更请求已处理，处理结果:${_P0.accepted}]]></content>
+                </arguments>
+            </handler>
+        </function>
+    </service>
+    
+    <service class="com.m3.patchbuild.pack.PackService">
+        <function method="prepareBuild(com.m3.patchbuild.pack.Pack, java.util.Set)">
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler">
+                <arguments>
+                    <notifier>${_P0.requester}</notifier>
+                    <subject><![CDATA[等待构建：${_P0.buildNo}]]></subject>
+        			<content><![CDATA[用户${_P0.requester}提交的构建包等待被构建：${_P0.buildNo}]]></content>
+                </arguments>
+            </handler>
+        </function>
+        
+        <function method="handle(com.m3.patchbuild.IBussInfo, java.lang.Object)">
+            
+            <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" condition="'${_P0.status#name}' == 'builded'" advice="beforeX">
+               <arguments>
+                   <accept>#role(designer, ${_P0.branch.branch})</accept>
+                   <error><![CDATA[你没有设计人员(designer)的权限]]></error>
+                </arguments>
+            </handler>
+             <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" condition="'${_P0.status#name}' == 'checked'" advice="beforeX">
+               <arguments>
+                   <accept>#role(testmanager, ${_P0.branch.branch})</accept>
+                   <error><![CDATA[你没有测试经理(testmanager)的权限]]></error>
+               </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" condition="'${_P0.status#name}' == 'assigned'" advice="beforeX">
+               <arguments>
+                   <accept>#role(tester, ${_P0.branch.branch})</accept>
+               </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" condition="'${_P0.status#name}' == 'testing'" advice="beforeX">
+               <arguments>
+                   <accept>${_P0.tester}</accept>
+               </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" condition="'${_P0.status#name}' == 'pass'" advice="beforeX">
+               <arguments>
+                   <accept>#role(deployer, ${_P0.branch.branch})</accept>
+               </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" condition="'${_P0.status#name}' == 'publishFail'" advice="beforeX">
+               <arguments>
+                   <accept>${_P0.deployer}</accept>
+               </arguments>
+            </handler>
+            
+            
+            
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'builded'">
+               <arguments>
+                    <notifier>${_P0.requester}</notifier>
+                    <notifier>#followers(${_P0.requester})</notifier>
+                    <reciever>#role(designer, ${_P0.branch.branch})>#superiors(${_P0.requester})</reciever>
+                    <subject><![CDATA[构建成功：${_P0.buildNo}]]></subject>
+        			<content><![CDATA[构建包${_P0.buildNo}已成功构建，请检查是否合法]]></content>
+                </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'buildFail'">
+               <arguments>
+                    <reciever>${_P0.requester}</reciever>
+                    <subject><![CDATA[构建失败：${_P0.buildNo}]]></subject>
+        			<content><![CDATA[构建包${_P0.buildNo}构建失败，请查看错误日志并处理]]></content>
+                </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" advice="afterR" condition="'${_P0.status#name}' == 'checked'">
+            	<arguments>
+            	    <reciever>#role(testmanager, ${_P0.branch.branch})>#superiors(${_P0.requester})</reciever>
+            	    <notifier>#followers(${_P0.requester})</notifier>
+      				<subject><![CDATA[请分配: ${_P0.buildNo}]]></subject>
+      				<content><![CDATA[构建包${_P0.buildNo}已通过${_P0.checker}检查，请分配测试人员]]></content>
+              </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'checkFail'">
+                <arguments>
+	        		<reciever>${_P0.requester}</reciever>
+            	    <notifier>#followers(${_P0.requester})</notifier>
+	        		<subject><![CDATA[检查失败：${_P0.buildNo}]]></subject>
+	        		<content><![CDATA[用户${_P0.requester}提交的构建包${_P0.buildNo}检查失败,失败原因:${_P0.failReason}, 检查人:${_P0.checker}]]></content>
+	            </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'assigned'">
+                <arguments>
+	        		<reciever>${_P0.tester}</reciever>
+            	    <notifier>#followers(${_P0.requester})</notifier>
+	        		<subject><![CDATA[请测试：${_P0.buildNo}]]></subject>
+	        		<content><![CDATA[构建包${_P0.buildNo}由${_P0.assigner}分配给${_P0.tester}, 请开始测试]]></content>
+	            </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'testing'">
+                <arguments>
+	        		<reciever>${_P0.tester}</reciever>
+            	    <notifier>${_P0.requester}</notifier>
+	        		<subject><![CDATA[反馈测试：${_P0.buildNo}]]></subject>
+	        		<content><![CDATA[用户${_P0.tester}已经对${_P0.buildNo}开始测试，请及时反馈结果]]></content>
+	            </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'testFail'">
+                <arguments>
+	        		<reciever>${_P0.requester}</reciever>
+            	    <notifier>#followers(${_P0.requester})</notifier>
+	        		<subject><![CDATA[测试打回：${_P0.buildNo}]]></subject>
+	        		<content><![CDATA[构建包${_P0.buildNo}已由测试人员${_P0.tester}打回，打回原因：${_P0.failReason}，请处理]]></content>
+	            </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'pass'">
+                <arguments>
+	        		<reciever>#role(deployer, ${_P0.branch.branch})>#superiors(${_P0.requester})</reciever>
+            	    <notifier>#followers(${_P0.requester})</notifier>
+            	    <notifier>${_P0.tester}</notifier>
+	        		<subject><![CDATA[请发布：${_P0.buildNo}]]></subject>
+	        		<content><![CDATA[构建包${_P0.buildNo}已由测试人员${_P0.tester}测试通过，请发布]]></content>
+	            </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'published'">
+                <arguments>
+	        		<notifier>#followers(${_P0.requester})</notifier>
+            	    <notifier>${_P0.deployer}</notifier>
+            	    <notifier>${_P0.tester}</notifier>
+	        		<subject><![CDATA[发布成功：${_P0.buildNo}]]></subject>
+	        		<content><![CDATA[构建包${_P0.buildNo}已成功发布，发布人：${_P0.deployer}]]></content>
+	            </arguments>
+            </handler>
+            <handler class="com.m3.patchbuild.aop.handler.MessageHandler" condition="'${_P0.status#name}' == 'publishFail'">
+                <arguments>
+	        		<reciever>${_P0.deployer}</reciever>
+	        		<subject><![CDATA[发布失败：${_P0.buildNo}]]></subject>
+	        		<content><![CDATA[构建包${_P0.buildNo}发布失败，请处理]]></content>
+	            </arguments>
+            </handler>
+         </function>
+         
+        <function method="publish(com.m3.patchbuild.pack.Pack)">
+            <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" advice="beforeX">
+               <arguments>
+                   <accept>#role(deployer, ${_P0.branch})</accept>
+                   <error><![CDATA[你没有发布人员(deployer)的权限]]></error>
+               </arguments>
+            </handler>
+        </function>
+    </service>
+</services>

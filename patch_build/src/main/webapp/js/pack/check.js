@@ -56,6 +56,6 @@ var checkObj = {
 			}
 			$('#failreason').val(rea);
 			//alert($('#failreason').val());
-			$('#checkForm').submit();
+			$('#taskForm').submit();
 		}
 };

@@ -2,15 +2,10 @@ package com.m3.patchbuild.attached;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseBussInfo;
 
 /**
  * 附件信息
@@ -19,12 +14,7 @@ import com.m3.patchbuild.IBussInfo;
  */
 @Entity
 @Table(name="Att_Attachment")
-public class Attachment implements IBussInfo{
-	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
-	@Column(name = "uuid", unique = true)
-	private String uuid;//唯一ID
+public class Attachment extends BaseBussInfo{
 	private String fileName; //附件名称
 	private Date createTime; //创建时间
 	private String fileUuid; //文件的唯一名称 
@@ -32,12 +22,6 @@ public class Attachment implements IBussInfo{
 	private String bussType; //业务类型
 	
 	
-	public String getUuid() {
-		return uuid;
-	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
 	public Date getCreateTime() {
 		return createTime;
 	}

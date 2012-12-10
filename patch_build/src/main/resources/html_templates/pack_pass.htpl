@@ -1,0 +1,4 @@
+请发布构建包：${pack.buildNo}
+分支${pack.branch.branch}上的构建包${pack.buildNo}已经测试通过，请发布
+申请人：${requester.username}
+测试人: ${tester.username}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<functions>
+	<service>ResetPassReqService</service>
+	<function>
+		
+		<id>NewResetPassReqService</id>
+		<name>新增密码重置请求</name>
+		<service>com.m3.patchbuild.user.ResetPassReqService</service>
+		<method>saveInfo(com.m3.patchbuild.IBussInfo)</method>
+	    <condition>"${_Parameter_0.handleTime}" == "null"</condition>
+	</function>
+	<function>
+		<service>ResetPassReqService</service>
+		<id>SaveResetPassReqService</id>
+		<name>保存密码重置请求</name>
+		<method>saveInfo(com.m3.patchbuild.IBussInfo)</method>
+	    <condition>"${_Parameter_0.handleTime}" != "null"</condition>
+	</function>
+</functions>

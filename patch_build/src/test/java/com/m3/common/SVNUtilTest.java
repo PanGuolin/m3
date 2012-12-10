@@ -9,6 +9,8 @@ import java.util.Set;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 
+import com.m3.patchbuild.svn.SVNUtil;
+
 import junit.framework.TestCase;
 
 /**

@@ -15,15 +15,23 @@
 	<script type="text/javascript" src="${basePath}/js/include/header.js"></script>
 </head>
 <body>
+<s:set value="@com.m3.patchbuild.branch.BranchUtil@listAllBranch()" name="branchs"/>
 <div id="headerDiv">
-	<div id="welcome">欢迎 <b>${userBean.username}</b> !你有<span id="undealmsg">0</span>条未处理任务消息和<span id="unreadmsg">0</span>条未读关注消息</div>
+	<div id="welcome">欢迎 <b>
+		<a title="点击进行用户修改" href="${basePath}/user/userinfo">${userBean.username}[${userBean.userId }]</a>!</b>&nbsp;&nbsp;当前分支： 
+		<select style="line-height:20px; height:20px;" name="user.mainBranch" selValue="${currentBranch.branch}" id="currentBranch">
+			<s:iterator value='@com.m3.patchbuild.branch.BranchUtil@listAllBranch()' status='st' id='branch'>
+			<option value="<s:property value='#branch.branch'/>"> <s:property value='#branch.name'/></option>
+			</s:iterator> 
+		</select>
+	</div>
 	<div id="menu">
-		<a href="${basePath}/msg/mymsg.jsp" id="btn_listpatch"><span class="corner"></span>我的消息</a>
-		<a href="${basePath}/manage/listbuild.jsp" id="btn_listbuild"><span class="corner"></span>构建包列表</a>
-		<a href="${basePath}/manage/showbuildlog.jsp" id="btn_showbuildlog"><span class="corner"></span>构建日志</a>
-		<a href="${basePath}/pack/addbuild.jsp" id="btn_addbuild"><span class="corner"></span>增加构建</a>
-		<a href="${basePath}/manage/listbuildfiles.jsp" id="btn_listbuildfiles"><span class="corner"></span>文件查询</a>
-		<a href="${basePath}/index.jsp" id="btn_index">	<span class="corner"></span>切换用户</a>
+		<a href="${basePath}/msg/mymsg.jsp"><span class="corner"></span>我的消息</a>
+		<a href="${basePath}/pack/listpack.jsp"><span class="corner"></span>构建包列表</a>
+		<a href="${basePath}/patch/listpatch.jsp"><span class="corner"></span>补丁列表</a>
+<%-- 		<a href="${basePath}/pack/addbuild.jsp"><span class="corner"></span>增加构建</a> --%>
+		<a href="${basePath}/user/relation"><span class="corner"></span>我的关系</a>
+<%-- 		<a href="${basePath}/user/userinfo"><span class="corner"></span>我的信息</a> --%>
 	</div>
 	<div id="menubar">
 		<a href="${basePath}/user/logout">退出系统</a>

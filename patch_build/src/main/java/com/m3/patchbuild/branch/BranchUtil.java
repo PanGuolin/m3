@@ -2,7 +2,7 @@ package com.m3.patchbuild.branch;
 
 import java.util.List;
 
-import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.base.BussFactory;
 
 /**
  * 分支服务辅助工具类
@@ -16,7 +16,7 @@ public abstract class BranchUtil {
 	 * @return
 	 */
 	public static List<Branch> listAllBranch() {
-		BranchService branchService = (BranchService)BussFactory.getService(Branch.class);
+		IBranchService branchService = (IBranchService)BussFactory.getService(Branch.class);
 		return branchService.listAllBranch();
 	}
 

@@ -10,7 +10,9 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 
-import com.m3.common.SVNUtil;
+import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseService;
+import com.m3.patchbuild.base.DaoUtil;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.pack.Pack;
 
@@ -19,11 +21,10 @@ import com.m3.patchbuild.pack.Pack;
  * @author MickeyMic
  *
  */
-public class SVNLogService {
+public class SVNLogService extends BaseService implements ISVNLogService{
 	private static final Logger logger = Logger.getLogger(SVNLog.class);
 	
-	private static SVNLogDAO dao = new SVNLogDAO();
-	
+	private SVNLogDAO dao = new SVNLogDAO();
 	
 	/**
 	 * 将SVN日志信息更新到本地数据库
@@ -32,7 +33,7 @@ public class SVNLogService {
 	 * @return
 	 * @throws SVNException
 	 */
-	public static void updateLog(Branch branch) throws SVNException {
+	public void updateLog(Branch branch) throws SVNException {
 		long maxRevision = dao.getMaxRevision(branch);
 		long ts = System.currentTimeMillis();
 		Set<SVNLogEntry> newLogs = SVNUtil.getSVNLogEntry(branch.getSvnUrl(), branch.getSvnUser(), 
@@ -62,7 +63,7 @@ public class SVNLogService {
 			logger.info("有 " + list.size() + "条SVN日志需要更新,起始版本：" + maxRevision + " ，查询费时 " + (System.currentTimeMillis() - ts) + "ms");
 			if (list.size() > 0) {
 				ts = System.currentTimeMillis();
-				dao.saveBatch(list);
+				DaoUtil.saveBatch(list);
 				logger.info("保存日志到数据库完成，费时 " + (System.currentTimeMillis() - ts) + "ms");
 			}
 		}
@@ -74,7 +75,7 @@ public class SVNLogService {
 	 * @return
 	 * @throws SVNException 
 	 */
-	public static List<SVNLog> listByKeyword(Branch branch, String keywords) throws SVNException {
+	public List<SVNLog> listByKeyword(Branch branch, String keywords) throws SVNException {
 		updateLog(branch);
 		return dao.findByKeywords(branch, keywords);
 	}
@@ -84,8 +85,24 @@ public class SVNLogService {
 	 * @param pack
 	 * @throws SVNException 
 	 */
-	public static void fillBuildPack(Pack pack, Set<String> files) throws SVNException {
+	public void fillBuildPack(Pack pack) throws Exception {
 		updateLog(pack.getBranch());
-		dao.fillBuildPack(pack, files);
+		dao.fillBuildPack(pack);
 	}
+	
+	/**
+	 * 列出版本号最小的日志信息
+	 * @param branch
+	 * @return
+	 */
+	public List<Object[]> listBaseVersion(Branch branch) {
+		return dao.getBaseRevision(branch);
+	}
+
+	@Override
+	protected Class<? extends IBussInfo> doGetBizClass() {
+		return SVNLog.class;
+	}
+
+
 }

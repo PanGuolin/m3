@@ -9,16 +9,17 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 
 import com.m3.common.FileUtil;
-import com.m3.patchbuild.AbstractService;
-import com.m3.patchbuild.BussFactory;
 import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseService;
+import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.base.DaoUtil;
 
 /**
  * 附件服务
  * @author MickeyMic
  *
  */
-public class AttachmentService extends AbstractService{
+public class AttachmentService extends BaseService{
 	
 	private static final Logger logger = Logger.getLogger(AttachmentService.class);
 
@@ -42,14 +43,6 @@ public class AttachmentService extends AbstractService{
 		} catch (Throwable t) {
 			logger.error("创建附件根目录时出错", t);
 		}
-	}
-	
-	public AttachmentService() {
-		super(new AttachmentDao());
-	}
-	
-	protected AttachmentDao getDao() {
-		return (AttachmentDao)super.getDao();
 	}
 	
 	/**
@@ -82,7 +75,12 @@ public class AttachmentService extends AbstractService{
 			att.setBussId(info.getUuid());
 			att.setBussType(BussFactory.getBussType(info.getClass()));
 		}
-		getDao().saveInfo(att);
+		DaoUtil.saveInfo(att);
 		return att;
+	}
+
+	@Override
+	protected Class<? extends IBussInfo> doGetBizClass() {
+		return Attachment.class;
 	}
 }

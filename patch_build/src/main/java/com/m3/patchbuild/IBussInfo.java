@@ -11,4 +11,6 @@ public interface IBussInfo {
 	 * @return
 	 */
 	public String getUuid();
+	
+	public void setUuid(String uuid);
 }

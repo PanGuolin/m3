@@ -16,8 +16,7 @@ create table Msg_Message
    Sender               char(30),
    MessageType          int,
    Status               int,
-   DetailId             char(36),
-   Attached             bit,
+   Content				varchar(4000)				   null,	
    constraint PK_MSG_MESSAGE primary key clustered (UUID)
 );
 

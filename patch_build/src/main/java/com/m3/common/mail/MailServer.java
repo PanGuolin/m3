@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  * @author pangl
  *
  */
-public class MailServer {
+public class MailServer{
 	
 	private static Logger logger = Logger.getLogger(MailServer.class);
 	

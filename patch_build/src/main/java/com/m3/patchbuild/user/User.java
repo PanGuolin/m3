@@ -4,21 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseBussInfo;
 
 /**
  * 用户信息对象
@@ -27,12 +22,7 @@ import com.m3.patchbuild.IBussInfo;
  */
 @Entity
 @Table(name="PB_User")
-public class User implements IBussInfo{
-	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
-	@Column(name = "uuid", unique = true)
-	private String uuid; //唯一标识
+public class User extends BaseBussInfo {
 	
 	@Column(name="userId", nullable=false)
 	private String userId; //用户登录名
@@ -49,9 +39,8 @@ public class User implements IBussInfo{
 	@Column(name="isSVN")
 	private boolean isSVNUser = false; //是否SVN用户，如果是SVN用户则密码验证交由SVN系统负责
 	
-	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name = "PB_UserRole", joinColumns = @JoinColumn(name = "UserUuid"))
-	private Set<String> roles = new HashSet<String>(); //用户角色集合
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="user")
+	private Set<UserRole> roles = new HashSet<UserRole>(); //用户角色集合
 	
 	@ManyToMany(
             targetEntity=User.class,
@@ -59,31 +48,27 @@ public class User implements IBussInfo{
             fetch=FetchType.EAGER
     )
     @JoinTable(
-            name="PB_ReportRelation",
-            joinColumns={@JoinColumn(name="UserNo")},
-            inverseJoinColumns={@JoinColumn(name="SuperiorNo")}
+            name="User_Superior",
+            joinColumns={@JoinColumn(name="UserId")},
+            inverseJoinColumns={@JoinColumn(name="SuperiorID")}
     )
 	private Set<User> superiors = new HashSet<User>();//汇报关系人集合
 	
+	private boolean enabled; //是否可用
+	
+	private String mainBranch; //主分支
+	
 	@ManyToMany(
             targetEntity=User.class,
             cascade ={CascadeType.PERSIST,CascadeType.MERGE},
             fetch=FetchType.EAGER
     )
     @JoinTable(
-            name="PB_UserFollow",
+            name="User_Follower",
             joinColumns={@JoinColumn(name="UserId")},
             inverseJoinColumns={@JoinColumn(name="FollowerID")}
     )
 	private Set<User> followers = new HashSet<User>(); //跟随人（关注当前用户）集合
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
 
 	public String getUserId() {
 		return userId;
@@ -109,23 +94,35 @@ public class User implements IBussInfo{
 		this.email = email;
 	}
 
-	public Set<String> getRoles() {
+	public Set<UserRole> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<String> roles) {
-		if (roles == null)
-			this.roles.clear();
+	public void setRoles(Set<UserRole> roles) {
 		this.roles = roles;
 	}
-	
-	public void addRole(String role) {
-		if (role != null)
-			this.roles.add(role);
+
+	public void addRole(String branch, String roleId) {
+		if (branch == null || roleId == null)
+			return;
+		if (hasRole(branch, roleId)) return;
+		
+		UserRole nRole = new UserRole();
+		nRole.setUser(this);
+		nRole.setBranch(branch);
+		nRole.setRoleId(roleId);
+		roles.add(nRole);
 	}
 	
-	public boolean hasRole(String role) {
-		return this.roles.contains(role);
+	public boolean hasRole(String branch, String roleId) {
+		if (roleId == null) return false;
+		if (roles == null || roles.isEmpty()) return false;
+		for (UserRole role : roles) {
+			if ((branch == null || branch.equals(role.getBranch()))
+				&& roleId.equals(role.getRoleId()))
+				return true;
+		}
+		return false;
 	}
 
 	public String getUsername() {
@@ -166,8 +163,21 @@ public class User implements IBussInfo{
 	public String toString() {
 		return userId;
 	}
-	
-	
-	
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getMainBranch() {
+		return mainBranch;
+	}
+
+	public void setMainBranch(String mainBranch) {
+		this.mainBranch = mainBranch;
+	}
 
 }

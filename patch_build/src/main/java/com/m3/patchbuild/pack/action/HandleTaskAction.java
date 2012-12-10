@@ -1,12 +1,10 @@
 package com.m3.patchbuild.pack.action;
 
 import com.m3.patchbuild.BaseAction;
-import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.exception.IllegalBPStateException;
-import com.m3.patchbuild.message.Message;
-import com.m3.patchbuild.message.MessageService;
+import com.m3.patchbuild.pack.IPackService;
 import com.m3.patchbuild.pack.Pack;
-import com.m3.patchbuild.pack.PackService;
 import com.m3.patchbuild.pack.PackStatus;
 
 /**
@@ -19,9 +17,9 @@ public abstract class HandleTaskAction extends BaseAction{
 	private String i= null;//构建包ID
 	
 	@Override
-	final protected String doExecute() throws Exception {
-		PackService packService = (PackService)BussFactory.getService(Pack.class);
-		Pack pack = (Pack) packService.findInfoByUuid(i);
+	protected String doExecute() throws Exception {
+		IPackService packService = (IPackService)BussFactory.getService(Pack.class);
+		Pack pack = (Pack) packService.findByUuid(i);
 		if (pack == null) {
 			throw new Exception("指定的构建包不存在" + i);
 		}
@@ -31,10 +29,8 @@ public abstract class HandleTaskAction extends BaseAction{
 		
 		validPack(pack);
 		fillPack(pack);
-		packService.save(pack);
+		packService.saveInfo(pack);
 		
-		MessageService msgService = (MessageService)BussFactory.getService(Message.class);
-		msgService.statusChanged(pack);
 		return SUCCESS;
 	}
 	

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+    <message>
+        <service>com.m3.patchbuild.user.ResetPassReqService</service> <!-- 业务对象 -->
+        <method>saveInfo(com.m3.patchbuild.IBussInfo)</method><!-- 业务方法 -->
+        <advice>afterR</advice>
+        <condition>'${_P0.handleTime}' == 'null'</condition>
+        <recievers> <!-- 消息接收人列表 -->
+            <participant>
+                <type>role</type>
+                <expr>admin</expr>
+            </participant>
+        </recievers>
+        <notifiers> <!-- 消息抄送人列表 -->
+            <participant>
+                <type>relation</type>
+                <expr>requester</expr>
+            </participant>
+        </notifiers>
+        <subject><![CDATA[密码重置:${_P0.requester.userId}]]></subject>
+        <content><![CDATA[用户:${_P0.requester.userId}申请密码重置，请审批。]]></content>
+    </message>
+    
+    <message>
+        <service>com.m3.patchbuild.user.ResetPassReqService</service>
+        <method>handle(com.m3.patchbuild.IBussInfo, com.m3.patchbuild.message.IHandleContext)</method>
+        <advice>afterR</advice>
+        <notifiers>
+            <participant>
+                <type>script</type>
+                <expr>${_P0.requester.userId}</expr>
+            </participant>
+        </notifiers>
+        <subject><![CDATA[密码重置已处理:${_P0.accepted}]]></subject>
+        <content><![CDATA[你申请的密码重置已经处理，处理结果:${_P0.accepted}]]></content>
+    </message>
+    
+    <message>
+        <service>com.m3.patchbuild.user.RegisterReqService</service> 
+        <method>saveInfo(com.m3.patchbuild.IBussInfo)</method>
+        <advice>afterR</advice>
+        <condition>NEW_INFO</condition>
+        <recievers>
+            <participant>
+                <type>role</type>
+                <expr>admin</expr>
+            </participant>
+        </recievers>
+        <subject><![CDATA[用户注册请求：${_Parameter_0.userId}]]></subject>
+        <content><![CDATA[用户${_Parameter_0.userId}申请注册，请处理]]></content>
+    </message>
+    <message>
+        <service>com.m3.patchbuild.user.RegisterReqService</service> 
+        <method>saveInfo(com.m3.patchbuild.IBussInfo)</method>
+        <advice>afterR</advice>
+        <condition>OLD_INFO</condition>
+        <notifiers> <!-- 消息抄送人列表 -->
+            <participant>
+                <type>script</type>
+                <expr>${_Parameter_0.userId}</expr>
+            </participant>
+        </notifiers>
+        <subject><![CDATA[欢迎新用户：${_Parameter_0.userId}]]></subject>
+        <content><![CDATA[欢迎您加入本系统]]></content>
+    </message>
+    <message>
+        <service>com.m3.patchbuild.user.ChangeRoleReqService</service> 
+        <method>saveInfo(com.m3.patchbuild.IBussInfo)</method>
+        <advice>afterR</advice>
+        <condition>'${_P0.handleTime}' == 'null'</condition>
+        <recievers>
+            <participant><type>role</type><expr>admin</expr></participant>
+        </recievers>
+        <notifiers>
+            <participant><type>script</type><expr>${_P0.requester}</expr></participant>
+        </notifiers>
+        <subject><![CDATA[用户申请改变角色：${_P0.requester}]]></subject>
+        <content><![CDATA[用户${_P0.requester}申请改变角色，新角色列表:${_P0.newRoles}]]></content>
+    </message>
+    <message>
+        <service>com.m3.patchbuild.user.ChangeRoleReqService</service> 
+        <method>handle(com.m3.patchbuild.IBussInfo, com.m3.patchbuild.message.IHandleContext)</method>
+        <advice>afterR</advice>
+        <notifiers>
+            <participant><type>script</type><expr>${_P0.requester}</expr></participant>
+        </notifiers>
+        <subject><![CDATA[您的角色变更已处理：${_P0.accepted}]]></subject>
+        <content><![CDATA[您的角色变更已处理，处理结果:${_P0.accepted}]]></content>
+    </message>
+</messages>

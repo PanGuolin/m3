@@ -12,7 +12,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.util.FileUtils;
 
-import com.m3.patchbuild.IBussInfo;
+import com.m3.common.StringUtil;
+import com.m3.patchbuild.base.BaseBussInfo;
 import com.m3.patchbuild.branch.Branch;
 
 /**
@@ -20,10 +21,9 @@ import com.m3.patchbuild.branch.Branch;
  * @author MickeyMic
  *
  */
-public class Pack implements IBussInfo{
+public class Pack  extends BaseBussInfo {
 	private static final Logger logger = Logger.getLogger(Pack.class);
 
-	private String uuid;//唯一标识
 	private String buildNo; //构建号
 	private String keywords; //构建关键字
 	private String requester; //构建申请人
@@ -43,15 +43,13 @@ public class Pack implements IBussInfo{
 	private String patch; //所属补丁
 	private PackStatus status = PackStatus.init; //当前状态
 	private List<BuildFile> buildFiles = new ArrayList<BuildFile>(); //构建文件列表
-	private Set<String> depends = new HashSet<String>(); //依赖其它构建包列表
+	//private Set<String> depends = new HashSet<String>(); //依赖其它构建包列表
+	private Set<Pack> depends = new HashSet<Pack>();//依赖关系
 	private String failReason; //失败原因
+	private List<Bug> bugs = new ArrayList<Bug>();//对应的BUG号
+	private String libfiles; //lib包列表，用分号连接
+	private Date buildTime; //构建时间
 	
-	public String getUuid() {
-		return uuid;
-	}
-	public void setUuid(String guid) {
-		this.uuid = guid;
-	}
 	public String getBuildNo() {
 		return buildNo;
 	}
@@ -59,6 +57,19 @@ public class Pack implements IBussInfo{
 		this.buildNo = buildNo;
 	}
 	public String getKeywords() {
+		if (keywords == null)
+			keywords = ";";
+		if (!keywords.startsWith(";"))
+			keywords = ";" + keywords;
+		if (!keywords.endsWith(";"))
+			keywords += ";";
+		if (keywords.indexOf(";" + buildNo + ";") == -1)
+			keywords += buildNo + ";";
+		for (Bug bug : bugs) {
+			if (keywords.indexOf(";" + bug.getBugNo() + ";") == -1) {
+				keywords += bug.getBugNo() + ";";
+			}
+		}
 		return keywords;
 	}
 	public void setKeywords(String keywords) {
@@ -149,22 +160,18 @@ public class Pack implements IBussInfo{
 	public boolean removeBuildFile(String url) {
 		return this.buildFiles.remove(url);
 	}
-	public Set<String> getDepends() {
-		return depends;
-	}
-	public void setDepends(Set<String> depends) {
-		if (depends != null)
-			this.depends = depends;
-	}
-	
-	public void addDepends(String depend) {
-		this.depends.add(depend);
-	}
-	
-	public boolean removeDepend(String depend) {
-		return this.depends.remove(depend);
-	}
-	
+//	public Set<String> getDepends() {
+//		return depends;
+//	}
+//	public void setDepends(Set<String> depends) {
+//		if (depends != null)
+//			this.depends = depends;
+//	}
+//	
+//	public void addDepends(String depend) {
+//		this.depends.add(depend);
+//	}
+//	
 	public String[] getFilePaths() {
 		Set<String> set = new HashSet<String>();
 		for (BuildFile file : buildFiles) {
@@ -246,5 +253,41 @@ public class Pack implements IBussInfo{
 	
 	public File getZipFile() {
 		return new File(getWSRoot(), buildNo + ".zip");
+	}
+	
+	public List<Bug> getBugs() {
+		return bugs;
+	}
+	public void setBugs(List<Bug> bugs) {
+		this.bugs = bugs;
+	}
+	
+	public Bug findBugByNo(String bugNo) {
+		if (StringUtil.isEmpty(bugNo))
+			return null;
+		for (Bug bug : bugs) {
+			if (bugNo.equals(bug.getBugNo())) {
+				return bug;
+			}
+		}
+		return null;
+	}
+	public Set<Pack> getDepends() {
+		return depends;
+	}
+	public void setDepends(Set<Pack> depends) {
+		this.depends = depends;
+	}
+	public String getLibfiles() {
+		return libfiles;
+	}
+	public void setLibfiles(String libfiles) {
+		this.libfiles = libfiles;
+	}
+	public Date getBuildTime() {
+		return buildTime;
+	}
+	public void setBuildTime(Date buildTime) {
+		this.buildTime = buildTime;
 	}
 }

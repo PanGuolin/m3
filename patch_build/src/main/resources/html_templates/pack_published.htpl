@@ -1,0 +1,2 @@
+构建包发布成功:${pack.buildNo}
+构建包${pack.buildNo} -[${pack.branch.branch}]成功发布到补丁${pack.patch}

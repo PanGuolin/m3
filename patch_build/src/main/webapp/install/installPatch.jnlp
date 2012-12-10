@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="GBK"?> 
+<jnlp codebase="http://127.0.0.1:8080/patch" href="installPatch.jnlp"> 
+	<information> 
+		<title>Install Patch Pack</title> 
+		<vendor>Three Mickey 2004</vendor> 
+		<icon href="photo1.JPG"/> 
+	</information> 
+	<resources> 
+		<j2se version="1.5+"/> 
+		<jar href="install/pb.jar"/> 
+	</resources> 
+	<application-desc main-class="com.m3.patchbuild.install.PackInstaller"/> 
+</jnlp> 

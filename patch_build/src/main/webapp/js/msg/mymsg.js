@@ -1,6 +1,6 @@
-var mymsg = {
-	refresh : function() {
-		var url = basePath + "/js/fnmsg.action?t=nl";
+var mainObj = {
+	query : function() {
+		var url = basePath + "/msg/fnmsg.action?jfs=true&t=nl";
 		if ($("#query_nt_v1").is(":checked")) {
 			url += "&q.nt=0";
 		} else {
@@ -9,103 +9,116 @@ var mymsg = {
 		if($("#query_stat").is(":checked")) {
 			url += "&q.status=1";
 		}
-		$.get(url, mymsg.handleMsgData, "json");
+		$.get(url, mainObj.handleMsgData, "json");
 	},
 	
 	data : {},
 	
 	handleMsgData : function(data, status) {
 		if (status != "success" || !data.rows.length) {
-			mymsg.data = undefined;
+			mainObj.data = undefined;
 			$get("#datagrid").loadData([]);
 			return;
 		}
-		mymsg.data = data;
-		var isTo = $("#query_nt_v1").is(":checked");
-		var recType = isTo ? "通知" : "关注";
+		data.isTo = $("#query_nt_v1").is(":checked");
+		mainObj.data = data;
+		
+		var recType = data.isTo ? "通知" : "关注";
 		var rows = data["rows"];
 		for (var i=0; i<rows.length; i++) {
-			var row = rows[i];
-			row.recType = recType;
-			var action = "";
-			action += "<a href='#' onclick='$msg(mymsg.data.rows[" + i + "].detail.content, {width:400});'>显示内容</a>";
-			if (isTo) {
-				action += "&nbsp; &nbsp;<a href='#' onclick='mymsg.doTask(" + i + ")'>处理</a>";
-			} else {
-				action += "&nbsp; &nbsp;<a href='#' onclick='mymsg.ignore(" + i + ")'>忽略</a>";
-			}
-			action += "&nbsp; &nbsp;<a href='#' onclick='mymsg.checkOperators(" + i + ")'>当前操作人</a>";
-			row.action = action;
+			rows[i].recType = recType;
 		}
 		$get("#datagrid").loadData(data);
-	},
-	
-	checkOperators : function(index) {
-		var uuid = mymsg.data.rows[index].uuid;
-		var url =  basePath + "/js/fnmsg.action?t=qo&i=" + uuid;
-		$.get(url, mymsg.showOperators, "json");
-	}, 
-	
-	showOperators : function(data, status) {
-		var msg = "";
-		if (status != "success" || !data.rows.length) {
-			msg = "没有找到相应执行人，可能消息已过期";
-		} else {
-			msg = "当前消息处理用户列表：<br/>";
-			for (var i=0; i<data.rows.length; i++) {
-				msg += data.rows[i].userName + "[" + data.rows[i].userId + "]，&nbsp;&nbsp;";
-			}
-		}
-		$msg(msg, {title:"消息处理人"});
-	},
-	//忽略消息
-	ignore : function(index) {
-		var uuid = mymsg.data.rows[index].uuid;
-		var url =  basePath + "/js/fnmsg.action?t=ig&i=" + uuid;
-		$.get(url, mymsg.refresh, "json");
+		$('#lastQuery').text("最后更新时间：" + date2str(new Date(),"yyyy年MM月dd日 hh:mm:ss"));
 	},
 	//处理任务
-	doTask : function(index) {
-		var uuid = mymsg.data.rows[index].uuid;
-		var url = basePath + "/js/handle?t=pm&i=" + uuid;
-		$.get(url, mymsg.openWin, "html");
-		//$('#taskWindow').window('refresh', url);
-		//$('#taskWindow').window({content:'sss0'});
-		//$('#taskWindow').window('open');
-	},
-	openWin : function(data, status) {
-		if (status != "success") {
+	doTask : function() {
+		if (!mainObj.data.isTo) {
+			alert("关注消息没有关联任务");
 			return;
 		}
-		var temp = $("#tempDiv").html(data);
-		var url = basePath + "/js/handle?t=pc&i=" + temp.find('#uuid').text();
-		var mode = temp.find('#modetype').text();
-		if (mode == "mode_iw") {
-			
-			$('#taskWindow').window('open');
-			$('#taskWindow').window('refresh', url);
-			//alert($('#taskWindow').window('body').html());
-		} else {
-			location.href = url;
-		}
+		var row = mainObj.getSelectedRow(true);
+		if (!row || !row.uuid)
+			return;
+		var url = basePath + "/msg/handle?jfs=true&t=pm&i=" + row.uuid;
+		$.get(url, function(data, status) {
+			if (status != "success") {
+				return;
+			}
+			if (data.tips)alert(data.tips);
+			if (data.pageMode) {
+				if (data.pageMode == "mode_iw") {
+					$('#taskWindow').window('open');
+					$('#taskWindow').window('refresh', basePath + data.pageUrl);
+				} else {
+					location.href = basePath + data.pageUrl;
+				}
+			}
+		}, "json");
 	},
-	winLoaded : function() {
-		var subms = $('#taskWindow').window('body').find('form');
-		if (subms.length) {
-			subms.ajaxForm(function() {
-				$('#taskWindow').window('close');
-				mymsg.refresh();
-			});
+	viewOperator : function() {
+		var row = mainObj.getSelectedRow(true);
+		if (!row || !row.uuid)
+			return;
+		var uuid = row.uuid;
+		var url =  basePath + "/msg/fnmsg.action?jfs=true&t=qo&i=" + uuid;
+		$.get(url, function(data, status){
+			var msg = "";
+			if (status != "success") {
+				alert("执行失败！");
+				return;
+			}
+			if (data.tips) alert(data.tips);
+			if (!data.rows || !data.rows.length) {
+				msg = "没有找到相应执行人，可能消息已过期";
+			} else {
+				msg = "当前消息处理用户列表：<br/>";
+				for (var i=0; i<data.rows.length; i++) {
+					msg += data.rows[i].userName + "[" + data.rows[i].userId + "]，&nbsp;&nbsp;";
+				}
+			}
+			$msg(msg, {title:"消息处理人"});
+		}, "json");
+	},
+	/**
+	 * 获取选择的记录
+	 * @param warn
+	 * @returns
+	 */
+	getSelectedRow : function(warn) {
+		var dg = $get("#datagrid");
+		var index = dg.getRowIndex(dg.getSelected());
+		if (index == -1) {
+			if (warn)
+				alert('必须选择一条记录');
+			return undefined;
 		}
+		return mainObj.data.rows[index];
 	}
 };
 	
 $().ready(function() {
-	$(".queryForm").change(mymsg.refresh);
-	$(mymsg.refresh());
+	$(".queryForm").change(mainObj.query);
+	$(mainObj.query());
+	$('#viewDetail').click(function() {
+		var row = mainObj.getSelectedRow(true);
+		if (row && row.content) {
+			$msg(row.content, {width:400});
+		}
+	});
+	$('#handleTask').click(mainObj.doTask);
+	$('#viewOp').click(mainObj.viewOperator);
+	$('#ignore').click(function(){
+		if (mainObj.data.isTo) {
+			alert("无法忽略任务消息");
+			return;
+		}
+		var row = mainObj.getSelectedRow(true);
+		if (row && row.uuid) {
+			var url =  basePath + "/msg/fnmsg.action?jfs=true&t=ig&i=" + row.uuid;
+			$.get(url, mainObj.query, "json");
+		}
+	});
+	
 });
 		
-function booleanFormater(value, row, index) {
-	return value ? "是" : "否";
-}
-

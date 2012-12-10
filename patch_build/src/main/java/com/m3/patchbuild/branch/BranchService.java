@@ -2,23 +2,16 @@ package com.m3.patchbuild.branch;
 
 import java.util.List;
 
-import com.m3.patchbuild.AbstractService;
-import com.m3.patchbuild.BaseDAO;
+import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseService;
+import com.m3.patchbuild.base.DaoUtil;
 
 /**
  * 构建分支服务类
  * @author MickeyMic
  *
  */
-public class BranchService extends AbstractService{
-	
-	public BranchService() {
-		super(new BranchDAO());
-	}
-	
-	protected BranchDAO getDao() {
-		return (BranchDAO)super.getDao();
-	}
+public class BranchService extends BaseService implements IBranchService{
 	
 	/**
 	 * 获取分支对象
@@ -26,7 +19,7 @@ public class BranchService extends AbstractService{
 	 * @return
 	 */
 	public Branch getBranch(String branch) {
-		return (Branch)getDao().findByBillNo(BaseDAO.getBillNo("branch", branch));
+		return (Branch) findByBillNo("branch", branch);
 	}
 	
 	/**
@@ -34,15 +27,22 @@ public class BranchService extends AbstractService{
 	 * @param branch
 	 */
 	public void saveBranch(Branch branch) {
-		getDao().saveInfo(branch);
+		DaoUtil.saveInfo(branch);
 	}
 	
 	/**
 	 * 获取系统中的所有分支信息
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Branch> listAllBranch() {
-		return getDao().listAllBranch();
+		return (List<Branch>) DaoUtil.list(getBizClass(), null);
+	}
+
+
+	@Override
+	public Class<? extends IBussInfo> doGetBizClass() {
+		return Branch.class;
 	}
 
 }

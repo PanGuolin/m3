@@ -19,8 +19,10 @@
 	display: block;
 	float:left;
 	position:relative;
-	background-color:#c00;
-	color: #fff;
+/* 	background-color:#c00; */
+	background-color:#69F;
+	font-weight: bold;
+	color: #FFF;
 	text-decoration:none;
 	padding:6px;
 	margin:1px 0 0 1px;
@@ -32,7 +34,7 @@
 	height:0;
 	width:0;
 	overflow:hidden;
-	border-bottom:solid 6px #c00;
+	border-bottom:solid 6px #69F;
 	border-left: solid 6px #fff;
 	top: 0;
 	left: 0;
@@ -78,7 +80,7 @@
 #bodyDiv {
 	width: 960px;
 	text-align:center;
-	margin: 20px auto;
+	margin: 0px auto;
 	clear: both;
 }
 
@@ -92,6 +94,7 @@
 .dataTable td{
 	border:solid 1px #CCC;
 	line-height: 20px;
+	text-align:left;
 }
 
 .dataTable th {
@@ -99,4 +102,25 @@
 	background-color:#D5E2F2;
 	border:solid 1px #99BBE8;
 	line-height: 20px;
+	text-align:center;
+}
+
+.dataTable_simple {
+	border:1px solid #ccc;
+	border-collapse:collapse;
+	margin-top: 20px;
+	width:100%;
+}
+
+.dataTable_simple td{
+	border:solid 1px #CCC;
+	line-height: 20px;
+}
+
+.dataTable_simple th {
+	font-weight: bold;
+	background-color:#D5E2F2;
+	border:solid 1px #99BBE8;
+	line-height: 20px;
+	text-align:center;
 }

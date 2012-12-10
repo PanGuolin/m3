@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+    <message>
+    	<function>NewResetPassReqService</function>
+    	<advice>afterX</advice>
+        <recievers>
+            <participant>
+                <type>role</type>
+                <expr>admin</expr>
+            </participant>
+        </recievers>
+        <subject><![CDATA[密码重置:${_Parameter_0.userId}]]></subject>
+        <content><![CDATA[用户:${_Parameter_0.userId}申请密码重置，请审批。]]></content>
+    </message>
+    <message>
+    	<function>SaveResetPassReqService</function>
+    	<advice>afterX</advice>
+        <notifiers> <!-- 消息抄送人列表 -->
+            <participant>
+                <type>script</type>
+                <expr>${_Parameter_0.userId}</expr>
+            </participant>
+        </notifiers>
+        <subject><![CDATA[密码重置已处理]]></subject>
+        <content><![CDATA[你申请的密码重置已经处理，处理结果:${_Parameter_0.accepted}]]></content>
+    </message>
+</messages>

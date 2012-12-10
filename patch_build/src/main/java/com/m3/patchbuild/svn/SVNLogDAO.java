@@ -2,9 +2,11 @@ package com.m3.patchbuild.svn;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -21,11 +23,11 @@ import com.m3.patchbuild.pack.Pack;
  */
 public class SVNLogDAO extends BaseDAO {
 	private static final Logger logger = Logger.getLogger(SVNLogDAO.class);
-
-	@Override
-	protected Class<?> getInfoClass() {
-		return SVNLog.class;
+	
+	public SVNLogDAO() {
+		super(SVNLog.class);
 	}
+
 	
 	/**
 	 * 根据单据编号查找相应的单据
@@ -39,7 +41,7 @@ public class SVNLogDAO extends BaseDAO {
 		}
 		try {
 			return HibernateUtil.openSession()
-					.createCriteria(getInfoClass())
+					.createCriteria(bizClass)
 					.add(Restrictions.and(
 							Restrictions.eq("branch", billNO.substring(0, index).trim()),
 							Restrictions.eq("revision", billNO.substring(index).trim())))
@@ -63,6 +65,24 @@ public class SVNLogDAO extends BaseDAO {
 			HibernateUtil.closeSession();
 		}
 	}
+	@SuppressWarnings({ "unchecked" })
+	public List<Object[]> getBaseRevision(Branch branch) {
+		try {
+			Session session = HibernateUtil.openSession();
+			Criteria minCrit = session.createCriteria(bizClass);
+			//DetachedCriteria minCrit = DetachedCriteria.forClass(getInfoClass());
+			//minCrit = minCrit.createAlias("SVNLog", "log");
+			ProjectionList proj = Projections.projectionList();
+			proj = proj.add(Projections.groupProperty("path"));
+			proj = proj.add(Projections.max("revision"));
+			return  minCrit.setProjection(proj)
+					.add(Restrictions.eq("branch", branch.getBranch()))
+					.add(Restrictions.le("modifyTime", branch.getBaseTime()))
+					.list();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
 	
 	/**
 	 * 根据日志关键字查找对应的修改记录
@@ -76,10 +96,14 @@ public class SVNLogDAO extends BaseDAO {
 		if (keywords != null) {
 			sql.append(" AND (");
 			String[] ps = keywords.split(";");
+			boolean isFirst = true;
 			for (int i=0; i<ps.length; i++) {
-				if (i > 0)
+				if (ps[i].trim().length() == 0)
+					continue;
+				if (!isFirst)
 					sql.append(" OR");
 				sql.append(" logMessage like '%" + ps[i] + "%'");
+				isFirst = false;
 			}
 			sql.append(")");
 		}
@@ -95,21 +119,22 @@ public class SVNLogDAO extends BaseDAO {
 	 *  更新构建包中的文件版本
 	 * @param pack
 	 * @param paths 
+	 * @throws Exception 
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
-	public void fillBuildPack(Pack pack, Set<String> paths)  {
-		if (paths.isEmpty())
+	public void fillBuildPack(Pack pack) throws Exception  {
+		if (pack.getBuildFiles().isEmpty())
 			return;
 		StringBuilder sql = new StringBuilder("SELECT {l.*} FROM pb_svnlog l")
 			.append(" INNER JOIN (SELECT MAX(revision) r, path p FROM pb_svnlog GROUP BY path) m")
 			.append(" ON l.revision = m.r and l.path = m.p WHERE branch = '" + pack.getBranch().getBranch() + "'")
 			.append(" AND (");
 		boolean first = true;
-		for (String path : paths) {
+		for (BuildFile file : pack.getBuildFiles()) {
 			if (!first)
 				sql.append(" OR");
-			sql.append(" l.path= '" + path + "'");
+			sql.append(" l.path= '" + file.getUrl() + "'");
 			first = false;
 		}
 		sql.append(")");
@@ -118,14 +143,20 @@ public class SVNLogDAO extends BaseDAO {
 			List<SVNLog> list = HibernateUtil.openSession().createSQLQuery(sql.toString())
 				.addEntity("l", SVNLog.class)
 				.list();
-			pack.getBuildFiles().clear();
-			for (SVNLog log : list) {
-				BuildFile file = new BuildFile();
-				file.setModifier(log.getAuthor());
-				file.setModifyTime(log.getModifyTime());
-				file.setRevision(log.getRevision());
-				file.setUrl(log.getPath());
-				pack.addBuildFile(file);
+			for (BuildFile file : pack.getBuildFiles()) {
+				boolean exists = false;
+				for (SVNLog log : list) {
+					if (log.getPath().equals(file.getUrl())) {
+						file.setModifier(log.getAuthor());
+						file.setModifyTime(log.getModifyTime());
+						file.setRevision(log.getRevision());
+						file.setPackUid(pack.getUuid());
+						exists = true;
+						break;
+					}
+				}
+				if (!exists)
+					throw new Exception("找不到文件:" + file.getUrl());
 			}
 		} finally {
 			HibernateUtil.closeSession();

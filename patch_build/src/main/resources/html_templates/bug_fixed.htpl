@@ -1,0 +1,2 @@
+BUG验证通过：${bug.bugNo}
+构建包${pack.branch.branch} -${pack.buildNo}的BUG ${bug.bugNo}已经由用户 ${tester.username}测试通过。

@@ -4,11 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.m3.patchbuild.base.BaseBussInfo;
 
 /**
  * BuildFile 表示构建内包含的文件信息
@@ -16,13 +14,8 @@ import org.hibernate.annotations.GenericGenerator;
  *
  */
 @Entity
-@Table(name="PB_BuildFile")
-public class BuildFile {
-	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
-	@Column(name = "uuid", unique = true)
-	private String uuid; //唯一ID
+@Table(name="Pack_BuildFile")
+public class BuildFile extends BaseBussInfo{
 	
 	@Column(name="url")
 	private String url; //文件路径
@@ -36,16 +29,7 @@ public class BuildFile {
 	@Column(name="modifier")
 	private String modifier; //修改人
 	
-	//@Column(name="buildNo")
-	//private String buildNo;
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+	private String packUid;
 
 	public String getUrl() {
 		return url;
@@ -91,12 +75,11 @@ public class BuildFile {
 		return this.url.endsWith(of.url) && this.revision == of.revision;
 	}
 
-	//public String getBuildNo() {
-	//	return buildNo;
-	//}
+	public String getPackUid() {
+		return packUid;
+	}
 
-	//public void setBuildNo(String buildNo) {
-	//	this.buildNo = buildNo;
-	//}
-	
+	public void setPackUid(String packUid) {
+		this.packUid = packUid;
+	}
 }

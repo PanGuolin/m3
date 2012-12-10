@@ -43,8 +43,10 @@ public abstract class FileUtil {
 			file.delete();
 		} else {
 			File[] files = file.listFiles();
-			for (File f : files) {
-				deleteFile(f);
+			if(files != null) {
+				for (File f : files) {
+					deleteFile(f);
+				}
 			}
 			file.delete();
 		}

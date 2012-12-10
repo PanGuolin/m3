@@ -2,36 +2,67 @@
 /**
  * 处理消息
  */
-var fnmsg = {
-		fetchMsg : function() {$.get(basePath + "/js/fnmsg.action?t=n", fnmsg.handleMsgData, "json");},
-			
-		handleMsgData : function(data, status) {
-			var viewOrDoUrl = basePath + "/msg/viewordo?i=";
-			if (status == "success" ) {
-				//var sStatus = data.status;
-				//if (-1 == sStatus)  {//线程被中断
-				//	
-				//}
-					
-				var msgObj = data["message"];
-				if (msgObj) {
-					var content="接收时间: " + msgObj["sendTime"] 
-						+ "<br/><a href='" + viewOrDoUrl + msgObj["uuid"] + "' style='display:block;float:right;'>开始处理</a>";
-					var subject = msgObj["subject"];
-					if (msgObj["detail"] && msgObj["detail"]["content"])
-						content = msgObj["detail"]["content"] + "<br/>" + content;
-					$msg(content,{
-						title: subject,
-						position: 'right bottom',
-						width: 300
-					});
-					if (mymsg && mymsg.refresh) {
-						mymsg.refresh();
+var headerObj = {
+		init : function() {
+			$('#currentBranch').change(function() {
+				$.get(basePath + "/sys/changeBranch?jfs=true&branch=" + $(this).val(), function(data, status) {
+					if (status != "success" ) {alert("请求错误!"); return;}
+					if (!data) return;
+					if (data.tips) alert(data.tips);
+					window.location.reload();
+				}, "json");
+			});
+			headerObj.fetchMsg();
+		},
+		fetchMsg : function() {
+			$.get(basePath + "/msg/fnmsg.action?jfs=true&t=n", function(data, status) {
+				if (status == "success" ) {
+					if (!data) return;
+					if (data.tips) alert(data.tips);
+					var msgObj = data.message;
+					if (msgObj && msgObj.subject) {
+						var content = msgObj.content + "<br/>接收时间: " + msgObj.sendTime;
+						$msg(content,{
+							title: msgObj.subject,
+							position: 'right bottom',
+							width: 300
+						});
+						if (mainObj && mainObj.query) {
+							mainObj.query();
+						}
 					}
 				}
-			}
-			fnmsg.fetchMsg();
-		}
+				headerObj.fetchMsg();
+			}, "json");
+		},
 };
 		
-$(document).ready(function(){fnmsg.fetchMsg();});
+$(document).ready(headerObj.init);
+
+function formatTime(value, row, index) {
+	if (value)
+		return value.substring(5, 10) + " " + value.substring(11, 16);
+	return value;
+}
+
+function formatStatus(value, row, index) {
+	var isFail = false;
+	var title = value;
+	switch(value) {
+		case "builded": 	title="已构建";		break;
+		case "buildFail": 	title="构建失败";	isFail = true; break;
+		case "checked": 	title="检查通过";	break;
+		case "checkFail": 	title="检查不通过";	isFail = true; break;
+		case "init": 		title="初始化";		break;
+		case "pass": 		title="测试通过";	break;
+		case "published": 	title="已发布";		break;
+		case "request": 	title="请求构建";	break;
+		case "testFail": 	title="测试打回";	isFail = true; break;
+		case "testing": 	title="正在测试";	break;
+		case "publishFail": title="发布失败";	isFail = true; break;
+		case "assigned":	title="已分配";		break;
+	}
+	if (isFail)
+		title = "<span style='color:red'>" + title + "</span>";
+	return title;
+}

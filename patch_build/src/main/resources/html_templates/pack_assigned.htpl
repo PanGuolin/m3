@@ -1,0 +1,5 @@
+请测试构建包：${pack.buildNo}
+您好！
+<b>构建包${pack.buildNo}</b>已经由${pack.assigner}分配给您进行测试，请开始测试<br/>
+补丁分支：<b>${pack.branch.branch}</b><br/>
+构建申请人：${pack.requester}<br/>

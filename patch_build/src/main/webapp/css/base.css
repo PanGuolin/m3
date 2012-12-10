@@ -66,7 +66,7 @@ del {
 	text-decoration:line-through;
 }
 
-address,caption,cite,code,dfn,em,th,var {
+address,cite,code,dfn,em,var {
 	font-style:normal;
 	font-weight:500;
 }
@@ -78,7 +78,7 @@ ol,ul {
 
 /* 对齐是排版最重要的因素, 别让什么都居中 */
 caption,th {
-	text-align:left;
+	text-align:left; font-weight: bold;
 }
 
 /* 来自yahoo, 让标题都自定义, 适应多个系统应用 */
@@ -110,9 +110,8 @@ ins,a {
 	text-decoration:none;
 }
 
-
 #outterDiv {margin-left:auto;margin-right:auto; width:960px; text-align:left;}
-#titleDiv {background:#369; line-height:30px; text-align:left;color:#FFF;font-weight:bold; }
+#titleDiv {background:#369; line-height:30px; text-align:left;color:#FFF;font-weight:bold; padding-left:10px;}
 #formDiv {border:1px solid #69C;}
 #linkDiv {text-align:right; margin-bottom:3px;}
 #linkDiv a { text-decoration:none; margin-left:5px;}
@@ -120,5 +119,35 @@ ins,a {
 .r {text-align:right;}
 .l {text-align:left;}
 .c {text-align:center;}
+.ml {margin-left: 20px;}
+.pl {padding-left: 20px;}
 .cap { font-weight:bold;}
 .cap td{ border-top: 1px solid #CCC;}
+.cmt {color: #999};
+.imgbtn {cursor: pointer; width:25px; height:25px;}
+th {font-weight:bold;}
+
+.op a {margin-right: 10px;  cursor:pointer; color: #33F;}
+
+table.single { width:100%}
+table.single td {padding:5px;}
+
+.wf {width:100%;}
+
+.toolBar { width:100%; text-align:left; background:#FEF }
+.toolBar img {cursor:pointer; margin:3px;}
+.toolBar img:hover{border:2px solid #ccc; margin:1px;}
+
+.queryDiv { width:100%; text-align:left; background:#EEE; line-height:30px; padding:3px 0; display:none;}
+.queryDiv table {border-collapse:collapse; margin-left:10px;}
+.queryDiv td.h{padding-left:5px;}
+.queryDiv img{height:12px;}
+#lastQuery {float:right; margin-top:20px; margin-right:10px;}
+input[type="text"], input[type='password'] {line-height:15px; height:15px;}
+input[type="reset"], input[type="submit"] {padding:2px 10px; margin-left:10px; cursor:pointer;}
+
+.queryBar {width:100%; line-height:10px; background:#999; height:10px; cursor:pointer;}
+
+.layoutTable {width:100%;}
+.layoutTable td{padding-top:4px;}
+.btl td {border-bottom:1px solid #CCC;}

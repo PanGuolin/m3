@@ -7,18 +7,19 @@ package com.m3.patchbuild.pack;
  */
 public enum PackStatus {
 
-	init, //初始状态
-	request, //请求构建
-	checkFail, //检查失败
-	checked, //检查完成
-	builded, //构建完成
-	buildFail, //构建失败
-	assigned, //已分配
-	testing, //测试中
-	pass, //测试完成
-	testFail,//测试失败
-	published,//已发布
-	publishFail,//发布失败
+	init, //初始状态0
+	request, //请求构建1
+	checkFail, //检查失败2
+	checked, //检查完成3
+	builded, //构建完成4
+	buildFail, //构建失败5
+	assigned, //已分配6
+	testing, //测试中7
+	pass, //测试完成8
+	testFail,//测试失败9
+	published,//已发布10
+	publishFail,//发布失败11
+	canceled,//取消
 	;
 
 	@Override

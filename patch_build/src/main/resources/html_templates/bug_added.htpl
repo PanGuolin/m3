@@ -1,0 +1,3 @@
+BUG已录入：${bug.bugNo}
+测试员${tester.username}针对构建包${pack.branch.branch} -${pack.buildNo}提交了一个BUG：${bug.bugNo}<br/>
+BUG描述: ${bug.comment}

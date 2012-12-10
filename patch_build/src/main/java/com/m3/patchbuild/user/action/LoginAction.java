@@ -1,26 +1,28 @@
 package com.m3.patchbuild.user.action;
 
+import org.apache.struts2.ServletActionContext;
+
 import com.m3.common.ContextUtil;
 import com.m3.patchbuild.BaseAction;
-import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
-import com.m3.patchbuild.user.UserService;
 
 public class LoginAction extends BaseAction {
-	
 	private String username;
 	private String password;
 	
 	@Override
 	public String doExecute() throws Exception {
-		User user = ((UserService)BussFactory.getService(User.class))
+		User user = ((IUserService)BussFactory.getService(User.class))
 				.checkUser(username, password);
 		if (user == null) {
 			setTips("登录失败，请重试！");
-			return ERROR;
+			return INPUT;
 		}
 		
 		ContextUtil.userLogin(user);
+		dataMap.put("sessionId", ServletActionContext.getRequest().getSession().getId());
 		return SUCCESS;
 	}
 
@@ -39,5 +41,4 @@ public class LoginAction extends BaseAction {
 	public String getPassword() {
 		return password;
 	}
-
 }

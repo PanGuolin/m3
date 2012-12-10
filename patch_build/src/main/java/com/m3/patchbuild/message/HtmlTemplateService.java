@@ -1,6 +1,7 @@
 package com.m3.patchbuild.message;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -16,6 +17,23 @@ public class HtmlTemplateService {
 	private static final Logger logger = Logger.getLogger(HtmlTemplateService.class);
 	
 	private static HtmlTemplateDAO dao = new HtmlTemplateDAO();
+	
+	/**
+	 * 根据关键字及上下文环境返回具体的值
+	 * @param key
+	 * @param context
+	 * @return
+	 */
+	public static String getValue(String key, Map<String, Object> context) {
+		String temp;
+		try {
+			temp = dao.getTemplate(key);
+		} catch (IOException e) {
+			logger.error("没有配置相应的模板", e);
+			return key;
+		}
+		return BeanUtil.parseString(temp, context);
+	}
 	
 	public static String getTemplate(String type, Pack bp) {
 		String content;

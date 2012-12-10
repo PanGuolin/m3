@@ -1,0 +1,6 @@
+构建包检查失败：${pack.buildNo}
+您好！
+ &nbsp;&nbsp;&nbsp;&nbsp; 您提交的构建包<b>${pack.buildNo}</b>检查不通过，补丁分支：<b>${pack.branch.branch}</b><br/>
+ &nbsp;&nbsp;&nbsp;&nbsp; 检查设计师：<b>${checker.username}</b> 时间：${pack.checkTime}<br/>
+ &nbsp;&nbsp;&nbsp;&nbsp; 检查不通过原因: <p>${pack.failReason}</p><br/>
+ &nbsp;&nbsp;&nbsp;&nbsp; 请根据不通过原因修复并重新提交

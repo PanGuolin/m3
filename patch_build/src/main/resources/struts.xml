@@ -6,17 +6,19 @@
 	
 <struts>
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
-	<package name="patchbuild" extends="struts-default">
+	<package name="patchbuild" extends="json-default">
 	    <global-results>
 	        <result name="login">/user/login.jsp</result>
 	    </global-results>
 	</package>
 	<package name="user" extends="patchbuild" namespace="/user">
 		<action name="login" class="com.m3.patchbuild.user.action.LoginAction">
+		    <result name="loginResult" type="json">
+		        <param name="root">dataMap</param>
+		    </result>
 			<result name="error">/user/login.jsp</result>
 			<result name="success" type="redirect">/msg/mymsg.jsp</result>
 		</action>
-		
 		<action name="logout" class="com.m3.patchbuild.user.action.LogoutAction">
 		</action>
 		
@@ -24,25 +26,40 @@
 			<result name="error">/user/importfromsvn.jsp</result>
 			<result name="success">/user/myfp.jsp</result>
 		</action>
+		<action name="relation" class="com.m3.patchbuild.user.action.ManagerRelationAction">
+			<result name="success">/user/relation.jsp</result>
+		</action>
+		<action name="register" class="com.m3.patchbuild.user.action.RegisterAction">
+			<result name="success" type="redirect">/msg/mymsg.jsp</result>
+			<result name="input">/user/register.jsp</result>
+		</action>
+		<action name="reqresetpass" class="com.m3.patchbuild.user.action.ResetPassReqAction">
+			<result name="success">/user/resetpassok.jsp</result>
+		</action>
+		<action name="userinfo" class="com.m3.patchbuild.user.action.EditUserAction">
+			<result name="success">/user/userinfo.jsp</result>
+		</action>
 	</package>
-	<package name="pack" extends="patchbuild" namespace="/pack">
+	<package name="pack" extends="json-default" namespace="/pack">
 		<action name="addBuild" class="com.m3.patchbuild.pack.action.AddBuildAction">
 			<result name="success" type="redirect">/msg/mymsg.jsp</result>
 			<result name="next" >/pack/addbuild.jsp</result>
 			<result name="error">/pack/addbuild.jsp</result>
 		</action>
-		<action name="handle" class="com.m3.patchbuild.pack.action.DispatchTaskAction">
-		    <result name="mode_iw">/msg/mode_inner_window.jsp</result>
-		    <result name="mode_nw">/msg/mode_new_window.jsp</result>
+		<action name="handle" class="com.m3.patchbuild.pack.action.DispatchPackAction">
+		    <result name="page_info" type="json">
+		        <param name="root">dataMap</param>
+		    </result>
+		    <result name="request">/pack/request.jsp</result>
 		    <result name="buildFail">/pack/buildfail.jsp</result>
 		    <result name="builded">/pack/check.jsp</result>
 		    <result name="checkFail">/pack/checkfail.jsp</result>
 		    <result name="checked">/pack/assign.jsp</result>
 		    <result name="assigned">/pack/starttest.jsp</result>
-		    <result name="testing">/pack/tested.jsp</result>
-		    <result name="testFail">/pack/testFail.jsp</result>
-		    <result name="pass">/pack/publish.jsp</result>
-		    <result name="publishFail">/pack/publishFail.jsp</result>
+		    <result name="testing">/pack/handletest.jsp</result>
+		    <result name="testFail">/pack/testfail.jsp</result>
+		    <result name="pass" type="redirectAction">/pack/publish</result>
+		    <result name="publishFail">/pack/publishfail.jsp</result>
 		</action>
 		<action name="viewf" class="com.m3.patchbuild.pack.action.ViewPackFileAction">
 	     	<result name="success">/pack/viewfile.jsp</result>
@@ -56,6 +73,51 @@
 		<action name="starttest" class="com.m3.patchbuild.pack.action.StartTestAction">
 	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
 		</action>
+		<action name="handletest" class="com.m3.patchbuild.pack.action.HandleTestAction">
+	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
+	     	<result name="handle">/pack/handletest.jsp</result>
+		</action>
+		<action name="publish" class="com.m3.patchbuild.pack.action.PublishAction">
+	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
+	     	<result name="handle">/pack/publish.jsp</result>
+		</action>
+		<action name="resetdeploy" class="com.m3.patchbuild.pack.action.ResetDeployAction">
+	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
+		</action>
+		<action name="reset" class="com.m3.patchbuild.pack.action.ResetAction">
+	     	<result name="success" type="redirect">/msg/mymsg.jsp</result>
+		</action>
+		<action name="bystat" class="com.m3.patchbuild.pack.action.ListPackByStatusAction">
+		    <result type="json"><param name="root">dataMap</param></result>
+		</action>
+		<action name="query" class="com.m3.patchbuild.pack.action.QueryPackAction">
+		    <result type="json"><param name="root">dataMap</param></result>
+		</action>
+		<action name="download" class="com.m3.patchbuild.pack.action.DownloadAction">
+		    <result name="success" type="stream">
+		        <param name="contentType">application/x-download;charset=UTF-8</param>
+		        <param name="inputName">inputStream</param>
+		        <param name="contentDisposition">attachment;filename="${fileName}"</param>
+		        <param name="bufferSize">4096</param>
+		    </result>
+		</action>
+	</package>
+	<package name="patch" extends="json-default" namespace="/patch">
+	    <action name="query" class="com.m3.patchbuild.patch.action.QueryPatchAction">
+		    <result type="json"><param name="root">dataMap</param></result>
+		</action>
+		<action name="download" class="com.m3.patchbuild.patch.action.DownloadAction">
+		    <result name="success" type="stream">
+		        <param name="contentType">application/x-download;charset=UTF-8</param>
+		        <param name="inputName">inputStream</param>
+		        <param name="contentDisposition">attachment;filename="${fileName}"</param>
+		        <param name="bufferSize">4096</param>
+		    </result>
+		</action>
+		<action name="tag" class="com.m3.patchbuild.patch.action.CreateBranchAction">
+		    <result type="json"><param name="root">dataMap</param></result>
+		    <result name="next">/patch/createsub.jsp</result>
+		</action>
 	</package>
 	<package name="json" extends="json-default" namespace="/js">
         <action name="fnmsg" class="com.m3.patchbuild.message.action.FetchMessageAction">
@@ -64,14 +126,9 @@
             </result>
         </action>
         <action name="handle" class="com.m3.patchbuild.message.action.HandleMessageAction">
-   			<result name="next" type="redirectAction">
-   			    <param name="namespace">/${bussType}</param>  
-            	<param name="actionName">handle</param>  
-            	<param name="bussId">${bussId}</param>
-            	<param name="checkId">${checkId}</param>
-            	<param name="reqtype">${t}</param>
-            	<param name="messageId">${i}</param>
-   			</result>
+            <result type="json">
+               <param name="root">dataMap</param>
+         	</result>
 		</action>
 		<action name="viewf" class="com.m3.patchbuild.pack.action.ViewPackFileAction">
 	     	<result type="json">

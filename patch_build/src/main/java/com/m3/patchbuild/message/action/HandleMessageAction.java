@@ -1,15 +1,17 @@
 package com.m3.patchbuild.message.action;
 
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.m3.common.ContextUtil;
 import com.m3.patchbuild.BaseAction;
-import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.IStateful;
+import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.message.IMessageService;
 import com.m3.patchbuild.message.Message;
+import com.m3.patchbuild.message.MessageHandler;
 import com.m3.patchbuild.message.MessageReciever;
-import com.m3.patchbuild.message.MessageService;
-import com.opensymphony.xwork2.ActionContext;
 
 /**
  * 处理消息
@@ -18,19 +20,13 @@ import com.opensymphony.xwork2.ActionContext;
  */
 public class HandleMessageAction extends BaseAction{
 	
-	public static final String NEXT = "next"; //下一个页面
+	private Map<String, Object> dataMap = new HashMap<String, Object>();
 	
-	private String bussType; //处理业务的ACTION命名空间
-
-	private String nextAction; //处理业务的ACTION名称 
+	public static final String KEY_PAGE_MODE = "pageMode"; //JSON KEY OF Page Mode
 	
-	private String bussId; //消息关联业务ID
+	public static final String KEY_PAGE_URL = "pageUrl"; //JSON KEY OF Page URL
 	
 	private String i;//消息UUID
-	
-	private String checkId; //防止恶意访问的ID号
-	
-	private String t; //请求类型
 
 	@Override
 	protected String doExecute() throws Exception {
@@ -38,8 +34,8 @@ public class HandleMessageAction extends BaseAction{
 			setTips("必须指定ID");
 			return ERROR;
 		}
-		MessageService msgService = (MessageService)BussFactory.getService(Message.class);
-		Message message = (Message) msgService.findInfoByUuid(i);
+		IMessageService msgService = (IMessageService)BussFactory.getService(Message.class);
+		Message message = (Message) msgService.findByUuid(i);
 		if (message == null) {
 			setTips("没有找到相应的消息");
 			return ERROR;
@@ -65,47 +61,19 @@ public class HandleMessageAction extends BaseAction{
 			setTips("当前消息没有对应的业务，不需要处理");
 			return ERROR;
 		}
-		this.checkId = UUID.randomUUID().toString();
-		ActionContext.getContext().getSession().put(checkId, true);
-		this.bussId = message.getBussId();
-		this.bussType = "/" + message.getBussType();
-		//this.nextAction = "handle";
-		return NEXT;
-	}
-
-	public String getI() {
-		return i;
+		IBussInfo info = BussFactory.getService(message.getBussType()).findByUuid(message.getBussId());
+		this.dataMap.put(KEY_PAGE_MODE, MessageHandler.getViewMode(info));
+		this.dataMap.put(KEY_PAGE_URL, MessageHandler.getAction(info));
+		
+		return SUCCESS;
 	}
 
 	public void setI(String i) {
 		this.i = i;
 	}
 
-	public String getNextAction() {
-		return nextAction;
-	}
-
-	public void setNextAction(String nextAction) {
-		this.nextAction = nextAction;
-	}
-
-	public String getBussId() {
-		return bussId;
-	}
-
-	public String getBussType() {
-		return bussType;
-	}
-
-	public String getCheckId() {
-		return checkId;
-	}
-
-	public String getT() {
-		return t;
-	}
-
-	public void setT(String t) {
-		this.t = t;
+	public Map<String, Object> getDataMap() {
+		return dataMap;
 	}
 }
+

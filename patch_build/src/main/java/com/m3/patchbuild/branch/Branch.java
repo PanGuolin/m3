@@ -1,14 +1,12 @@
 package com.m3.patchbuild.branch;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseBussInfo;
 
 /**
  * 构建分支信息对象
@@ -17,18 +15,13 @@ import com.m3.patchbuild.IBussInfo;
  */
 @Entity
 @Table(name="PB_Branch")
-public class Branch implements IBussInfo{
+public class Branch extends BaseBussInfo{
 	
 	public static final String DIR_SVN = "svn"; //SVN文件目录名称
 	public static final String DIR_JAVA_SRC = "src"; //java文件保存目录名称
 	public static final String FILE_BUILD = "build.xml"; //构建所用的脚本名称
 	public static final String FILE_PUBLISH = "publish.xml"; //发布所用的脚本名称
 	
-	@Id
-	@GeneratedValue(generator = "hibernate-uuid")
-	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
-	@Column(name = "uuid", unique = true)
-	private String uuid; //唯一标识
 	
 	@Column(name="branch", unique=true)
 	private String branch; //分支标识
@@ -60,12 +53,8 @@ public class Branch implements IBussInfo{
 	@Column(name="workspace")
 	private String workspace; //工作根目录
 	
-	public String getUuid() {
-		return uuid;
-	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+	private Date baseTime; //分支代码的基础时间，创建分支时将以该时间为基础
+	
 	public String getBranch() {
 		return branch;
 	}
@@ -138,6 +127,12 @@ public class Branch implements IBussInfo{
 	@Override
 	public String toString() {
 		return this.name == null ? this.branch : this.name; 
+	}
+	public Date getBaseTime() {
+		return baseTime;
+	}
+	public void setBaseTime(Date baseTime) {
+		this.baseTime = baseTime;
 	}
 	
 	

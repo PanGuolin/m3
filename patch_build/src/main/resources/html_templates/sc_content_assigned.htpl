@@ -1,4 +1,0 @@
-您好！
-<b>${BP.buildNo}</b>已经由${BP.assigner}分配给您进行测试，请开始测试<br/>
-补丁分支：<b>${BP.branch.branch}</b><br/>
-构建申请人：${BP.requester}<br/>

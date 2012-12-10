@@ -3,7 +3,6 @@ package com.m3.patchbuild.message;
 import java.math.BigInteger;
 
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.HibernateUtil;
 import com.m3.common.mail.MailServer;
@@ -16,27 +15,10 @@ import com.m3.patchbuild.BaseDAO;
  */
 public class MailServerDAO extends BaseDAO{
 
-	@Override
-	protected Class<?> getInfoClass() {
-		return MailServer.class;
+	public MailServerDAO() {
+		super(MailServer.class);
 	}
 
-	/**
-	 * 根据单据编号查找相应的单据
-	 * @param billNO
-	 * @return
-	 */
-	public Object findByNo(Object billNO) {
-		try {
-			return HibernateUtil.openSession()
-					.createCriteria(getInfoClass())
-					.add(Restrictions.eq("name", billNO))
-					.uniqueResult();
-		} finally {
-			HibernateUtil.closeSession();
-		}
-	}
-	
 	/**
 	 * 保存一个业务对象
 	 * @param info

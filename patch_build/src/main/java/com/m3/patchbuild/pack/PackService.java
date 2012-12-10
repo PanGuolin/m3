@@ -1,28 +1,27 @@
 package com.m3.patchbuild.pack;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.tmatesoft.svn.core.SVNException;
 
 import com.m3.common.ContextUtil;
 import com.m3.common.StringUtil;
-import com.m3.patchbuild.AbstractService;
-import com.m3.patchbuild.BaseDAO;
-import com.m3.patchbuild.BussFactory;
+import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseService;
+import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.base.DaoUtil;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.branch.BranchService;
+import com.m3.patchbuild.branch.IBranchService;
 import com.m3.patchbuild.exception.BussException;
 import com.m3.patchbuild.exception.CanNotBuildEmptyException;
-import com.m3.patchbuild.exception.DependsUnpublishException;
 import com.m3.patchbuild.exception.IllegalBPStateException;
-import com.m3.patchbuild.exception.NotMainBranchException;
 import com.m3.patchbuild.exception.PackExistsException;
-import com.m3.patchbuild.message.Message;
-import com.m3.patchbuild.message.MessageService;
-import com.m3.patchbuild.patch.Patch;
-import com.m3.patchbuild.patch.PatchService;
+import com.m3.patchbuild.pack.action.PackQuery;
+import com.m3.patchbuild.patch.PublishService;
 
 
 /**
@@ -30,22 +29,31 @@ import com.m3.patchbuild.patch.PatchService;
  * @author MickeyMic
  *
  */
-public class PackService extends AbstractService {
+public class PackService extends BaseService implements IPackService {
+	
+	private static final Logger logger = Logger.getLogger(PackService.class);
 
+	private PackDAO dao = new PackDAO();
 	public PackService() {
-		super(new PackDAO());
 	}
 
 	public PackDAO getDao() {
-		return (PackDAO)super.getDao();
+		return dao;
 	}
 	
 	/**
 	 * 保存对象
 	 * @param bp
 	 */
-	public void save(Pack bp) {
-		getDao().saveInfo(bp);
+	public void saveInfo(Pack pack) {
+		if (pack.getComments() != null && pack.getComments().length() > 400)
+			pack.setComments(pack.getComments().substring(0, 400));
+		DaoUtil.saveInfo(pack);
+	}
+	
+	public void cancel(Pack pack) {
+		getDao().removeDependOn(pack);
+		DaoUtil.delete(pack);
 	}
 	
 	/**
@@ -53,11 +61,11 @@ public class PackService extends AbstractService {
 	 * @param bp
 	 * @throws Exception 
 	 */
-	public void prepareBuild(Pack bp, Set<String> files) throws BussException {
+	public void prepareBuild(Pack pack, Set<String> files) throws BussException {
 		if (files == null || files.isEmpty())
-			throw new CanNotBuildEmptyException(bp);
+			throw new CanNotBuildEmptyException(pack);
 		
-		Pack oldPack = find(bp.getBranch().getBranch(), bp.getBuildNo());
+		Pack oldPack = find(pack.getBranch().getBranch(), pack.getBuildNo());
 		if (oldPack != null) {
 			PackStatus status = oldPack.getStatus();
 			if (!PackStatus.buildFail.equals(status) && 
@@ -65,54 +73,38 @@ public class PackService extends AbstractService {
 					!PackStatus.testFail.equals(status)  && 
 					!PackStatus.builded.equals(status) &&
 					!PackStatus.request.equals(status)) {
-				throw new PackExistsException(bp, oldPack);
+				throw new PackExistsException(pack, oldPack);
 			}
 			if (PackStatus.builded.equals(status) && 
 					oldPack.getRequester() != null &&
 					!oldPack.getRequester().equals(ContextUtil.getUserId())) {
-				throw new PackExistsException(bp, oldPack);
+				throw new PackExistsException(pack, oldPack);
 			}
-			//bp.setUuid(oldPack.getUuid());
-			bp = oldPack;
+			oldPack.setLibfiles(pack.getLibfiles());
+			getDao().clearBuildFiles(oldPack);
+			pack.setUuid(oldPack.getUuid());
+			pack = oldPack;
+			//((IMessageService)BussFactory.getService(Message.class)).expiredByBussInfo(pack);
 		}
 		
-		bp.setRequester(ContextUtil.getUserId());
-		bp.setRequestTime(new Date());
-		bp.setStatus(PackStatus.request);
-		if (bp.getBranch().getUuid() == null) {
-			Branch branch = ((BranchService)BussFactory.getService(Branch.class)).getBranch(bp.getBranch().getBranch());
-			bp.setBranch(branch);
+		pack.setRequester(ContextUtil.getUserId());
+		pack.setRequestTime(new Date());
+		pack.setStatus(PackStatus.request);
+		pack.getDepends().clear();
+		getDao().removeDependOn(pack);
+		if (pack.getBranch().getUuid() == null) {
+			Branch branch = ((IBranchService)BussFactory.getService(Branch.class)).getBranch(pack.getBranch().getBranch());
+			pack.setBranch(branch);
 		}
-		getDao().saveInfo(bp);
-		BaseDAO.commit();
-		BuildService.add(bp, files);
-		//保存成功后发邮件通知
-		//((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
+		for (String file : files) {
+			BuildFile bf = new BuildFile();
+			bf.setUrl(file);
+			pack.getBuildFiles().add(bf);
+		}
+		DaoUtil.saveInfo(pack);
+		DaoUtil.commit();
+		BuildService.add(pack);
 	}
-	
-	
-//	/**
-//	 * 检查构建包是否允许进入测试阶段
-//	 * @param packUid 构建包的UUID
-//	 * @param userId 用户ID
-//	 * @param failReason 失败原因，如果为null或空字符串则表示检查通过
-//	 * @throws Exception
-//	 */
-//	public void check(String packUid, String userId, String failReason) throws Exception {
-//		Pack pack = (Pack) getDao().findByUuid(packUid);
-//		if (!PackStatus.builded.equals(pack.getStatus())) {
-//			throw new IllegalBPStateException(pack, PackStatus.builded);
-//		}
-//		
-//		pack.setChecker(userId);
-//		pack.setCheckTime(new Date());
-//		pack.setFailReason(failReason);
-//		pack.setStatus(StringUtil.isEmpty(failReason) ? PackStatus.checked : PackStatus.checkFail);
-//		save(pack);
-//		
-//		MessageService msgService = (MessageService)BussFactory.getService(Message.class);
-//		msgService.statusChanged(pack);
-//	}
 	
 	/**
 	 * 查找对象
@@ -122,11 +114,12 @@ public class PackService extends AbstractService {
 	 * @throws SVNException
 	 */
 	public Pack find(String branch, String buildNo) {
-		return getDao().find(branch, buildNo);
+		return (Pack) DaoUtil.findByBillNo(getBizClass(),
+				new String[]{"branch.branch", "buildNo"}, new Object[]{branch, buildNo});
 	}
 	
 	public void delete(Pack bp) {
-		getDao().delete(bp);
+		DaoUtil.delete(bp);
 	}
 
 	/**
@@ -136,41 +129,184 @@ public class PackService extends AbstractService {
 	public List<Pack> listByStatus(PackStatus status) {
 		return getDao().listByStatus(status);
 	}
-
-	/**
-	 * 构建包已经构建的处理
-	 * @param bp
-	 * @throws Exception 
-	 */
-	public void builded(Pack bp) {
-		save(bp);
-		((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
-	}
-	
 	
 	/**
 	 * 发布构建包
 	 * @param bp
 	 * @throws Exception
 	 */
-	public void publish(Pack bp) throws BussException {
-		Branch branch = bp.getBranch();
-		if (!StringUtil.isEmpty(branch.getParent()))
-			throw new NotMainBranchException(bp);
-		if (!PackStatus.pass.equals(bp.getStatus())) {
-			throw new IllegalBPStateException(bp, PackStatus.pass);
-		}
-		//不能发布有依赖（未发布）的构建包
-		List<Pack> depends = getDao().listUnpublishDepends(bp);
-		if (depends != null && !depends.isEmpty()) {
-			throw new DependsUnpublishException(bp, depends);
+	public void publish(Pack pack) throws BussException {
+		PublishService.publish(pack.getUuid());
+	}
+
+	public List<Pack> listByStatus(Collection<PackStatus> slist) {
+		return getDao().listByStatus(slist);
+	}
+
+	/**
+	 * 列出所有 已测试通过的构建包
+	 * @param branch
+	 * @param pass
+	 * @return
+	 */
+	public List<Pack> listByStatus(String branch, PackStatus status) {
+		return getDao().listByStatus(branch, status);
+	}
+
+	/**
+	 * 列出指定UUID的构建包
+	 * @param asList
+	 * @return
+	 */
+	public List<Pack> listByUuids(Collection<String> uuids) {
+		return getDao().listByUuids(uuids);
+	}
+
+	public void clearBuildFiles(Pack bp) {
+		getDao().clearBuildFiles(bp);
+	}
+
+	/**
+	 * 根据条件查询Pack信息
+	 * @param q
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Pack> query(PackQuery q) {
+		return (List<Pack>) getDao().list(q);
+	}
+
+	/**
+	 * 列出所有在指定日期前发布的构建包
+	 * @param time
+	 * @return
+	 */
+	public List<Pack> listPublished(Branch branch, Date time) {
+		return getDao().listPublished(branch, time);
+		
+	}
+
+	@Override
+	public Class<? extends IBussInfo> doGetBizClass() {
+		return Pack.class;
+	}
+
+	@Override
+	public void handle(IBussInfo info, Object context) {
+		Pack pack = (Pack)info;
+		PackHandleContext hContext = (PackHandleContext)context;
+		if (hContext.getOldStatus() != null && !hContext.getOldStatus().equals(pack.getStatus())) {
+			IllegalBPStateException ex = new IllegalBPStateException(pack, hContext.getOldStatus());
+			logger.error("构建处理失败", ex);
+			return;
 		}
 		
-		PatchService patchService = ((PatchService)BussFactory.getService(Patch.class));
-		Patch info = patchService.getPatch(branch, (Date)null);
-		//如果当天还没有补丁生成，则先生成补丁
-		if (info == null) {
-			info = patchService.createPatch(branch);
+		switch(pack.getStatus()) {
+			case request: //构建成功或失败
+				//构建成功，设置依赖关系
+				if (hContext.isFailed()) {
+					pack.setFailReason(hContext.getFailReason());
+					pack.setStatus(PackStatus.buildFail);
+				} else {
+					pack.setStatus(PackStatus.builded);
+					setDepends(pack);
+				}
+				pack.setBuildTime(new Date());
+				break;
+			case builded: //设计师检查
+				pack.setChecker(ContextUtil.getUserId());
+				pack.setCheckTime(new Date());
+				if (!StringUtil.isEmpty(hContext.getFailReason())) {
+					pack.setFailReason(hContext.getFailReason());
+					pack.setStatus(PackStatus.checkFail);
+				} else {
+					pack.setFailReason(null);
+					pack.setStatus(PackStatus.checked);
+					if (!StringUtil.isEmpty(pack.getTester())) {
+						pack.setStatus(PackStatus.assigned);
+					}
+				}
+				break;
+			case checked://分配
+				if (StringUtil.isEmpty(hContext.getTester())) {
+					throw new RuntimeException("必须指定测试员");
+				}
+				pack.setAssigner(ContextUtil.getUserId());
+				pack.setAssignTime(new Date());
+				pack.setStatus(PackStatus.assigned);
+				pack.setTester(hContext.getTester());
+				break;
+			case assigned: //开始测试
+				pack.setTester(ContextUtil.getUserId());
+				pack.setStatus(PackStatus.testing);
+				pack.setTestTime(new Date());
+				break;
+			case testing: //反馈测试结果
+				if (!StringUtil.isEmpty(hContext.getFailReason())) {
+					pack.setStatus(PackStatus.testFail);
+					pack.setFailReason(hContext.getFailReason());
+				} else {
+					pack.setStatus(PackStatus.pass);
+					pack.setPassTime(new Date());
+				}
+				break;
+			case publishFail: //重置发布状态
+				pack.setStatus(PackStatus.pass);
+				break;
+			case pass://发布
+				if (hContext.isFailed()) {
+					pack.setStatus(PackStatus.publishFail);
+					pack.setFailReason(hContext.getFailReason());
+				} else {
+					pack.setStatus(PackStatus.published);
+					pack.setPatch(hContext.getPatchNo());
+					//getDao().removeDependOn(pack);
+				}
+				pack.setDeployer(hContext.getDeployer());
+				pack.setDeployTime(new Date());
+				break;
+		}
+		switch(pack.getStatus()) {
+			case request:
+			case checkFail:
+			case published:
+			case testFail:
+				getDao().removeDependOn(pack);
+		}
+		saveInfo(pack);
+	}
+
+	@Override
+	public PackHandleContext newContext() {
+		return new PackHandleContext();
+	}
+	
+	/**
+	 * 设置对其它构建包的依赖关系 
+	 * @param pak
+	 */
+	private void setDepends(Pack bp) {
+		List<Pack> deps = getDao().findDepends(bp);
+		for (Pack pk : deps) {
+			if (!pk.getUuid().equals(bp.getUuid())) {
+				switch (pk.getStatus()) {
+				case assigned:
+				case builded:
+				case checked:
+				case pass:
+				case testing:
+				case publishFail:
+					bp.getDepends().add(pk);
+					break;
+				case buildFail:
+				case checkFail:
+				case init:
+				case published:
+				case request:
+				case testFail:
+				}
+			}
 		}
 	}
+		
 }

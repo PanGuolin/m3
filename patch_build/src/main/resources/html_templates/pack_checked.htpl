@@ -1,0 +1,5 @@
+请安排测试构建包：${pack.buildNo}
+分支${pack.branch.branch}上的构建包${pack.buildNo}已经由${checker.username}检查通过，请安排测试人员进行测试<br/>
+构建人: <b>${pack.requester}</b><br/>
+构建时间:${pack.requestTime}<br/>
+检查时间:${pack.checkTime}<br/>

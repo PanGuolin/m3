@@ -1,23 +1,25 @@
 package com.m3.patchbuild.patch;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 
-import com.m3.patchbuild.BussFactory;
+import com.m3.common.ContextUtil;
+import com.m3.common.HibernateUtil;
+import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.branch.Branch;
-import com.m3.patchbuild.message.Message;
-import com.m3.patchbuild.message.MessageService;
+import com.m3.patchbuild.pack.IPackService;
 import com.m3.patchbuild.pack.Pack;
-import com.m3.patchbuild.pack.PackService;
+import com.m3.patchbuild.pack.PackHandleContext;
 import com.m3.patchbuild.pack.PackStatus;
 
 /**
@@ -30,9 +32,9 @@ public class PublishService {
 	
 	private static final Logger logger = Logger.getLogger(PublishService.class);
 	
-	private static List<Pack> queue = new ArrayList<Pack>(); //待构建队列
+	private static List<String> queue = new ArrayList<String>(); //待构建队列
+	private static Map<String, String> reqUsers = new HashMap<String, String>();
 	
-	private static PublishThread publishThread = new PublishThread();
 	
 	static {
 		startMonitor();
@@ -43,9 +45,10 @@ public class PublishService {
 	 * @param pack
 	 * @return
 	 */
-	public static int publish(Pack pack) {
+	public static int publish(String packUuid) {
 		synchronized (queue) {
-			queue.add(pack);
+			queue.add(packUuid);
+			reqUsers.put(packUuid, ContextUtil.getUserId());
 			queue.notifyAll();
 		}
 		return queue.size();
@@ -62,25 +65,26 @@ public class PublishService {
 	 */
 	private static void startMonitor() {
 		//初始化构建线程
-		Thread monitor = new Thread() {
+		Thread monitor = new Thread("Publish Thread") {
 			@Override
 			public void run() {
 				while(true) {
-					synchronized (queue) {
-						boolean begin = false;
-						if (!queue.isEmpty()) {
-							if (!publishThread.isAlive()) {
-								publishThread.publish(queue.remove(0));
-								begin = true;
+					try {
+						synchronized (queue) {
+							if (!queue.isEmpty()) {
+								String uuid = queue.remove(0);
+								String userid = reqUsers.remove(uuid);
+								publish(uuid, userid);
+							} else {
+								try {
+									queue.wait();
+								} catch (InterruptedException e) {
+									logger.error("发布线程等待时出错", e);
+								}
 							}
 						}
-						if (!begin) {
-							try {
-								queue.wait();
-							} catch (InterruptedException e) {
-								logger.error("发布线程等待时出错", e);
-							}
-						}
+					} catch(Throwable t) {
+						logger.error("发布时出错", t);
 					}
 				}
 			}
@@ -89,92 +93,91 @@ public class PublishService {
 		monitor.start();
 	}
 	
-	/**
-	 * 补丁构建线程
-	 * @author pangl
-	 *
-	 */
-	private static class PublishThread extends Thread {
-			private Pack bp = null;
-			private Patch patch = null;
-			
-			PublishThread() {
-				super("Publish Pack Thread");
-			}
-			
-			public synchronized void publish(Pack bp) {
-				this.bp = bp;
-				PatchService patchService = ((PatchService)BussFactory.getService(Patch.class));
-				this.patch = patchService.getPatch(bp.getBranch(), (Date)null);
-				//如果当天还没有补丁生成，则先生成补丁
-				if (patch == null) {
-					patch = patchService.createPatch(bp.getBranch());
-				}
-				this.start();
-			}
+	public static void publish(String packuuid, String userId) {
+		HibernateUtil.openSession();
+		IPackService packService = (IPackService) BussFactory.getService(Pack.class);
+		Pack pack = (Pack) packService.findByUuid(packuuid);
+		PackHandleContext context = (PackHandleContext)packService.newContext();
+		context.setOldStatus(pack.getStatus());
+		Patch patch = null;
+		try {
+			patch = doBuild(pack);
+			patch.setLastModify(new Date());
+			patch.addBuild(pack.getBuildNo());
+			IPatchService patchService = ((IPatchService) BussFactory
+					.getService(Patch.class));
+			patchService.save(patch);
+			// 发送相应的邮件
+		} catch (Exception e) {
+			context.setException(e);
+			logger.error("执行发布时出错", e);
+		} finally {
+			context.setDeployer(userId);
+			if (patch != null)
+				context.setPatchNo(patch.getName());
+			ContextUtil.setUserId(userId);
+			packService.handle(pack, context);
+			HibernateUtil.closeSession();
+		}
+	}
 
-			@Override
-			public synchronized void run() {
-				try {
-					doBuild();
-					bp.setStatus(PackStatus.published);
-					bp.setPatch(patch.getName());
-					//发送相应的邮件
-				} catch (Exception e) {
-					logger.error("执行构建时出错", e);
-					bp.setStatus(PackStatus.publishFail);
-					ByteArrayOutputStream bo = new ByteArrayOutputStream();
-					e.printStackTrace(new PrintStream(bo));
-					bp.setFailReason(bo.toString());
-					//出错则不改变状态, 同时发布邮件
-				} finally {
-					((PackService)BussFactory.getService(Pack.class)).save(bp);
-					((MessageService)BussFactory.getService(Message.class)).statusChanged(bp);
-				}
+	private static Patch doBuild(Pack pack) throws Exception {
+		if (!pack.getDepends().isEmpty()) {
+			String deps = "";
+			for (Pack p : pack.getDepends()) {
+				if (!PackStatus.published.equals(p.getStatus()))
+					deps += p + ",";
 			}
-			
-			private void doBuild() throws Exception {
-				Branch branch = bp.getBranch();
-				File antFile = new File(branch.getWorkspace(), Branch.FILE_PUBLISH);
-				if (!antFile.exists()) {
-					antFile = new File(PublishService.class.getResource(DEFAULT_ANT_FILE).getFile());
-				}
-				
-				Project proj = new Project();
-				//添加日志输出  
-				File logFile = patch.getPublishLog(bp);
-				if (!logFile.getParentFile().exists())
-					logFile.getParentFile().mkdirs();
-				PrintStream logOut = new PrintStream(logFile);
-		        DefaultLogger consoleLogger = new DefaultLogger();  
-		        consoleLogger.setErrorPrintStream(logOut);  
-		        consoleLogger.setOutputPrintStream(logOut);  
-		        //consoleLogger.setErrorPrintStream(System.err);  
-		        //consoleLogger.setOutputPrintStream(System.out);
-		        //输出信息级别  
-		        consoleLogger.setMessageOutputLevel(Project.MSG_VERBOSE);  
-		        proj.addBuildListener(consoleLogger);  
-				
-				proj.fireBuildStarted();
-				proj.init();
-
-				proj.setProperty("dir.branch", branch.getWorkspace());
-				proj.setProperty("dir.patch", patch.getWSRoot().getAbsolutePath());
-				proj.setProperty("dir.publish", patch.getPublishWS(bp).getAbsolutePath());
-				proj.setProperty("pack.file", bp.getZipFile().getAbsolutePath());
-				proj.setProperty("patch.name", patch.getName());
-				
-				ProjectHelper helper = ProjectHelper.getProjectHelper();
-				helper.parse(proj, antFile);
-				proj.executeTarget(proj.getDefaultTarget());
-				proj.fireBuildFinished(null);
-				logOut.flush();
-				logOut.close();
-				//改变构建包状态
-				//bp.setStatus(BuildPackStatus.builded);
-				//BuildPackService.builded(bp);
-			}	
+			if (deps.length() > 0)
+				throw new Exception("无法发布" + pack.getBuildNo() + ", 依赖的包未发布:" + deps);
+		}
+		Branch branch = pack.getBranch();
+		IPatchService patchService = ((IPatchService) BussFactory
+				.getService(Patch.class));
+		Patch patch = patchService.getPatch(branch, (Date) null);
+		// 如果当天还没有补丁生成，则先生成补丁
+		if (patch == null) {
+			patch = patchService.createPatch(branch);
 		}
 
+		File antFile = new File(branch.getWorkspace(), Branch.FILE_PUBLISH);
+		if (!antFile.exists()) {
+			antFile = new File(PublishService.class.getResource(
+					DEFAULT_ANT_FILE).getFile());
+		}
+
+		Project proj = new Project();
+		// 添加日志输出
+		File logFile = patch.getPublishLog(pack);
+		if (!logFile.getParentFile().exists())
+			logFile.getParentFile().mkdirs();
+		PrintStream logOut = new PrintStream(logFile);
+		DefaultLogger consoleLogger = new DefaultLogger();
+		consoleLogger.setErrorPrintStream(logOut);
+		consoleLogger.setOutputPrintStream(logOut);
+		// consoleLogger.setErrorPrintStream(System.err);
+		// consoleLogger.setOutputPrintStream(System.out);
+		// 输出信息级别
+		consoleLogger.setMessageOutputLevel(Project.MSG_VERBOSE);
+		proj.addBuildListener(consoleLogger);
+
+		proj.fireBuildStarted();
+		proj.init();
+
+		proj.setProperty("dir.branch", branch.getWorkspace());
+		proj.setProperty("dir.patch", patch.getWSRoot().getAbsolutePath());
+		proj.setProperty("dir.publish", patch.getPublishWS(pack)
+				.getAbsolutePath());
+		proj.setProperty("pack.file", pack.getZipFile().getAbsolutePath());
+		proj.setProperty("patch.name", patch.getName());
+
+		ProjectHelper helper = ProjectHelper.getProjectHelper();
+		helper.parse(proj, antFile);
+		proj.executeTarget(proj.getDefaultTarget());
+		proj.fireBuildFinished(null);
+		logOut.flush();
+		logOut.close();
+		return patch;
+	}
 
 }
