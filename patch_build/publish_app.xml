@@ -2,7 +2,7 @@
 <project name="publishApplication" basedir="." default="publish">
 	
 	<property name="dir.project" value="."/>
-	<property name="dir.target" value="E:\web_server\apache-tomcat-5.5.35\webapps\patch"/>
+	<property name="dir.target" value="D:\web_server\apache-tomcat-5.5.35\webapps\patch"/>
 	 
 	<target name="publish">
 		<echo>project root: ${dir.project}</echo>

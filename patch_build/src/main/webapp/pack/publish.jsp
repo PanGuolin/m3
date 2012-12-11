@@ -2,7 +2,7 @@
 <%@ include file="/include/header.jsp" %>
 <div style="text-align:left">
 <h1>请确认待发布的包并提交发布</h1>
-<s:form action="/pack/publish">
+<s:form action="publish" namespace="/pack">
 
 <table class="dataTable">
 	<tr>
@@ -11,9 +11,9 @@
 		<th>构建号</th>
 		<th>依赖补丁</th>
 		<th>测试人员</th>
-		<th>测试通过时间</th>
+		<th class="dateTime">测试通过时间</th>
 		<th>申请人</th>
-		<th>申请时间</th>
+		<th class="dateTime">申请时间</th>
 	</tr>
 	<s:iterator value="packs" status='st' id='pack'> 
 	<tr>

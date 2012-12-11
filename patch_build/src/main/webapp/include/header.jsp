@@ -8,10 +8,9 @@
 <head>
 	<title>补丁构建管理系统</title>
 	<script type="text/javascript">var basePath = "${basePath}";</script>
-	
 	<link rel="stylesheet" href="${basePath}/css/base.css" type="text/css" />
 	<link rel="stylesheet" href="${basePath}/css/header.css" type="text/css" />
-	<script type="text/javascript" src="${basePath}/js/jquery.js"></script>
+	<script type="text/javascript" src="${basePath}/js/fn/fn.js?use=widget"></script>
 	<script type="text/javascript" src="${basePath}/js/include/header.js"></script>
 </head>
 <body>

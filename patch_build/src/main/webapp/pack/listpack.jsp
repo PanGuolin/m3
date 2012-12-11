@@ -76,6 +76,8 @@
 		singleSelect="true"
 		pageIndexParam="q.pageIndex"
 		pageSizeParam="q.pageSize"
+		autoLoad="false"
+		url="${basePath }/pack/query"
 		>
 	<thead>
 		<tr>

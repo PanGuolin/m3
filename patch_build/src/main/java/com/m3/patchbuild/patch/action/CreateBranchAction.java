@@ -86,7 +86,6 @@ public class CreateBranchAction extends BaseAction{
 		return patch;
 	}
 		
-	@SuppressWarnings("unchecked")
 	private void createBranch(Patch patch) throws Exception {
 		
 		IPackService packService = (IPackService)BussFactory.getService(Pack.class);
@@ -109,7 +108,7 @@ public class CreateBranchAction extends BaseAction{
 			if (!tagFiles.containsKey(log[0])) {
 				TagFileInfo info = new TagFileInfo();
 				info.setPath((String) log[0]);
-				info.setRevision((long) log[1]);
+				info.setRevision((Long) log[1]);
 				tagFiles.put(info.getPath(), info);
 			}
 		}

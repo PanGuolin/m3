@@ -113,7 +113,7 @@
                     <notifier>${_P0.requester}</notifier>
                     <notifier>#followers(${_P0.requester})</notifier>
                     <reciever>#role(designer, ${_P0.branch.branch})>#superiors(${_P0.requester})</reciever>
-                    <subject><![CDATA[构建成功：${_P0.buildNo}]]></subject>
+                    <subject><![CDATA[请检查：${_P0.buildNo}]]></subject>
         			<content><![CDATA[构建包${_P0.buildNo}已成功构建，请检查是否合法]]></content>
                 </arguments>
             </handler>
@@ -194,7 +194,7 @@
         <function method="publish(com.m3.patchbuild.pack.Pack)">
             <handler class="com.m3.patchbuild.aop.handler.PermissionHandler" advice="beforeX">
                <arguments>
-                   <accept>#role(deployer, ${_P0.branch})</accept>
+                   <accept>#role(deployer, ${_P0.branch.branch})</accept>
                    <error><![CDATA[你没有发布人员(deployer)的权限]]></error>
                </arguments>
             </handler>

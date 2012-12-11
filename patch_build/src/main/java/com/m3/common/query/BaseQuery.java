@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.BeanUtil;
@@ -60,7 +61,7 @@ public abstract class BaseQuery implements IQuery{
 		this.totalSize = totalSize;
 	}
 	
-	public void beforeQuery(Criteria criter) {
+	public void beforeQuery(Criteria criter, boolean fetchCount) {
 		Field[] fields = getClass().getDeclaredFields();
 		for (Field f : fields) {
 			QueryField ann = f.getAnnotation(QueryField.class);
@@ -83,14 +84,19 @@ public abstract class BaseQuery implements IQuery{
 		
 		doBeforeQuery(criter);
 		
-		if (getPageIndex() > -1 && getPageSize() > 0) {
-			criter.setFirstResult(getPageIndex()-1 * getPageSize()).setMaxResults(getPageSize());
-		}
-		for (QueryOrder order : orders) {
-			if (order.isDesc())
-				criter.addOrder(Order.desc(order.getPropertyName()));
-			else
-				criter.addOrder(Order.asc(order.getPropertyName()));
+		if (fetchCount) {
+			criter.setProjection(Projections.rowCount()).uniqueResult();
+		} else {
+			if (getPageIndex() > 0 && getPageSize() > 0) {
+				criter.setFirstResult((getPageIndex()-1) * getPageSize())
+					.setMaxResults(getPageSize());
+			}
+			for (QueryOrder order : orders) {
+				if (order.isDesc())
+					criter.addOrder(Order.desc(order.getPropertyName()));
+				else
+					criter.addOrder(Order.asc(order.getPropertyName()));
+			}
 		}
 	}
 	

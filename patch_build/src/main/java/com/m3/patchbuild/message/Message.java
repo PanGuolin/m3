@@ -52,7 +52,7 @@ public class Message  extends BaseBussInfo {
 	
 	private String content; //消息主体
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "message",  cascade = CascadeType.ALL) 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "message",  cascade = CascadeType.ALL) 
 	private Set<MessageReciever> recievers = new HashSet<MessageReciever>();
 	
 	public String getBussType() {

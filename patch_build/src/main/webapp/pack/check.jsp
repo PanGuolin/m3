@@ -120,6 +120,7 @@
 		</tr>
 	</table>
 	<s:form action="handleTask" theme="simple" id="taskForm" namespace="/msg">
+		<span class="submitConfirm">确定要提交检查结果？</span>
 		<input type="hidden" name="i" value="${i}"/>
 		<input type="hidden" name="t" value="${t}"/>
 		<input type="hidden" name="context.failReason" id="failreason" value=""/>

@@ -7,6 +7,7 @@ import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.IStateful;
 import com.m3.patchbuild.base.BaseService;
 import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.base.DaoUtil;
 import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
 
@@ -86,61 +87,14 @@ public class MessageService extends BaseService implements IMessageService{
 		rec.setUserName(user.getUsername());
 		message.getRecievers().add(rec);
 	}
-
-//	/**
-//	 * BUG状态变更
-//	 * @param pack
-//	 * @param bugNo
-//	 */
-//	public void bugFixed(Pack pack, String bugNo) {
-//		Bug bug = pack.findBugByNo(bugNo);
-//		if (bug == null)
-//			return;
-//		bugStateChange(pack, bug);
-//	}
-//	
-//	public void bugStateChange(Pack pack, Bug bug) {
-//		
-//		IUserService userService = (IUserService) BussFactory.getService(User.class);
-//		User requester = userService.findUser(pack.getRequester());
-//		User tester = userService.findUser(bug.getTester());
-//		Set<User> ccUsers = new HashSet<User>();
-//		ccUsers.addAll(requester.getFollowers());
-//		
-//		Message msg = new Message();
-//		msg.setBussType(BussFactory.getBussType(Bug.class));
-//		msg.setBussId(bug.getUuid());
-//		msg.setSender(bug.getTester());
-//		msg.setSendTime(new Date());
-//		msg.setStatus(IStateful.STATE_NORMAL);
-//		msg.setMessageType(0);
-//		
-//		String subj = bug.isFixed() ? "subj_bug_fixed" : "subj_bug_added" ;
-//		String content = bug.isFixed() ? "cont_bug_fixed" : "cont_bug_added";
-//		Map<String, Object> context = new HashMap<String, Object>();
-//		context.put("requester", requester);
-//		context.put("pack", pack);
-//		context.put("tester", tester);
-//		context.put("bug", bug);
-//		
-//		msg.setSubject(HtmlTemplateService.getValue(subj, context));
-//		msg.setContent(HtmlTemplateService.getValue(content, context));
-//		
-//		attachReciever(msg, requester, !bug.isFixed());
-//		for (User user : ccUsers) {
-//			attachReciever(msg, user, false);
-//		}
-//		getDao().expiredByBussInfo(bug);
-//		saveInfo(msg);
-//		UserMessageQueue.messageSended(msg);
-//	}
-//	
+	
 	public void expiredByBussInfo(IBussInfo info) {
 		getDao().expiredByBussInfo(info);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Message> list(MessageQuery q) {
-		return (List<Message>) dao.list(q);
+		return (List<Message>)DaoUtil.list(getBizClass(), q);
 	}
 
 	@Override

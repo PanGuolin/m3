@@ -1,7 +1,5 @@
 var mainObj = {
 
-	data : {},
-	
 	/**
 	 * 查看构建包的当前操作人
 	 */
@@ -53,36 +51,7 @@ var mainObj = {
 	 * 查询
 	 * @returns {Boolean}
 	 */
-	query : function() {
-		var queryForm = $('#queryForm');
-		$.post(queryForm[0].action + "?jfs=true", queryForm.serialize(), function(data, status) {
-			mainObj.data = [];
-			$get("#datagrid").loadData(mainObj.data);
-			if (status != "success") return;
-			if (data.tips) {
-				var tips = data.tips.replace("<br/>", "\n");
-				alert(tips);
-			}
-			if (!data.rows.length) return;
-			var rows = data["rows"];
-			for (var i=0; i<rows.length; i++) {
-				var row = rows[i];
-				if (row.depends.length) {
-					var deps = rows[i].depends;
-					var depf = "<span class='op'>";
-					for (var j=0; j<deps.length; j++) {
-						depf += "<a href=/pack/download?uuid=" + deps[j].uuid + "'>" + deps[j].buildNo + "</a>";
-					}
-					depf += "</span>";
-					row.dependsA = depf;
-				}
-			}
-			mainObj.data = data;
-			$get("#datagrid").loadData(data);
-			$('#lastQuery').text("最后更新时间：" + date2str(new Date(),"yyyy年MM月dd日 hh:mm:ss"));
-		}, "json");
-		return false;
-	},
+	query : function() {return doDataQuery();},
 	
 	init : function() {
 		$('#viewOp').click(mainObj.viewOperators);
@@ -94,7 +63,6 @@ var mainObj = {
 			window.location.href = url;
 		});
 		$('#addPack').click(function(){window.location.href=basePath + "/pack/addbuild.jsp";});
-		//$('.queryBar').click(function(){$('.queryDiv').toggle('normal');});
 		appendSubmit('#queryForm', mainObj.query);
 		mainObj.query();
 	},

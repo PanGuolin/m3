@@ -75,9 +75,10 @@
 		<td ></td>
 		<td colspan="3">
 			<s:form action="handleTask" theme="simple" id="taskForm" namespace="/msg">
-			<input type="hidden" name="i" value="${i}"/>
-			<input type="hidden" name="t" value="${t}"/>
-			<table>
+			<span class="submitConfirm">确定要提交该结果？</span>
+			<input type="hidden" name="i" value="${info.uuid}"/>
+			<input type="hidden" name="t" value="com.m3.patchbuild.pack.Pack"/>
+			<table> 
 				<tr>
 					<td><input type="radio" name="context.pass" value="true"/>测试通过</td>
 					<td class="pl l cmt">该构建包已经没有问题，可以进入发布阶段</td>
@@ -85,7 +86,7 @@
 				<tr>
 					<td><input type="radio" name="context.pass" value="false"/>打回开发</td>
 					<td class="pl l cmt">该构建包存在严重BUG，并且无法通过BUG构建包解决，必须打回开发人员重新构建</td>
-				</tr>
+				</tr> 
 				<tr>
 					<td>打回原因描述</td>
 					<td class="pl"><textarea style="width:100%;" id="failreason" name="context.failReason">严重错误</textarea></td>

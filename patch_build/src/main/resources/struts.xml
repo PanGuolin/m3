@@ -7,8 +7,18 @@
 <struts>
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
 	<package name="patchbuild" extends="json-default">
+	    <interceptors>
+          <interceptor-stack name="exceptionmapping-stack">
+              <interceptor-ref name="defaultStack">
+                  <param name="exception.logEnabled">true</param>  
+                  <param name="exception.logLevel">error</param>                               
+              </interceptor-ref>  
+          </interceptor-stack>
+      </interceptors>
+      <default-interceptor-ref name="exceptionmapping-stack"/>
+      
 	    <global-results>
-	        <result name="login">/user/login.jsp</result>
+	        <result name="login" type="redirect">/user/login.jsp</result>
 	        <result name="error">/common/error.jsp</result>
 	        <result name="success" type="redirect">/msg/mymsg.jsp</result>
 	        <result name="json" type="json">
@@ -31,6 +41,7 @@
 		</action>
 		<action name="fnmsg" class="com.m3.patchbuild.message.action.FetchMessageAction"/>
         <action name="handle" class="com.m3.patchbuild.message.action.HandleMessageAction"/>
+        <action name="query" class="com.m3.patchbuild.message.action.QueryMessageAction"/>
 	</package>
 	
 	<package name="user" extends="patchbuild" namespace="/user">

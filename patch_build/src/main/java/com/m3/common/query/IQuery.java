@@ -69,6 +69,6 @@ public interface IQuery {
 	 * @param criter
 	 * @throws Exception
 	 */
-	public void beforeQuery(Criteria criter);
+	public void beforeQuery(Criteria criter, boolean fetchCount);
 
 }

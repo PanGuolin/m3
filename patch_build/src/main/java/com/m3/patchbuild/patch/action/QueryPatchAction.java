@@ -1,9 +1,8 @@
 package com.m3.patchbuild.patch.action;
 
 import java.util.List;
-import java.util.Map;
 
-import com.m3.patchbuild.base.BaseJsonAction;
+import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.patch.IPatchService;
 import com.m3.patchbuild.patch.Patch;
@@ -13,7 +12,7 @@ import com.m3.patchbuild.patch.Patch;
  * @author pangl
  *
  */
-public class QueryPatchAction extends BaseJsonAction {
+public class QueryPatchAction extends BaseAction {
 	private PatchQuery q = new PatchQuery();
 
 	public PatchQuery getQ() {
@@ -25,12 +24,12 @@ public class QueryPatchAction extends BaseJsonAction {
 	}
 
 	@Override
-	protected void doExecute(Map<String, Object> dataMap) throws Exception {
+	protected String doExecute() throws Exception {
 		IPatchService patchService = (IPatchService)BussFactory.getService(Patch.class);
+		q.descOrder("createTime");
 		List<Patch> list = patchService.query(q);
 		dataMap.put("total", q.getTotalSize());
 		dataMap.put("rows", list);
-		
+		return SUCCESS;
 	}
-
 }

@@ -121,6 +121,7 @@ ins,a {
 .c {text-align:center;}
 .ml {margin-left: 20px;}
 .pl {padding-left: 20px;}
+.pt {padding-top: 20px;}
 .cap { font-weight:bold;}
 .cap td{ border-top: 1px solid #CCC;}
 .cmt {color: #999};
@@ -144,10 +145,12 @@ table.single td {padding:5px;}
 .queryDiv img{height:12px;}
 #lastQuery {float:right; margin-top:20px; margin-right:10px;}
 input[type="text"], input[type='password'] {line-height:15px; height:15px;}
-input[type="reset"], input[type="submit"] {padding:2px 10px; margin-left:10px; cursor:pointer;}
+input[type="reset"], input[type="submit"], input[type="button"] {padding:2px 10px; margin-left:10px; cursor:pointer;}
 
 .queryBar {width:100%; line-height:10px; background:#999; height:10px; cursor:pointer;}
 
 .layoutTable {width:100%;}
 .layoutTable td{padding-top:4px;}
 .btl td {border-bottom:1px solid #CCC;}
+
+.submitConfirm {display:none}

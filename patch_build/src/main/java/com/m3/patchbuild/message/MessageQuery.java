@@ -1,8 +1,11 @@
 package com.m3.patchbuild.message;
 
 import org.hibernate.Criteria;
+import org.hibernate.sql.JoinType;
 
+import com.m3.common.ContextUtil;
 import com.m3.common.query.BaseQuery;
+import com.m3.common.query.QueryField;
 
 /**
  * 消息查询对象
@@ -18,8 +21,17 @@ public class MessageQuery extends BaseQuery{
 	
 	public static int STATUS_INCLUD_EXPIR = 1; //包含处理过的
 	
+	@QueryField
 	private int status = 0; //消息状态，默认为0，即正常状态
-	private int nt = 0; //消息类型，0-过滤接收消息，1-过滤通知消息
+	
+	@QueryField(property="rec.sendType")
+	private int recieveType; //消息类型，0-过滤接收消息，1-过滤通知消息
+	
+	@QueryField(property="rec.userId")
+	private String userId;
+	
+	@QueryField(property="rec.status")
+	private int recieveStatus = MessageReciever.STATUS_NORMAL;
 	
 	public MessageQuery() {
 		this.descOrder("sendTime");
@@ -29,20 +41,44 @@ public class MessageQuery extends BaseQuery{
 		return status;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public int getNt() {
-		return nt;
-	}
-
-	public void setNt(int nt) {
-		this.nt = nt;
-	}
 
 	@Override
 	protected void doBeforeQuery(Criteria criteria) {
+		criteria.createAlias("recievers", "rec", JoinType.LEFT_OUTER_JOIN);
 	}
+
+	public int getRecieveType() {
+		return recieveType;
+	}
+
+	public void setRecieveType(int recieveType) {
+		this.recieveType = recieveType;
+	}
+
+	public String getUserId() {
+		if (userId == null)
+			return ContextUtil.getUserId();
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public int getRecieveStatus() {
+		return recieveStatus;
+	}
+
+	public void setRecieveStatus(int recieveStatus) {
+		this.recieveStatus = recieveStatus;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	
+	
+	
+
 	
 }

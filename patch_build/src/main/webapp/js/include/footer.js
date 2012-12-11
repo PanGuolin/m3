@@ -8,7 +8,7 @@ var footerObj = {
 			if (v) $(sels[i]).val(v);
 		}
 		
-		$('form').submit(footerObj.checkRequired);
+		$('form').submit(footerObj.beforeSubmit);
 		
 		var reqs = $('.required');
 		for (var i=0; i<reqs.length; i++) {
@@ -23,46 +23,72 @@ var footerObj = {
 			}
 		}
 		
-		if ($('#queryForm').length == 1 && $('.toolBar').length == 1) {
-			$('<div id="lastQuery"></div>').appendTo($('.toolBar'));
+		var queryForm = $('#queryForm');
+		if (queryForm.length) {
+			if ($('.toolBar').length)
+				$('<div id="lastQuery"></div>').appendTo($('.toolBar'));
+		}
+		
+		var ths = $('TH.dateTime');
+		if (ths.length) {
+			for (var i=0; i<ths.length; i++) {
+				var index = $(ths[i]).index();
+				if (!index) continue;
+				var table = $(ths[i]).closest('TABLE');
+				if (!table.length) continue;
+				var trs = table.find("TR");
+				for (var j=0; j<trs.length; j++) {
+					var tds = $(trs[j]).find("TD");
+					if (tds.length < index){continue;}
+					try {
+						var d = new Date($(tds[index]).text());
+						$(tds[index]).text(date2str(d, "MM/dd hh:mm"));
+					} catch (exception){}
+				}
+			}
 		}
 	},
 	
-	checkRequired : function() {
-		var form = (arguments.length > 0) ? $(arguments[0]) : $(this);
+	beforeSubmit : function() {
+		var form = $(this);
+		if (form.attr('tagName') != 'FORM')
+			form = $(arguments[0]);
 		var r = form.find('.required');
-		if (!r || !r.length) return true;
-		for (var i=0; i<r.length; i++) {
-			var or = $(r[i]);
-			if (!or.val) continue;
-			if(or.val().trim().length == 0) {
-				alert(or.attr("title") + "不能为空");
-				event.preventDefault();
-				event.stopPropagation();
-				return false;
+		if (r && r.length) {
+			for (var i=0; i<r.length; i++) {
+				var or = $(r[i]);
+				if (!or.val) continue;
+				if(or.val().trim().length == 0) {
+					alert(or.attr("title") + "不能为空");
+					event.preventDefault();
+					event.stopPropagation();
+					return false;
+				}
 			}
+		}
+		var warn = form.find(".submitConfirm");
+		if (warn.length) {
+			 return confirm($(warn[0]).html()); 
 		}
 		return true;
 	}
 };
+
 $().ready(footerObj.init);
+
 /**
  * 获取选择的记录
  * @param warn
  * @returns
  */
-function getSelectedRow(warn, gridId, dataOwner) {
-	if (!gridId) gridId = "datagrid";
-	var dg = $get("#" + gridId);
-	var index = dg.getRowIndex(dg.getSelected());
-	if (index == -1) {
-		if (warn)
-			alert('必须选择一条记录');
+function getSelectedRow(warn, gridId) {
+	var dg = gridId ? $get("#"+gridId) : $get("#datagrid");
+	var data = dg.getSelected();
+	if (!data) {
+		if (warn) alert('必须选择一条记录');
 		return undefined;
 	}
-	if (!dataOwner) dataOwner = mainObj;
-	if (dataOwner && dataOwner.data)
-		return dataOwner.data.rows[index];
+	return data;
 }
 
 function defTaskWinLoaed() {
@@ -115,29 +141,6 @@ function taskWinLoaded(windowId, dataOwner) {
 				return false;
 			});
 		}
-//		subms.bind('submit', function() {
-//			var v = $(this).data("events")['submit'][1];
-//			for (var p in v) {
-//				alert(p + ":" + v[p]);
-//			}
-//			alert($(this).data("events")['submit'][0] );
-//			alert(footerObj.checkRequired);
-//			var value = footerObj.checkRequired(this);
-//			alert("===" + value);
-//			return false;
-//		});
-		
-// 		subms.ajaxForm(function(data) {
-// 			$(windowId).window('close');
-// 			if (data && data.tips) {
-// 				alert(data.tips);
-// 			}
-// 			if (!dataOwner)
-// 				dataOwner = mainObj;
-// 			if (dataOwner && dataOwner.query)
-// 				dataOwner.query();
-// 		});
-		
 	}
 }
 
@@ -145,4 +148,13 @@ function date2str(x,y) {
 	var z = {M:x.getMonth()+1,d:x.getDate(),h:x.getHours(),m:x.getMinutes(),s:x.getSeconds()};
 	y = y.replace(/(M+|d+|h+|m+|s+)/g,function(v) {return ((v.length>1?"0":"")+eval('z.'+v.slice(-1))).slice(-2)});
 	return y.replace(/(y+)/g,function(v) {return x.getFullYear().toString().slice(-v.length)});
+}
+
+function doDataQuery(formId, datagridId) {
+	var queryForm = formId ? $('#' + formId) : $('#queryForm');
+	var dataGrid = datagridId ?  $get('#' + datagridId) : $get('#datagrid');
+	dataGrid.reload(null, "jfs=true&" + queryForm.serialize(), true);
+	if ($('#lastQuery').length)
+		$('#lastQuery').text("最后查询时间：" + date2str(new Date(),"yyyy年MM月dd日 hh:mm:ss"));
+	return false;
 }

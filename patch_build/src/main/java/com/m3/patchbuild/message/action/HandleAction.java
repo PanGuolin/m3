@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
+import com.m3.common.StringUtil;
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.base.BussFactory;
@@ -80,7 +81,7 @@ public class HandleAction extends BaseAction implements ServletRequestAware {
 		if (context == null) {
 			if (t == null)
 				t = request.getParameter("t");
-			if (t != null)
+			if (!StringUtil.isEmpty(t))
 				context =  ((IHandleService)BussFactory.getService(t)).newContext();
 		}
 		return context;

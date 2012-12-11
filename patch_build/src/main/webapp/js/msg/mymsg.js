@@ -1,45 +1,15 @@
 var mainObj = {
-	query : function() {
-		var url = basePath + "/msg/fnmsg.action?jfs=true&t=nl";
-		if ($("#query_nt_v1").is(":checked")) {
-			url += "&q.nt=0";
-		} else {
-			url += "&q.nt=1";
-		}
-		if($("#query_stat").is(":checked")) {
-			url += "&q.status=1";
-		}
-		$.get(url, mainObj.handleMsgData, "json");
-	},
+	query : function() {return doDataQuery();},
 	
-	data : {},
-	
-	handleMsgData : function(data, status) {
-		if (status != "success" || !data.rows.length) {
-			mainObj.data = undefined;
-			$get("#datagrid").loadData([]);
-			return;
-		}
-		data.isTo = $("#query_nt_v1").is(":checked");
-		mainObj.data = data;
-		
-		var recType = data.isTo ? "通知" : "关注";
-		var rows = data["rows"];
-		for (var i=0; i<rows.length; i++) {
-			rows[i].recType = recType;
-		}
-		$get("#datagrid").loadData(data);
-		$('#lastQuery').text("最后更新时间：" + date2str(new Date(),"yyyy年MM月dd日 hh:mm:ss"));
-	},
 	//处理任务
 	doTask : function() {
-		if (!mainObj.data.isTo) {
-			alert("关注消息没有关联任务");
-			return;
-		}
-		var row = mainObj.getSelectedRow(true);
+		var row = getSelectedRow(true);
 		if (!row || !row.uuid)
 			return;
+		if (row.recievers[0].sendType == 1) {
+			alert("关注消息没有关联任务！");
+			return;
+		}
 		var url = basePath + "/msg/handle?jfs=true&t=pm&i=" + row.uuid;
 		$.get(url, function(data, status) {
 			if (status != "success") {
@@ -57,7 +27,7 @@ var mainObj = {
 		}, "json");
 	},
 	viewOperator : function() {
-		var row = mainObj.getSelectedRow(true);
+		var row = getSelectedRow(true);
 		if (!row || !row.uuid)
 			return;
 		var uuid = row.uuid;
@@ -79,29 +49,14 @@ var mainObj = {
 			}
 			$msg(msg, {title:"消息处理人"});
 		}, "json");
-	},
-	/**
-	 * 获取选择的记录
-	 * @param warn
-	 * @returns
-	 */
-	getSelectedRow : function(warn) {
-		var dg = $get("#datagrid");
-		var index = dg.getRowIndex(dg.getSelected());
-		if (index == -1) {
-			if (warn)
-				alert('必须选择一条记录');
-			return undefined;
-		}
-		return mainObj.data.rows[index];
 	}
 };
 	
 $().ready(function() {
-	$(".queryForm").change(mainObj.query);
-	$(mainObj.query());
+	$("#queryForm INPUT").change(mainObj.query);
+	mainObj.query();
 	$('#viewDetail').click(function() {
-		var row = mainObj.getSelectedRow(true);
+		var row = getSelectedRow(true);
 		if (row && row.content) {
 			$msg(row.content, {width:400});
 		}
@@ -109,12 +64,12 @@ $().ready(function() {
 	$('#handleTask').click(mainObj.doTask);
 	$('#viewOp').click(mainObj.viewOperator);
 	$('#ignore').click(function(){
-		if (mainObj.data.isTo) {
-			alert("无法忽略任务消息");
-			return;
-		}
-		var row = mainObj.getSelectedRow(true);
+		var row = getSelectedRow(true);
 		if (row && row.uuid) {
+			if (row.recievers[0].sendType == 0) {
+				alert("无法忽略任务消息！");
+				return;
+			}
 			var url =  basePath + "/msg/fnmsg.action?jfs=true&t=ig&i=" + row.uuid;
 			$.get(url, mainObj.query, "json");
 		}
@@ -122,3 +77,7 @@ $().ready(function() {
 	
 });
 		
+
+function messageType(value, row, index) {
+	return value[0].sendType == 0 ? "通知" : "抄送";
+}

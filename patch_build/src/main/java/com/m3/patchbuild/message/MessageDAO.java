@@ -1,13 +1,11 @@
 package com.m3.patchbuild.message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
 
 import com.m3.common.ContextUtil;
 import com.m3.common.HibernateUtil;
-import com.m3.common.query.BaseQuery;
 import com.m3.patchbuild.BaseDAO;
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.IStateful;
@@ -36,55 +34,6 @@ public class MessageDAO extends BaseDAO{
 			HibernateUtil.closeSession();
 		}
 	}
-
-	public List<Message> list(BaseQuery query) {
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append(" FROM Message msg LEFT JOIN fetch msg.recievers rec Where rec.userId=:userId AND msg.status=0");
-		MessageQuery q = (MessageQuery)query;
-		
-		sb.append(" AND rec.sendType=" + (q.getNt() == 1 ? "1" : "0"))
-		.append(" AND rec.status=" + MessageReciever.STATUS_NORMAL)
-		.append(" ORDER BY sendTime DESC");
-		
-		try {
-			Session sess = HibernateUtil.openSession();
-			if (query != null) {
-				String sql = sb.toString();
-				sql = "SELECT count(*) " + sql.replaceAll("fetch", "");
-				Long size = (Long) sess.createQuery(sql)
-						.setParameter("userId", ContextUtil.getUserId())
-						.uniqueResult();
-				query.setTotalSize(size.longValue());
-				if (size.longValue() == 0)
-					return new ArrayList<Message>();
-			}
-			return sess.createQuery(sb.toString())
-					.setParameter("userId", ContextUtil.getUserId())
-					.list();
-		} finally {
-			HibernateUtil.closeSession();
-		}
-	}
-
-
-//	@Override
-//	protected void beforeList(BaseQuery query, Criteria criter) {
-//		MessageQuery q = (MessageQuery)query;
-//		if (q.getStatus() == MessageQuery.STATUS_NOR) {
-//			criter.add(Restrictions.eq("status", IStateful.STATE_NORMAL));
-//		} else if (q.getStatus() == MessageQuery.STATUS_INCLUD_EXPIR) {
-//			
-//		}
-//		
-//		if (q.getNt() == MessageQuery.NT_NOTIFIER) {
-//			criter.createAlias("notifiers", "notifiers")
-//			.add(Restrictions.eq("notifiers.userId", ContextUtil.getUserId())); 
-//		} else if (q.getNt() == MessageQuery.NT_RECIEVER) {
-//			criter.createAlias("recievers", "recievers")
-//			.add(Restrictions.eq("recievers.userId", ContextUtil.getUserId())); 
-//		}
-//	}
 	
 	public void expiredByBussInfo(IBussInfo info) {
 		String type = BussFactory.getBussType(info.getClass());

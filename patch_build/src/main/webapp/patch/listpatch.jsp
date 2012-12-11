@@ -46,6 +46,8 @@
 		singleSelect="true"
 		pageIndexParam="q.pageIndex"
 		pageSizeParam="q.pageSize"
+		autoLoad="false"
+		url="${basePath}/patch/query"
 		>
 	<thead>
 		<tr>
@@ -54,7 +56,7 @@
 			<th field="lastModify" 	width="100"	align="right" formatter="formatTime">最后修改时间</th>
 			<th field="createTime" 	width="100" align="right" formatter="formatTime">制作时间</th>
 			<th field="md5"			width="200">MD5</th>
-			<th field="builds" 		width="300"		align="center">构建包列表</th>
+			<th field="builds" 		width="300"	align="left">构建包列表</th>
 		</tr>
 	</thead>
 </table>

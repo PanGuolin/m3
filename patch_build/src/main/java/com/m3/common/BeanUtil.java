@@ -61,7 +61,12 @@ public abstract class BeanUtil {
 			}
 			if (value == null)
 				value = "null";
-			sb.replace(start, end+1, value.toString());
+			
+			if (value.getClass().isEnum()) {
+				sb.replace(start, end+1, ((Enum<?>)value).name());
+			} else {
+				sb.replace(start, end+1, value.toString());
+			}
 			start = sb.indexOf(EXP_PREFIX, start + value.toString().length());
 		}
 		return sb.toString();

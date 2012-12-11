@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.HibernateUtil;
@@ -178,35 +177,23 @@ public abstract class DaoUtil {
 	 * 查找所有的业务对象
 	 * @return
 	 */
-	public static List<?> list(Class<? extends IBussInfo> bizClass, IQuery query) {
+	public static List<?> list(Class<?> bizClass, IQuery query) {
 		try {
 			Session sess = HibernateUtil.openSession();
 			Criteria criter = sess.createCriteria(bizClass);
-			apply(query, criter);
 			if (query != null)
-				query.beforeQuery(criter);
+				query.beforeQuery(criter, false);
 			List <?> result = criter.list();
 			if (query != null) {
 				criter = sess.createCriteria(bizClass);
-				query.beforeQuery(criter);
-				Long count = (Long) criter.setProjection(Projections.rowCount()).uniqueResult();
+				query.beforeQuery(criter, true);
+				Long count = (Long) criter.uniqueResult();
 				query.setTotalSize(count.longValue());
 			}
 			return result;
 		} finally {
 			HibernateUtil.closeSession();
 		}
-	}
-	
-	/**
-	 * 将查询信息应用到hibernate的Criteria对象
-	 * @param query
-	 * @param criteria
-	 */
-	public static void apply(IQuery query, Criteria criteria) {
-		if (query == null)
-			return;
-		query.beforeQuery(criteria);
 	}
 	
 	public static void commit() {

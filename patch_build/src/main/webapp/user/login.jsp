@@ -22,6 +22,11 @@
 				<td></td>
 			</tr>
 			<tr>
+				<td class="r"></td>
+				<td class="l"><input type="checkbox" name="storeCookie" value="true"/>保存我的信息</td>
+				<td></td>
+			</tr>
+			<tr>
 				<td colspan="3" class="r op">
 					<input type="submit" value="登录"/>
 				</td>
