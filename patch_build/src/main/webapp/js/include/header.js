@@ -18,6 +18,9 @@ var headerObj = {
 			$.get(basePath + "/msg/fnmsg.action?jfs=true&t=n", function(data, status) {
 				if (status == "success" ) {
 					if (!data) return;
+					if (data.status == "-1") {//用户未登录,则不再继续请求
+						return;
+					}
 					if (data.tips) alert(data.tips);
 					var msgObj = data.message;
 					if (msgObj && msgObj.subject) {

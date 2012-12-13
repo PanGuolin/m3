@@ -14,6 +14,7 @@ import com.m3.patchbuild.message.Message;
 import com.m3.patchbuild.message.MessageQuery;
 import com.m3.patchbuild.message.MessageReciever;
 import com.m3.patchbuild.message.UserMessageQueue;
+import com.m3.patchbuild.sys.UserNoLoginException;
 
 /**
  * 获取消息的Action
@@ -40,6 +41,8 @@ public class FetchMessageAction extends BaseAction {
 			try {
 				UserMessageQueue.consume(id, ContextUtil.getUserId(), 
 					new ActionMessageConsumer(dataMap));
+			} catch (UserNoLoginException e) {
+				dataMap.put("status", "-1");
 			} catch (Exception ex) {
 				setTips("当前请求被其它请求中断");
 			}

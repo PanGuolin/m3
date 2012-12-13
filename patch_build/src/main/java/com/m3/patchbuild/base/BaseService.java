@@ -1,7 +1,10 @@
 package com.m3.patchbuild.base;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.m3.common.query.IQuery;
 import com.m3.patchbuild.IBussInfo;
 
 public abstract class BaseService implements IService{
@@ -36,6 +39,13 @@ public abstract class BaseService implements IService{
 		return DaoUtil.findByBillNo(getBizClass(), properties, values);
 	}
 	
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<? extends IBussInfo> list(IQuery query) {
+		return (List<? extends IBussInfo>) DaoUtil.list(getBizClass(), query);
+	}
+
 	final public Class<? extends IBussInfo> getBizClass() {
 		return doGetBizClass();
 	}
@@ -45,5 +55,9 @@ public abstract class BaseService implements IService{
 	@Override
 	public boolean isSingleton() {
 		return true;
+	}
+	
+	protected boolean isEntitiesCacheable() {
+		return false;
 	}
 }

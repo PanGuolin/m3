@@ -21,6 +21,14 @@ var mainObj = {
 		}, "json");
 	},
 	
+	viewBuildLog : function() {
+		var row = getSelectedRow(true);
+		if (!row)
+			return;
+		$('#taskWindow').window('open');
+		$('#taskWindow').window('refresh', basePath + "/pack/viewBuildLog?uuid=" + row.uuid);
+	},
+	
 	/**
 	 * 处理构建包的相关任务
 	 */
@@ -63,8 +71,7 @@ var mainObj = {
 			window.location.href = url;
 		});
 		$('#addPack').click(function(){window.location.href=basePath + "/pack/addbuild.jsp";});
-		appendSubmit('#queryForm', mainObj.query);
-		mainObj.query();
+		$('#viewBuildLog').click(function(){openUrlOfSelected("/pack/viewBuildLog?uuid=");});
 	},
 };
 	

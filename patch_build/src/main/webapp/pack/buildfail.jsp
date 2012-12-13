@@ -1,6 +1,6 @@
 <%@page language="java" pageEncoding="UTF-8"%>
 <%@ include file="/include/header.jsp" %>
-<div style="text-align:center;">
+<div style="text-align:center; margin-top:20px;">
 	<div>你在【${info.branch.branch }】上提交的构建包【${info.buildNo}】构建失败，请检查日志并重新提交构建
 		<span style="margin-left:20px;"><a id="rebuild" href="#">重新构建</a></span>
 	</div>

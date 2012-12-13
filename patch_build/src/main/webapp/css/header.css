@@ -124,3 +124,17 @@
 	line-height: 20px;
 	text-align:center;
 }
+
+.subMenuBar {
+	text-align:left; background:#EEE; width:100%; padding:10px 0px;border-bottom:1px solid #99BBE8;
+}
+
+.subMenuBar a{
+	margin-left:10px;
+	margin-top:10px;
+	cursor:pointer; 
+	border-width: 0px 0px; 
+	border-color:black; 
+	border-style:solid; 
+	text-decoration:none; 
+	padding:2px;}

@@ -1,14 +1,15 @@
-package com.m3.patchbuild.user;
+package com.m3.patchbuild.sys;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.m3.patchbuild.base.BaseBussInfo;
@@ -19,25 +20,22 @@ import com.m3.patchbuild.base.BaseBussInfo;
  *
  */
 @Entity
-@Table(name="Sys_FunctionPerm")
-public class FunctionPerm  extends BaseBussInfo {
+@Table(name="Sys_Function")
+@Cacheable()
+public class Function extends BaseBussInfo {
 
-	@Column(name="code")
-	private String code;
+	private String code;//功能编码
 	
-	@Column(name="permName")
-	private String name;
+	private String name;//功能名称
 	
-	@Column(name="info")
-	private String info;
+	private String info;//功能信息
 	
-	@Column(name="type")
-	private int type;
+	private int type;//功能类型
 	
-	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name = "SYS_RolePermission", joinColumns = @JoinColumn(name = "roleName"))
-	private Set<String> roles = new HashSet<String>(); //用户角色集合
-
+	@ManyToMany(cascade ={CascadeType.PERSIST,CascadeType.MERGE}, fetch=FetchType.EAGER)
+    @JoinTable(name="Sys_FunctionRole",  joinColumns={@JoinColumn(name="functionId")}, inverseJoinColumns={@JoinColumn(name="roleId")} )
+	private Set<Role> roles = new HashSet<Role>();
+	
 	public String getCode() {
 		return code;
 	}
@@ -70,12 +68,11 @@ public class FunctionPerm  extends BaseBussInfo {
 		this.type = type;
 	}
 
-	public Set<String> getRoles() {
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<String> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-	
 }

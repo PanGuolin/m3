@@ -8,6 +8,8 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.base.BussFactory;
+import com.m3.patchbuild.sys.IRoleService;
+import com.m3.patchbuild.sys.Role;
 import com.m3.patchbuild.user.IResetPassReqService;
 import com.m3.patchbuild.user.IUserRole;
 import com.m3.patchbuild.user.IUserService;
@@ -35,7 +37,10 @@ public class ResetPassReqAction extends BaseAction implements ServletRequestAwar
 			setTips("用户名错误！");
 			return INPUT;
 		}
-		if (requester.hasRole(null, IUserRole.admin)) {
+		
+		IRoleService roleService = (IRoleService)BussFactory.getService(Role.class);
+		Role adminRole = roleService.find(IUserRole.admin);
+		if (requester.hasRole(null, adminRole)) {
 			setTips("无法重置管理员密码");
 			return INPUT;
 		}

@@ -9,6 +9,7 @@ import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.IUserRole;
+import com.m3.patchbuild.user.UserRole;
 
 /**
  * 管理用户关系
@@ -95,10 +96,12 @@ public class ManagerRelationAction extends BaseAction{
 	}
 	
 	private boolean canHaveMember(String branch, User curUser) {
-		return curUser.hasRole(branch, IUserRole.designer) ||
-				curUser.hasRole(branch, IUserRole.deployer) ||
-				curUser.hasRole(branch, IUserRole.testmanager) ||
-				curUser.hasRole(branch, IUserRole.admin);
+		for (UserRole role : curUser.getRoles()) {
+			if (role.getRole().isManageRole()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getFollowers() {

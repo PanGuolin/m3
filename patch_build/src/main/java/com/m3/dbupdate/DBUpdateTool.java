@@ -2,8 +2,10 @@ package com.m3.dbupdate;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +16,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
- * ¸¨ÖúÀà
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * @author pangl
  *
  */
@@ -22,30 +24,38 @@ public abstract class DBUpdateTool {
 	
 	private static final Logger logger = Logger.getLogger(DBUpdateTool.class);
 	
-	/** ¿ÉÒÔºöÂÔµÄÌØÕ÷Âë **/
+	private static String fileEncoding = "GBK";
+	
 	public static final String[] IGNORE_CHARACTER = new String[] {
-		"ORA-00955",//Ãû³ÆÒÑ±»ÏÖÓĞ¶ÔÏóÕ¼ÓÃ
+		"ORA-00955",
 		"ORA-02260",//table can have only one primary key 
 		"ORA-01430",//column being added already exists in table 
 		"ORA-00001",//Unique constraint violated 
 		"ORA-02261",//such unique or primary key already exists in the table. 
 		"ORA-02275",//such a referential constraint already exists in the table 
-		"ORA-01440"//column to be modified must be empty to decrease precision or scale
+		"ORA-01440",//column to be modified must be empty to decrease precision or scale
+		"æ•°æ®åº“ä¸­å·²å­˜åœ¨åä¸º",
+		"å·²ç»æœ‰é’ˆå¯¹å®ƒå®šä¹‰çš„ä¸»é”®",
+		"è¿åäº† PRIMARY KEY çº¦æŸ",
+		"å„è¡¨ä¸­çš„åˆ—åå¿…é¡»å”¯ä¸€",
+		"æ•°æ®åº“ä¸­å·²å­˜åœ¨åä¸º",
+		"è¿åäº† UNIQUE KEY çº¦æŸ",
+		"ä¸Šå·²å­˜åœ¨åç§°ä¸º",
+		"å·²ç”¨ä½œ object åç§°ï¼Œå› æ­¤ä¼šå¯¼è‡´é‡å¤",
+		"å·²å­˜åœ¨å±æ€§",
 	};
 	
 	/**
-	 * ´ÓSQLÎÄ¼şÖĞ¶ÁÈ¡SQLÓï¾ä
 	 * @param sqlFile
 	 * @return
 	 */
 	public static String[] readSqls(File sqlFile) throws IOException{
-		BufferedReader reader = new BufferedReader(new FileReader(sqlFile));
+		BufferedReader reader = new BufferedReader(new InputStreamReader (new FileInputStream(sqlFile), fileEncoding));
 		StringBuilder sb = new StringBuilder();
 		List<String> list = new ArrayList<String>(); 
-		boolean isMultiComment = false;//ÊÇ·ñ¶àĞĞ×¢ÊÍ
-		boolean isCreateTri = false;//ÊÇ·ñ´´½¨´¥·¢Æ÷
-		boolean isDeclare = false; //ÊÇ·ñdeclareyÓï¾ä 
-		//boolean isCreateView = false; //ÊÇ·ñ´´½¨´æ´¢¹ı³Ì
+		boolean isMultiComment = false;
+		boolean isCreateTri = false;
+		boolean isDeclare = false; 
 		try {
 			String line = null;
 			while((line = reader.readLine()) != null) {
@@ -78,14 +88,15 @@ public abstract class DBUpdateTool {
 					}
 				}
 				if (line.startsWith("create or replace trigger ") ||
-						line.startsWith("create or replace procedure ")) {
+						line.startsWith("create or replace procedure ") ||
+						line.startsWith("alter trigger ")) {
 					isCreateTri = true;
 				} else if (!isCreateTri && line.startsWith("declare")) {
 					isDeclare = true;
 				}
 				boolean sqlEnd = false;
 				if (isCreateTri || isDeclare) {
-					sqlEnd = line.endsWith("/");
+					sqlEnd = line.endsWith("/") || line.toLowerCase().endsWith("go");
 				} else {
 					if (line.endsWith(";")) {
 						line = line.substring(0, line.length() - 1);
@@ -114,10 +125,19 @@ public abstract class DBUpdateTool {
 	}
 	
 	public static void executeSql(Connection conn, String sql) throws SQLException {
+		if (sql.toUpperCase().startsWith("DROP ")) {
+			throw new SQLException("ä¸å…è®¸æ‰§è¡Œåˆ é™¤è¯­å¥");
+		}
 		Statement stmt = null;
 		try {
-			stmt = conn.createStatement();
-			stmt.execute(sql);
+			if (sql.toUpperCase().startsWith("EXECUTE")) {
+				stmt = conn.prepareCall(sql);
+				((CallableStatement)stmt).execute();
+			} else {
+				stmt = conn.createStatement();
+				stmt.execute(sql);
+			}
+			
 		} catch (SQLException ex) {
 			String msg = ex.getMessage();
 			for (String str : IGNORE_CHARACTER) {
@@ -175,7 +195,6 @@ public abstract class DBUpdateTool {
 	
 
 	/**
-	 * ÅĞ¶ÏÖ¸¶¨µÄË÷ÒıÊÇ·ñÂäÔÚ×Ö·û´®ÖĞ£¨±»Á½¸öµ¥ÒıºÅ°üº¬£©
 	 * @param sql
 	 * @param index
 	 * @return
@@ -193,4 +212,13 @@ public abstract class DBUpdateTool {
 		}
 		return false;
 	}
+	
+	public static String getFileEncoding() {
+		return fileEncoding;
+	}
+
+	public static void setFileEncoding(String fileEncoding) {
+		DBUpdateTool.fileEncoding = fileEncoding;
+	}
+
 }

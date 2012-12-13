@@ -8,6 +8,8 @@ import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.base.BaseService;
 import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.base.DaoUtil;
+import com.m3.patchbuild.role.Role;
+import com.m3.patchbuild.sys.IRoleService;
 
 /**
  * 改变角色列表
@@ -39,10 +41,11 @@ public class ChangeRoleReqService extends BaseService implements IChangeRoleReqS
 		if (req.isAccepted()) {
 			String branch = req.getBranch();
 			IUserService uService = (IUserService)BussFactory.getService(User.class);
+			IRoleService rService = (IRoleService)BussFactory.getService(Role.class);
 			User user = req.getRequester();
 			uService.removeRoles(user, branch);
 			for (String s : ctx.roles) {
-				user.addRole(branch, s);
+				user.addRole(branch, rService.find(s));
 			}
 			uService.saveInfo(user);
 		}

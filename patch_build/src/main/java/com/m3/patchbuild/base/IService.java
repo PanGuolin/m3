@@ -1,5 +1,8 @@
 package com.m3.patchbuild.base;
 
+import java.util.List;
+
+import com.m3.common.query.IQuery;
 import com.m3.patchbuild.IBussInfo;
 
 /**
@@ -15,6 +18,8 @@ public interface IService extends IManageable{
 	 * @return
 	 */
 	public IBussInfo findByUuid(String uuid);
+	
+	public List<? extends IBussInfo> list(IQuery query);
 	
 	public IService clone();
 	

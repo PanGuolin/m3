@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import com.m3.patchbuild.sys.UserNoLoginException;
+
 
 /**
  * 用户消息对象，保存特定用户的消息对象
@@ -25,7 +27,7 @@ public class UserMessageQueue {
 	public static void consume(Object queueId,  String userId, 
 			IMessageConsumer consumer) throws Exception{
 		if (userId == null)
-			return;
+			throw new UserNoLoginException();
 		UserMessageQueue queue = queues.get(queueId);
 		if (queue == null) {
 			synchronized (queues) {

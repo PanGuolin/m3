@@ -135,15 +135,13 @@ public class BuildThread extends Thread {
         consoleLogger.setOutputPrintStream(logOut); 
         consoleLogger.setMessageOutputLevel(Project.MSG_VERBOSE); 
         
-		File antFile = new File(bp.getWSRoot(), Branch.FILE_BUILD);
+		File antFile = new File(bp.getBranch().getWorkspace(), Branch.FILE_BUILD);
 		if (!antFile.exists()) {
 			antFile = new File(BuildThread.class.getResource(DEFAULT_ANT_FILE).getFile());
 		}
 		
         //输出信息级别  
         proj.addBuildListener(consoleLogger); 
-        proj.setProperty("-logFile", "c:\\ant_log.txt");
-   
 		proj.fireBuildStarted();
 		proj.init();
 		proj.setProperty("dir.branch", branch.getWorkspace());

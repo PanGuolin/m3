@@ -8,7 +8,7 @@
 		<a href="${pageContext.request.contextPath}/user/register.jsp">向管理员申请注册</a>
 		<a href="${basePath}/user/login.jsp">直接登录</a>
 	</div>
-	<div id="titleDiv">注册新用户</div>
+	<div id="titleDiv">从SVN引入新用户</div>
 	<div id="formDiv">
 		<s:form action="importFromSvn" method="POST" theme="simple" id="importForm" namespace="/user">
 			<table style="width:100%;" class="layoutTable">

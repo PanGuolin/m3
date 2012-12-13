@@ -7,6 +7,7 @@
 	<property name="dir.target" 		value="${dir.build}/target/"/>
 	<property name="compile.lib" 		value="${dir.branch}/lib"/>
 	<property name="compile.classes" 	value="${dir.branch}/classes"/>
+	<taskdef name="validateDB" classname="com.m3.common.ant.ValidateDBScript"/>
 	
 	<path id="java.compile.path"> <!-- ±àÒëÒÀÀµÂ·¾¶ -->
 		<fileset dir="${compile.lib}"/>
@@ -14,13 +15,28 @@
 	    <pathelement location="${dir.build}/lib"/>
 	</path>
     
-	<target name="build" depends="clean,compileJava,copyFiles">
+	<target name="build" depends="clean,validate,compileJava,copyFiles">
 		<zip destfile="${dir.build}/${build.buildNo}.zip" basedir="${dir.target}" />
 	</target>
 	
 	<target name="clean">
 		<delete dir="${dir.target}"/>
 		<mkdir dir="${dir.target}"/>
+	</target>
+	
+	<target name="validate">
+	    <validateDB driver="oracle.jdbc.driver.OracleDriver"
+	        url="jdbc:oracle:thin:@192.168.0.164:1521:orcl" user="bytter_sp1" password="bytter_sp1">
+	        <fileset dir="${source.svn}/sql/patch">
+				<include name="*_ORCL.sql"/>
+			</fileset>
+	    </validateDB>
+	    <validateDB driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+	        url="jdbc:sqlserver://192.168.0.36:1433;DatabaseName=hc_test" user="sa" password="sasa">
+	        <fileset dir="${source.svn}/sql/patch">
+				<include name="*_SQL2005.sql"/>
+			</fileset>
+	    </validateDB>
 	</target>
 
 	<target name="compileJava" description="±àÒëJAVAÎÄ¼þ">

@@ -6,6 +6,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.m3.patchbuild.base.BaseBussInfo;
+import com.m3.patchbuild.sys.Role;
 
 /**
  * 用户角色关系
@@ -19,14 +20,15 @@ public class UserRole extends BaseBussInfo{
 	@ManyToOne()
     @JoinColumn(name = "userId", nullable=false)
 	private User user;
-	private String roleId;
+	@JoinColumn(name="roleId", referencedColumnName="code")
+	private Role role;
 	private String branch;
 	
-	public String getRoleId() {
-		return roleId;
+	public Role getRole() {
+		return role;
 	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	public String getBranch() {
 		return branch;
@@ -48,13 +50,13 @@ public class UserRole extends BaseBussInfo{
 		UserRole r = (UserRole)other;
 		if (!user.equals(r.user))
 			return false;
-		if (roleId.equals(r.roleId))
+		if (role.equals(r.role))
 			return false;
 		return branch.equals(r.branch);
 	}
 	@Override
 	public String toString() {
-		return roleId + "[branch]";
+		return role.getCode() + "[branch]";
 	}
 	
 	

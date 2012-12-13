@@ -54,7 +54,6 @@ var mainObj = {
 	
 $().ready(function() {
 	$("#queryForm INPUT").change(mainObj.query);
-	mainObj.query();
 	$('#viewDetail').click(function() {
 		var row = getSelectedRow(true);
 		if (row && row.content) {

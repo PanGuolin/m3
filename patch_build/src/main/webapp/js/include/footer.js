@@ -47,6 +47,9 @@ var footerObj = {
 				}
 			}
 		}
+		
+		appendSubmit('#queryForm', function(){return doDataQuery();});
+		doDataQuery();
 	},
 	
 	beforeSubmit : function() {
@@ -97,6 +100,7 @@ function defTaskWinLoaed() {
 
 function appendSubmit(form, newFunct) {
 	var _form = $(form);
+	if (!_form || _form.attr('tagName') != 'FORM') return;
 	var bacFuncts = [];
 	if (_form.data('events') && _form.data('events')['submit']) {
 		var oldFuncts = _form.data('events')['submit'];
@@ -152,9 +156,17 @@ function date2str(x,y) {
 
 function doDataQuery(formId, datagridId) {
 	var queryForm = formId ? $('#' + formId) : $('#queryForm');
+	if (!queryForm.length) return;
 	var dataGrid = datagridId ?  $get('#' + datagridId) : $get('#datagrid');
+	if (!dataGrid) return;
 	dataGrid.reload(null, "jfs=true&" + queryForm.serialize(), true);
 	if ($('#lastQuery').length)
 		$('#lastQuery').text("最后查询时间：" + date2str(new Date(),"yyyy年MM月dd日 hh:mm:ss"));
 	return false;
+}
+
+function openUrlOfSelected(url) {
+	var row = getSelectedRow(true);
+	if (!row) return;
+	window.location.href = basePath + url + row.uuid;
 }

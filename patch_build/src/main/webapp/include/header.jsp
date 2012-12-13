@@ -30,6 +30,7 @@
 		<a href="${basePath}/patch/listpatch.jsp"><span class="corner"></span>补丁列表</a>
 <%-- 		<a href="${basePath}/pack/addbuild.jsp"><span class="corner"></span>增加构建</a> --%>
 		<a href="${basePath}/user/relation"><span class="corner"></span>我的关系</a>
+		<a href="${basePath}/sys/index.jsp"><span class="corner"></span>系统维护</a>
 <%-- 		<a href="${basePath}/user/userinfo"><span class="corner"></span>我的信息</a> --%>
 	</div>
 	<div id="menubar">

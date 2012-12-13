@@ -3,16 +3,18 @@ package com.m3.common;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.IBranchService;
-import com.m3.patchbuild.user.FunctionPerm;
-import com.m3.patchbuild.user.IFunctionPermService;
-import com.m3.patchbuild.user.IUserRole;
+import com.m3.patchbuild.sys.Function;
+import com.m3.patchbuild.sys.IFunctionService;
+import com.m3.patchbuild.sys.Role;
 import com.m3.patchbuild.user.User;
+import com.m3.patchbuild.user.UserRole;
 import com.opensymphony.xwork2.ActionContext;
 
 /**
@@ -123,46 +125,56 @@ public abstract class ContextUtil {
 			return (User)ActionContext.getContext().getSession().get(KEY_SESSION_USER);
 	}
 	
-	private static Map<String, List<String>> roleMap = new HashMap<String, List<String>>();
+	private static Map<String, Function> functionMap = new HashMap<String, Function>();
+	private static long functionLoadedTime = -1l;
+	
 	/**
 	 * 检查用户权限
 	 * @param path
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean checkPermission(HttpServletRequest request, String path) {
-		List<String> roles = roleMap.get(path);
-		if (roles == null) {
-			IFunctionPermService fpService = (IFunctionPermService)BussFactory.getService(FunctionPerm.class);
-			roles = fpService.listRoleByPath(path);
-			roleMap.put(path, roles);
+		if (functionMap.isEmpty() && functionLoadedTime == -1) {
+			synchronized (functionMap) {
+				if (functionMap.isEmpty()) {
+					IFunctionService fService = (IFunctionService)BussFactory.getService(Function.class);
+					List<Function> functions = (List<Function>) fService.list(null);
+					Map<String, Function> map = new HashMap<String, Function>();
+					for (Function f : functions) {
+						String key = f.getInfo();
+						if (f.getType() == 1 && !key.startsWith("/")) {
+							key = "/"+key;
+						}
+						map.put(key, f);
+					}
+					functionMap.putAll(map);
+					functionLoadedTime = System.currentTimeMillis();
+				}
+			}
 		}
-		
+		Function funct = functionMap.get(path);
+		if (funct == null || funct.getRoles().isEmpty()) 
+			return true;
+		Set<Role> roles = funct.getRoles();
 		User user = getLoginUser(request);
-		if (roles != null && !roles.isEmpty()) {
-			if (user == null) {
-				setTips(request, "用户必须登录才能继续操作");
-				return false;
-			}
-			boolean hasRole = false;
-			Branch branch = getCurrentBranch();
-			for (String role : roles) {
-				if (IUserRole.loginedUser.equals(role)) {
-					hasRole = true;
-					break;
+		if (user == null) {
+			setTips(request, "用户必须登录才能继续操作");
+			return false;
+		}
+		setUserId(user.getUserId());
+		Set<UserRole> userRoles = user.getRoles();
+		for (Role role : roles) {
+			if ("[loginedUser]".equals(role.getCode()))
+				return true;
+			for (UserRole uRole : userRoles) {
+				if (uRole.getRole().equals(role)) {
+					return true;
 				}
-				if (user.hasRole(branch.getBranch(), role)) {
-					hasRole = true;
-					break;
-				}
-			}
-			if (!hasRole) {
-				setTips(request, "用户没有执行当前功能的权限！");
-				return false;
 			}
 		}
-		if (user != null)
-			setUserId(user.getUserId());
-		return true;
+		setTips(request, "用户没有执行当前功能的权限！");
+		return false;
 	}
 
 	/**

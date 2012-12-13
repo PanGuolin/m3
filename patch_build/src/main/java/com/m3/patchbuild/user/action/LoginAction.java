@@ -13,6 +13,7 @@ import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
+import com.opensymphony.xwork2.ActionContext;
 
 public class LoginAction extends BaseAction implements ServletResponseAware, ServletRequestAware {
 	
@@ -22,6 +23,7 @@ public class LoginAction extends BaseAction implements ServletResponseAware, Ser
 	private String username;
 	private String password;
 	private boolean storeCookie;
+	private String code;
 	
 	@Override
 	public String doExecute() throws Exception {
@@ -37,8 +39,10 @@ public class LoginAction extends BaseAction implements ServletResponseAware, Ser
 						password = cookie.getValue();  
 					}  
 				}
-				if (username == null)
+				if (username == null) {
+					password = null;
 					return INPUT;
+				}
 				user = uService.findUser(username);
 				if (user == null) {
 					setTips("用户不存在");
@@ -51,7 +55,18 @@ public class LoginAction extends BaseAction implements ServletResponseAware, Ser
 				setTips("必须录入用户名&密码");
 				return INPUT;
 			}
-		} else {						user = uService.checkUser(username, password);
+		} else {
+			Object saveCode = ActionContext.getContext().getSession().get("loginCode");
+			if (saveCode == null) {
+				setTips("请重新登录");
+				return INPUT;
+			}
+			if (!saveCode.equals(code)) {
+				setTips("验证码错误！");
+				
+				return INPUT;
+			}
+			user = uService.checkUser(username, password);
 			if (user == null) {
 				setTips("用户名&口令错误");
 				return INPUT;
@@ -109,6 +124,12 @@ public class LoginAction extends BaseAction implements ServletResponseAware, Ser
 	public void setStoreCookie(boolean storeCookie) {
 		this.storeCookie = storeCookie;
 	}
-	
-	
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 }

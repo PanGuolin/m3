@@ -1,4 +1,4 @@
-package com.m3.patchbuild.user;
+package com.m3.patchbuild.sys;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import com.m3.patchbuild.base.BaseService;
  * @author pangl
  *
  */
-public class FunctionPermService extends BaseService implements IFunctionPermService{
+public class FunctionService extends BaseService implements IFunctionService{
 
 	private FunctionPermDAO dao = new FunctionPermDAO();
-	public FunctionPermService() {
+	public FunctionService() {
 	}
 	
 	/**
@@ -36,8 +36,6 @@ public class FunctionPermService extends BaseService implements IFunctionPermSer
 
 	@Override
 	public Class<? extends IBussInfo> doGetBizClass() {
-		// TODO Auto-generated method stub
-		return null;
+		return Function.class;
 	}
-
 }

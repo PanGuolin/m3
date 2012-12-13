@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.m3.patchbuild.base.BaseBussInfo;
+import com.m3.patchbuild.sys.Role;
 
 /**
  * 用户信息对象
@@ -102,24 +103,24 @@ public class User extends BaseBussInfo {
 		this.roles = roles;
 	}
 
-	public void addRole(String branch, String roleId) {
-		if (branch == null || roleId == null)
+	public void addRole(String branch, Role role) {
+		if (branch == null || role == null)
 			return;
-		if (hasRole(branch, roleId)) return;
+		if (hasRole(branch, role)) return;
 		
 		UserRole nRole = new UserRole();
 		nRole.setUser(this);
 		nRole.setBranch(branch);
-		nRole.setRoleId(roleId);
+		nRole.setRole(role);
 		roles.add(nRole);
 	}
 	
-	public boolean hasRole(String branch, String roleId) {
-		if (roleId == null) return false;
+	public boolean hasRole(String branch, Role role) {
+		if (role == null) return false;
 		if (roles == null || roles.isEmpty()) return false;
-		for (UserRole role : roles) {
-			if ((branch == null || branch.equals(role.getBranch()))
-				&& roleId.equals(role.getRoleId()))
+		for (UserRole r : roles) {
+			if ((branch == null || branch.equals(r.getBranch()))
+				&& role.getCode().equals(role.getCode()))
 				return true;
 		}
 		return false;

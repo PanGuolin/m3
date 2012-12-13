@@ -10,7 +10,6 @@ var mainObj = {
 };
 
 $().ready(function() {
-	appendSubmit('#queryForm', mainObj.query);
 	$('#download').click(function(){
 		var row = getSelectedRow(true);
 		if (row)
@@ -22,5 +21,4 @@ $().ready(function() {
 			window.location.href= basePath + "/patch/download?en=true&uuid=" + row.uuid;
 	});
 	$('#createBranch').click(mainObj.createBranch);
-	mainObj.query();
 });

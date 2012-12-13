@@ -34,7 +34,7 @@ public class EditUserAction extends BaseAction{
 			List<String> list = new ArrayList<String>();
 			for (UserRole role : user.getRoles()) {
 				if (branch.equals(role.getBranch())) {
-					list.add(role.getRoleId());
+					list.add(role.getRole().getCode());
 				}
 			}
 			this.roles = (String[])list.toArray(new String[list.size()]);
@@ -51,7 +51,7 @@ public class EditUserAction extends BaseAction{
 						boolean exists = false;
 						for (UserRole r : oldRoles) {
 							if (r.getBranch().equals(branch) 
-									&& r.getRoleId().equals(role)) {
+									&& r.getRole().getCode().equals(role)) {
 								exists = true; break;
 							}
 						}

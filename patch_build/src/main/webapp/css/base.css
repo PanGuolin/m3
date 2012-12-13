@@ -122,6 +122,7 @@ ins,a {
 .ml {margin-left: 20px;}
 .pl {padding-left: 20px;}
 .pt {padding-top: 20px;}
+.mt {margin-top: 20px;}
 .cap { font-weight:bold;}
 .cap td{ border-top: 1px solid #CCC;}
 .cmt {color: #999};

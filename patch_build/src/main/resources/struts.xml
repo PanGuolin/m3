@@ -33,6 +33,7 @@
 	
 	<package name="sys" extends="patchbuild" namespace="/sys">
 	    <action name="changeBranch" class="com.m3.patchbuild.sys.action.ChangeBranchAction"/>
+	    <action name="queryFunction" class="com.m3.patchbuild.sys.action.QueryFunctionAction"/>
 	</package>
 	
 	<package name="msg" extends="patchbuild" namespace="/msg">
@@ -98,10 +99,13 @@
 		<action name="publish" class="com.m3.patchbuild.pack.action.PublishAction">
 	     	<result name="handle">/pack/publish.jsp</result>
 		</action>
-		<action name="resetdeploy" class="com.m3.patchbuild.pack.action.ResetDeployAction"/>
-		<action name="reset" class="com.m3.patchbuild.pack.action.ResetAction"/>
-		<action name="bystat" class="com.m3.patchbuild.pack.action.ListPackByStatusAction"/>
-		<action name="query" class="com.m3.patchbuild.pack.action.QueryPackAction"/>
+		<action name="resetdeploy" 	class="com.m3.patchbuild.pack.action.ResetDeployAction"/>
+		<action name="reset" 		class="com.m3.patchbuild.pack.action.ResetAction"/>
+		<action name="bystat" 		class="com.m3.patchbuild.pack.action.ListPackByStatusAction"/>
+		<action name="query" 		class="com.m3.patchbuild.pack.action.QueryPackAction"/>
+		<action name="viewBuildLog" class="com.m3.patchbuild.pack.action.GetPackAction">
+		    <result name="success">/pack/viewBuildLog.jsp</result>
+		</action>
 		<action name="download" class="com.m3.patchbuild.pack.action.DownloadAction">
 		    <result name="success" type="stream">
 		        <param name="contentType">application/x-download;charset=UTF-8</param>

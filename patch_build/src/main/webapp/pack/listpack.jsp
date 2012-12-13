@@ -65,6 +65,7 @@
 	<img id="downloadFile" 	src="${basePath}/images/tb/download.png" 	title="下载文件"/>
 	<img id="addPack" 		src="${basePath}/images/tb/add.png" 		title="新增构建"/>
 	<img id="viewDetail" 	src="${basePath}/images/tb/detail.png" 		title="查看明细"/>
+	<img id="viewBuildLog"	src="${basePath}/images/tb/log.png" 		title="查看构建日志"/>
 </div>
 
 <table class="fn-datagrid" style="display:none;" id="datagrid"
@@ -103,4 +104,4 @@
 </table>
 <div id="taskWindow" class="easyui-window" title="处理构建包" data-options="iconCls:'icon-save'" style="width:400px;height:300px;"></div>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/pack/listpack.js"></script>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="/include/footer.jsp" %>
