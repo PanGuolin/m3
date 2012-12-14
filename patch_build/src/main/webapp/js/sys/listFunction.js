@@ -20,3 +20,19 @@ var mainObj = {
 };
 	
 $().ready(mainObj.init);
+
+
+function formatFunctType(value, row, index) {
+	return value == 0 ? "Action" : "JSP";
+}
+
+function formatFunctRoles(value, row, index) {
+	if (!value.length)
+		return value;
+	var str = "";
+	for (var i=0; i<value.length; i++) {
+		if (i > 0) str += ",";
+		str += value[i].name;
+	}
+	return str;
+}

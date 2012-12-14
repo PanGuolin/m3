@@ -1,6 +1,7 @@
 package com.m3.patchbuild.sys.action;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 
 import com.m3.common.query.BaseQuery;
 import com.m3.common.query.QueryField;
@@ -17,11 +18,13 @@ public class FunctionQuery extends BaseQuery{
 	@QueryField(type=QueryType.AllLike)
 	private String info;
 	
-	@QueryField(type=QueryType.Equal)
-	private int type;
+	private int type = -1;
 	
 	@Override
 	protected void doBeforeQuery(Criteria criteria) {
+		if (type != -1) {
+			criteria.add(Restrictions.eq("type", type));
+		}
 		
 	}
 

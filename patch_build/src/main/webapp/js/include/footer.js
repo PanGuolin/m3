@@ -2,6 +2,16 @@ var footerObj = {
 	init : function(){
 		$('.queryBar').click(function(){$('.queryDiv').slideToggle();});
 		
+		$("TABLE").each(function() {
+			var clss = $(this).attr("colClass");
+			if (!clss || clss.length == 0) return;
+			var clsList = clss.split(";");
+			$("TR", this).each(function(){
+				$("TD", this).each(function(){$(this).addClass(clsList[$(this).index() % clsList.length]);});
+			});
+		});
+
+		
 		var sels = $('select');
 		for (var i=0; i<sels.length; i++) {
 			var v = $(sels[i]).attr("selValue");
@@ -13,6 +23,7 @@ var footerObj = {
 		var reqs = $('.required');
 		for (var i=0; i<reqs.length; i++) {
 			var req = $(reqs[i]);
+			if(req.html() == "")continue;
 			if (req.attr("title") != undefined && req.attr("title") != "") continue;
 			var td = req.closest('td').prev();
 			if (!td || !td.length) continue;
@@ -156,10 +167,11 @@ function date2str(x,y) {
 
 function doDataQuery(formId, datagridId) {
 	var queryForm = formId ? $('#' + formId) : $('#queryForm');
-	if (!queryForm.length) return;
 	var dataGrid = datagridId ?  $get('#' + datagridId) : $get('#datagrid');
 	if (!dataGrid) return;
-	dataGrid.reload(null, "jfs=true&" + queryForm.serialize(), true);
+	var queryStr = "jfs=true";
+	if (queryForm.length)queryStr += "&" + queryForm.serialize();
+	dataGrid.reload(null, queryStr, true);
 	if ($('#lastQuery').length)
 		$('#lastQuery').text("最后查询时间：" + date2str(new Date(),"yyyy年MM月dd日 hh:mm:ss"));
 	return false;

@@ -134,7 +134,7 @@ th {font-weight:bold;}
 table.single { width:100%}
 table.single td {padding:5px;}
 
-.wf {width:100%;}
+.wf, .wfsub input {width:100%;}
 
 .toolBar { width:100%; text-align:left; background:#FEF }
 .toolBar img {cursor:pointer; margin:3px;}

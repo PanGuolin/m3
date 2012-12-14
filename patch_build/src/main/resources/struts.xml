@@ -18,7 +18,7 @@
       <default-interceptor-ref name="exceptionmapping-stack"/>
       
 	    <global-results>
-	        <result name="login" type="redirect">/user/login.jsp</result>
+	        <result name="login" type="redirect">/index.jsp</result>
 	        <result name="error">/common/error.jsp</result>
 	        <result name="success" type="redirect">/msg/mymsg.jsp</result>
 	        <result name="json" type="json">
@@ -34,6 +34,13 @@
 	<package name="sys" extends="patchbuild" namespace="/sys">
 	    <action name="changeBranch" class="com.m3.patchbuild.sys.action.ChangeBranchAction"/>
 	    <action name="queryFunction" class="com.m3.patchbuild.sys.action.QueryFunctionAction"/>
+	    <action name="queryBranch" class="com.m3.patchbuild.branch.action.QueryBranchAction"/>
+	    <action name="randImg" class="com.m3.patchbuild.sys.action.RandomImageAction">
+	        <result type="stream">  
+	            <param name="contentType">image/jpeg</param>
+	            <param name="inputName">inputStream</param>  
+	        </result>  
+	    </action>
 	</package>
 	
 	<package name="msg" extends="patchbuild" namespace="/msg">

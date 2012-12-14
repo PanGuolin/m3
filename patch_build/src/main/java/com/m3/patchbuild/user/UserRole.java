@@ -20,8 +20,11 @@ public class UserRole extends BaseBussInfo{
 	@ManyToOne()
     @JoinColumn(name = "userId", nullable=false)
 	private User user;
+	
+	@ManyToOne(targetEntity=Role.class)
 	@JoinColumn(name="roleId", referencedColumnName="code")
 	private Role role;
+	
 	private String branch;
 	
 	public Role getRole() {

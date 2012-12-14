@@ -2,7 +2,9 @@ package com.m3.patchbuild.sys;
 
 import java.util.List;
 
+import com.m3.common.query.IQuery;
 import com.m3.patchbuild.IBussInfo;
+import com.m3.patchbuild.base.BaseCacheService;
 import com.m3.patchbuild.base.BaseService;
 
 /**
@@ -10,32 +12,24 @@ import com.m3.patchbuild.base.BaseService;
  * @author pangl
  *
  */
-public class FunctionService extends BaseService implements IFunctionService{
+public class FunctionService extends BaseCacheService implements IFunctionService{
 
-	private FunctionPermDAO dao = new FunctionPermDAO();
-	public FunctionService() {
-	}
-	
-	/**
-	 * 列出拥有某功能权限的所有角色
-	 * @param permNo
-	 * @return
-	 */
+	@Override
 	public List<String> listRoleByPerm(String permCode) {
-		return dao.listRoleByPerm(permCode);
-	}
-	
-	/**
-	 * 列出拥有某功能权限的所有角色
-	 * @param permNo
-	 * @return
-	 */
-	public List<String> listRoleByPath(String path) {
-		return dao.listRoleByPath(path);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Class<? extends IBussInfo> doGetBizClass() {
+	public List<String> listRoleByPath(String path) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Class<? extends IBussInfo> doGetBizClass() {
 		return Function.class;
 	}
+
+	
 }

@@ -33,8 +33,8 @@
 		</tr>
 		<td class="r">拥有角色：</td>
 		<td class="l" colspan="5">
-			<s:iterator value="@com.m3.patchbuild.user.IUserRole@SYSROLES" id="uRole">
-				<input type="checkbox" name="roles" value="${uRole}"/><s:property value="#uRole"/>
+			<s:iterator value="@com.m3.patchbuild.sys.RoleUtil@listAssignable()" id="uRole">
+				<input type="checkbox" name="roles" value="${uRole.code}"/><s:property value="#uRole.name"/>
 			</s:iterator>
 		</td>
 		<td></td>

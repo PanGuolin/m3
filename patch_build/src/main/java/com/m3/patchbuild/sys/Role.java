@@ -1,5 +1,7 @@
 package com.m3.patchbuild.sys;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -12,8 +14,10 @@ import com.m3.patchbuild.base.BaseBussInfo;
  */
 @Entity
 @Table(name="Sys_Role")
-public class Role extends BaseBussInfo{
+public class Role extends BaseBussInfo implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	private String code;//编码
 	private String name;//名称
 	private boolean systemRole;//是否系统角色

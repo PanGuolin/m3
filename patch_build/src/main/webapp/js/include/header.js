@@ -43,8 +43,10 @@ var headerObj = {
 $(document).ready(headerObj.init);
 
 function formatTime(value, row, index) {
-	if (value)
+	if (value) {
+		value = value + "";
 		return value.substring(5, 10) + " " + value.substring(11, 16);
+	}
 	return value;
 }
 

@@ -154,15 +154,16 @@ public abstract class ContextUtil {
 			}
 		}
 		Function funct = functionMap.get(path);
+		
 		if (funct == null || funct.getRoles().isEmpty()) 
 			return true;
-		Set<Role> roles = funct.getRoles();
-		User user = getLoginUser(request);
+		User user = ContextUtil.getLoginUser(request);
 		if (user == null) {
 			setTips(request, "用户必须登录才能继续操作");
 			return false;
 		}
-		setUserId(user.getUserId());
+		
+		Set<Role> roles = funct.getRoles();
 		Set<UserRole> userRoles = user.getRoles();
 		for (Role role : roles) {
 			if ("[loginedUser]".equals(role.getCode()))
