@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -28,7 +29,10 @@ public class Function extends BaseBussInfo {
 	
 	private String name;//功能名称
 	
-	private String info;//功能信息
+	@Column(name="act")
+	private String action;//功能信息
+	
+	private String url;//
 	
 	private int type;//功能类型
 	
@@ -52,12 +56,20 @@ public class Function extends BaseBussInfo {
 		this.name = name;
 	}
 
-	public String getInfo() {
-		return info;
+	public String getAction() {
+		return action;
 	}
 
-	public void setInfo(String info) {
-		this.info = info;
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public int getType() {

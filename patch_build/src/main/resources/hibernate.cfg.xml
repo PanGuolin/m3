@@ -38,6 +38,7 @@
         <mapping class="com.m3.patchbuild.user.UserRole" />
         <mapping class="com.m3.patchbuild.sys.Function" />
         <mapping class="com.m3.patchbuild.sys.Role" />
+        <mapping class="com.m3.patchbuild.sys.Menu" />
 <!--         <mapping class="com.m3.patchbuild.info.Bird" /> -->
 <!--         <mapping class="com.m3.patchbuild.info.Dog" /> -->
 <!--         <mapping class="com.m3.patchbuild.info.SuperDog" /> -->

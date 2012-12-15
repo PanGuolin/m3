@@ -20,4 +20,8 @@ public interface IFunctionService extends IService{
 	 */
 	public List<String> listRoleByPath(String path);
 
+	public Function getByUrl(String url);
+
+	public Function getByAction(Class<?> actionClass);
+
 }

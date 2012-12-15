@@ -34,8 +34,8 @@ var headerObj = {
 							mainObj.query();
 						}
 					}
+					headerObj.fetchMsg();
 				}
-				headerObj.fetchMsg();
 			}, "json");
 		},
 };

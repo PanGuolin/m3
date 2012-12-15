@@ -1,9 +1,13 @@
 package com.m3.common;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,7 +16,13 @@ import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.branch.IBranchService;
 import com.m3.patchbuild.sys.Function;
 import com.m3.patchbuild.sys.IFunctionService;
+import com.m3.patchbuild.sys.IMenuService;
+import com.m3.patchbuild.sys.IRoleService;
+import com.m3.patchbuild.sys.IToolButtonService;
+import com.m3.patchbuild.sys.Menu;
 import com.m3.patchbuild.sys.Role;
+import com.m3.patchbuild.sys.ToolButton;
+import com.m3.patchbuild.user.IUserRole;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRole;
 import com.opensymphony.xwork2.ActionContext;
@@ -95,6 +105,9 @@ public abstract class ContextUtil {
 	}
 	
 	public static final String KEY_SESSION_USER = "userBean"; //保存用户信息的KEY
+	public static final String KEY_SESSION_MENUS = "myMenus"; //我的菜单 
+	
+	public static final String KEY_REQ_MENUPATH = "menuPath"; //菜单路径 
 	
 	/**
 	 * 保存已登录用户信息
@@ -102,12 +115,72 @@ public abstract class ContextUtil {
 	 * @param branch
 	 */
 	public static void userLogin(User user) {
-		Map<String, Object> map = ActionContext.getContext().getSession();
-		map.put(KEY_SESSION_USER, user);
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		session.put(KEY_SESSION_USER, user);
 		if (getCurrentBranch() == null) {
 			IBranchService branchService = (IBranchService)BussFactory.getService(Branch.class);
-			map.put(KEY_SESSION_BRANCH, branchService.getBranch(user.getMainBranch()));
+			session.put(KEY_SESSION_BRANCH, branchService.getBranch(user.getMainBranch()));
 		}
+		
+		//获取用户菜单信息
+		IMenuService menuService = (IMenuService)BussFactory.getService(Menu.class);
+		IRoleService roleService = (IRoleService)BussFactory.getService(Role.class);
+		IToolButtonService tbService = (IToolButtonService)BussFactory.getService(ToolButton.class);
+		
+		Role loginedRole = roleService.find(Role.loginedUser);
+		List<Menu> topMenus = menuService.getMenu(null);
+		Set<Role> userRoles = new HashSet<Role>();
+		for (UserRole ur : user.getRoles()) {
+			
+		}
+		Set<UserRole> userRoles = user.getRoles();
+		TreeMap<Menu, List<Menu>> myMenus = new TreeMap<Menu, List<Menu>>(new Comparator<Menu>() {
+			@Override
+			public int compare(Menu o1, Menu o2) {
+				return o1.getIndex() - o2.getIndex();
+			}
+		});
+		
+		Map<Menu, List<ToolButton>> myToolButtons = new HashMap<Menu, List<ToolButton>>();
+		
+		for (int mi=0; mi<topMenus.size(); mi++) {
+			Menu topMenu = topMenus.get(mi);
+			Set<Role> menuRoles = topMenu.getFunction().getRoles();
+			if (checkRole(menuRoles, userRoles)) {
+				List<Menu> subMenus = menuService.getMenu(topMenu);
+				for (int i=0; i<subMenus.size(); i++) {
+					Set<Role> subRoles = subMenus.get(i).getFunction().getRoles();
+					if (subRoles.isEmpty() || subRoles.contains(loginedRole) || containsAny(subRoles, userRoles)) {
+						List<ToolButton> btns = tbService.getToolButtons(subMenus.get(i));
+						for (int ti=0; ti<btns.size(); ti++) {
+							Set<Role> toolRoles = btns.get(i).getFunction().getRoles();
+							if (toolRoles.isEmpty() || toolRoles.contains(loginedRole) || containsAny(toolRoles,))
+							if ()
+						}
+					} else {
+						subMenus.remove(i);
+						i --;
+					}
+				}
+				myMenus.put(topMenu, subMenus);
+				
+			} else {
+				topMenus.remove(mi);
+				mi--;
+			}
+		}
+		
+		session.put(KEY_SESSION_MENUS, myMenus);
+	}
+	
+	private static boolean checkRole(Collection<Role> ownColl, Collection<UserRole> targetColl) {
+		if (ownColl.isEmpty()) 
+			return true;
+		for (Role o : ownColl) {
+			if (Role.loginedUser.equals(o.getCode()) || targetColl.contains(o))
+				return true;
+		}
+		return false;
 	}
 	
 	public static User getLoginUser() {
@@ -125,42 +198,57 @@ public abstract class ContextUtil {
 			return (User)ActionContext.getContext().getSession().get(KEY_SESSION_USER);
 	}
 	
-	private static Map<String, Function> functionMap = new HashMap<String, Function>();
-	private static long functionLoadedTime = -1l;
+	public static boolean checkPermission(HttpServletRequest request) {
+		return checkPermission(request, null);
+	}
+	
+	public static boolean checkPermission(Class<?> actionClass) {
+		return checkPermission(null, actionClass);
+	}
 	
 	/**
 	 * 检查用户权限
 	 * @param path
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static boolean checkPermission(HttpServletRequest request, String path) {
-		if (functionMap.isEmpty() && functionLoadedTime == -1) {
-			synchronized (functionMap) {
-				if (functionMap.isEmpty()) {
-					IFunctionService fService = (IFunctionService)BussFactory.getService(Function.class);
-					List<Function> functions = (List<Function>) fService.list(null);
-					Map<String, Function> map = new HashMap<String, Function>();
-					for (Function f : functions) {
-						String key = f.getInfo();
-						if (f.getType() == 1 && !key.startsWith("/")) {
-							key = "/"+key;
-						}
-						map.put(key, f);
-					}
-					functionMap.putAll(map);
-					functionLoadedTime = System.currentTimeMillis();
-				}
+	private static boolean checkPermission(HttpServletRequest request, Class<?> actionClass) {
+		if (request == null && actionClass == null) 
+			return false;
+		IFunctionService functService = (IFunctionService)BussFactory.getService(Function.class);
+		Function funct = null;
+		if (request != null) {
+			String basePath = request.getContextPath();
+			String path = request.getRequestURI();
+			if (path.startsWith(basePath))
+				path = path.substring(basePath.length());
+			funct = functService.getByUrl(path);
+		} else {
+			funct = functService.getByAction(actionClass);
+		}
+		if (funct == null)
+			return true;
+		IMenuService menuService = (IMenuService)BussFactory.getService(Menu.class);
+		Menu menu = menuService.findByFunction(funct);
+		if (menu != null) {
+			String mPath = menu.getId();
+			while((menu = menu.getParent()) != null) {
+				mPath = menu.getId() + ">>" + mPath;
+			}
+			if (request != null) {
+				request.setAttribute(KEY_REQ_MENUPATH, mPath);
+			} else {
+				ActionContext.getContext().getContextMap().put(KEY_REQ_MENUPATH, mPath);
 			}
 		}
-		Function funct = functionMap.get(path);
 		
-		if (funct == null || funct.getRoles().isEmpty()) 
+		if (funct.getRoles().isEmpty()) 
 			return true;
 		User user = ContextUtil.getLoginUser(request);
 		if (user == null) {
 			setTips(request, "用户必须登录才能继续操作");
 			return false;
+		} else {
+			setUserId(user.getUserId());
 		}
 		
 		Set<Role> roles = funct.getRoles();

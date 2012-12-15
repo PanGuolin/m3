@@ -11,7 +11,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import com.m3.common.ContextUtil;
-import com.m3.patchbuild.user.User;
 
 /**
  * 权限过滤器
@@ -29,14 +28,7 @@ public class PermissionFilter implements Filter{
 	public void doFilter(ServletRequest req, ServletResponse rep,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest)req;
-		String basePath = request.getContextPath();
-		String url = request.getRequestURI();
-		if (url.startsWith(basePath))
-			url = url.substring(basePath.length());
-		User user = ContextUtil.getLoginUser((HttpServletRequest) req);
-		if (user != null) 
-			ContextUtil.setUserId(user.getUserId());
-		if (!ContextUtil.checkPermission(request, url)) {
+		if (!ContextUtil.checkPermission(request)) {
 			request.getRequestDispatcher(loginPage).forward(req, rep);
 			return;
 		}

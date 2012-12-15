@@ -42,4 +42,9 @@ public class BaseBussInfo implements IBussInfo{
 				return info.uuid == null;
 			return uuid.equals(info.uuid);
 		}
+
+		@Override
+		public int hashCode() {
+			return uuid == null ? super.hashCode() : uuid.hashCode();
+		}
 }

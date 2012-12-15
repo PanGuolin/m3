@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.m3.common.ContextUtil;
 import com.m3.common.HibernateUtil;
-import com.m3.patchbuild.user.User;
 import com.opensymphony.xwork2.Action;
 
 public abstract class BaseAction implements Action {
@@ -26,10 +25,7 @@ public abstract class BaseAction implements Action {
 	}
 	
 	final public String execute() throws Exception {
-		User user = ContextUtil.getLoginUser(null);
-		if (user != null) 
-			ContextUtil.setUserId(user.getUserId());
-		if (!ContextUtil.checkPermission(null, this.getClass().getName()))
+		if (!ContextUtil.checkPermission(getClass()))
 			return LOGIN;
 		try {
 			HibernateUtil.openSession();

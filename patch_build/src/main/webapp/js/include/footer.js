@@ -1,5 +1,11 @@
 var footerObj = {
 	init : function(){
+		if(menuPath) {
+			var paths = menuPath.split(">>");
+			for (var i=0; i<paths.length; i++) {
+				$("#menu_" + paths[i] ).css("color", "black").css("font-weight", "blod");
+			}
+		}
 		$('.queryBar').click(function(){$('.queryDiv').slideToggle();});
 		
 		$("TABLE").each(function() {

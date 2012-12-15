@@ -15,6 +15,8 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Entity
 @Table(name="Sys_Role")
 public class Role extends BaseBussInfo implements Serializable{
+	
+	public static final String loginedUser = "[loginedUser]";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -53,10 +55,5 @@ public class Role extends BaseBussInfo implements Serializable{
 	}
 	public void setAssignable(boolean assignable) {
 		this.assignable = assignable;
-	}
-	@Override
-	public boolean equals(Object other) {
-		// TODO Auto-generated method stub
-		return super.equals(other);
 	}
 }

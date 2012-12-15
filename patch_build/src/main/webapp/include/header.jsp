@@ -7,7 +7,7 @@
 <html>
 <head>
 	<title>补丁构建管理系统</title>
-	<script type="text/javascript">var basePath = "${basePath}";</script>
+	<script type="text/javascript">var basePath = "${basePath}"; var menuPath = "${menuPath}";</script>
 	<link rel="stylesheet" href="${basePath}/css/base.css" type="text/css" />
 	<link rel="stylesheet" href="${basePath}/css/header.css" type="text/css" />
 	<script type="text/javascript" src="${basePath}/js/fn/fn.js?use=widget"></script>
@@ -25,13 +25,9 @@
 		</select>
 	</div>
 	<div id="menu">
-		<a href="${basePath}/msg/mymsg.jsp"><span class="corner"></span>我的消息</a>
-		<a href="${basePath}/pack/listpack.jsp"><span class="corner"></span>构建包列表</a>
-		<a href="${basePath}/patch/listpatch.jsp"><span class="corner"></span>补丁列表</a>
-<%-- 		<a href="${basePath}/pack/addbuild.jsp"><span class="corner"></span>增加构建</a> --%>
-		<a href="${basePath}/user/relation"><span class="corner"></span>我的关系</a>
-		<a href="${basePath}/sys/index.jsp"><span class="corner"></span>系统维护</a>
-<%-- 		<a href="${basePath}/user/userinfo"><span class="corner"></span>我的信息</a> --%>
+	   <s:iterator value="#session.myMenus.keys" id="menu">
+	   <a href="${basePath}${menu.function.url}" id="menu_${menu.id}"><span class="corner"></span><s:property value="#menu.name"/></a>  
+	   </s:iterator>  
 	</div>
 	<div id="menubar">
 		<a href="${basePath}/user/logout">退出系统</a>
