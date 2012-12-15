@@ -17,12 +17,10 @@ import com.m3.patchbuild.branch.IBranchService;
 import com.m3.patchbuild.sys.Function;
 import com.m3.patchbuild.sys.IFunctionService;
 import com.m3.patchbuild.sys.IMenuService;
-import com.m3.patchbuild.sys.IRoleService;
 import com.m3.patchbuild.sys.IToolButtonService;
 import com.m3.patchbuild.sys.Menu;
 import com.m3.patchbuild.sys.Role;
 import com.m3.patchbuild.sys.ToolButton;
-import com.m3.patchbuild.user.IUserRole;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRole;
 import com.opensymphony.xwork2.ActionContext;
@@ -106,6 +104,7 @@ public abstract class ContextUtil {
 	
 	public static final String KEY_SESSION_USER = "userBean"; //保存用户信息的KEY
 	public static final String KEY_SESSION_MENUS = "myMenus"; //我的菜单 
+	public static final String KEY_SESSION_TOOLBUTTONS = "myTools"; //我的菜单 
 	
 	public static final String KEY_REQ_MENUPATH = "menuPath"; //菜单路径 
 	
@@ -124,16 +123,13 @@ public abstract class ContextUtil {
 		
 		//获取用户菜单信息
 		IMenuService menuService = (IMenuService)BussFactory.getService(Menu.class);
-		IRoleService roleService = (IRoleService)BussFactory.getService(Role.class);
 		IToolButtonService tbService = (IToolButtonService)BussFactory.getService(ToolButton.class);
 		
-		Role loginedRole = roleService.find(Role.loginedUser);
 		List<Menu> topMenus = menuService.getMenu(null);
 		Set<Role> userRoles = new HashSet<Role>();
 		for (UserRole ur : user.getRoles()) {
-			
+			userRoles.add(ur.getRole());
 		}
-		Set<UserRole> userRoles = user.getRoles();
 		TreeMap<Menu, List<Menu>> myMenus = new TreeMap<Menu, List<Menu>>(new Comparator<Menu>() {
 			@Override
 			public int compare(Menu o1, Menu o2) {
@@ -150,13 +146,17 @@ public abstract class ContextUtil {
 				List<Menu> subMenus = menuService.getMenu(topMenu);
 				for (int i=0; i<subMenus.size(); i++) {
 					Set<Role> subRoles = subMenus.get(i).getFunction().getRoles();
-					if (subRoles.isEmpty() || subRoles.contains(loginedRole) || containsAny(subRoles, userRoles)) {
+					if (checkRole(subRoles, userRoles)) {
 						List<ToolButton> btns = tbService.getToolButtons(subMenus.get(i));
 						for (int ti=0; ti<btns.size(); ti++) {
 							Set<Role> toolRoles = btns.get(i).getFunction().getRoles();
-							if (toolRoles.isEmpty() || toolRoles.contains(loginedRole) || containsAny(toolRoles,))
-							if ()
+							if (!checkRole(toolRoles, userRoles)) {
+								btns.remove(ti);
+								ti --;
+							}
 						}
+						if (!btns.isEmpty())
+							myToolButtons.put(subMenus.get(i), btns);
 					} else {
 						subMenus.remove(i);
 						i --;
@@ -171,9 +171,10 @@ public abstract class ContextUtil {
 		}
 		
 		session.put(KEY_SESSION_MENUS, myMenus);
+		session.put(KEY_SESSION_TOOLBUTTONS, myToolButtons);
 	}
 	
-	private static boolean checkRole(Collection<Role> ownColl, Collection<UserRole> targetColl) {
+	private static boolean checkRole(Collection<Role> ownColl, Collection<Role> targetColl) {
 		if (ownColl.isEmpty()) 
 			return true;
 		for (Role o : ownColl) {
@@ -211,6 +212,7 @@ public abstract class ContextUtil {
 	 * @param path
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private static boolean checkPermission(HttpServletRequest request, Class<?> actionClass) {
 		if (request == null && actionClass == null) 
 			return false;
@@ -236,8 +238,14 @@ public abstract class ContextUtil {
 			}
 			if (request != null) {
 				request.setAttribute(KEY_REQ_MENUPATH, mPath);
+				Map<Menu, List<ToolButton>>tools = (Map<Menu, List<ToolButton>>)
+						request.getSession().getAttribute(KEY_SESSION_TOOLBUTTONS);
+				request.setAttribute("tools", tools.get(menu));
 			} else {
 				ActionContext.getContext().getContextMap().put(KEY_REQ_MENUPATH, mPath);
+				Map<Menu, List<ToolButton>>tools = (Map<Menu, List<ToolButton>>) 
+						ActionContext.getContext().getSession().get(KEY_SESSION_TOOLBUTTONS);
+				ActionContext.getContext().getContextMap().put("tools", tools.get(menu));
 			}
 		}
 		

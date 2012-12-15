@@ -35,3 +35,6 @@
 	</div>
 </div>
 <div id="bodyDiv">
+  <s:iterator value="#requester.tools" id="tool">
+	   <s:property value="#tool"/></a>  
+	   </s:iterator>  
