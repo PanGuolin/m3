@@ -57,7 +57,9 @@ create table Sys_Menu
 	Id				varchar(40)		not null,
 	Name			varchar(40)		not null,
 	Level			int				not null default 1,
+	Image			varchar(200)	null,
 	Function		char(36)		not null,
+	ToolMenu		bit				not null default 0,
    constraint PK_Sys_Menu primary key clustered (uuid)
 );
 create unique index Sys_Menu_BN on Sys_Menu (Id ASC);

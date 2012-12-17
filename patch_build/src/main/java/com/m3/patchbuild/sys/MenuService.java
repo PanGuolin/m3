@@ -1,9 +1,11 @@
 package com.m3.patchbuild.sys;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.base.BaseCacheService;
@@ -22,19 +24,19 @@ public class MenuService extends BaseCacheService implements IMenuService{
 		return Menu.class;
 	}
 	
-	public List<Menu> getMenu(Menu top) {
+	public List<Menu> getMenu(Menu top, Collection<Role> roles) {
 		List<Menu> list = new ArrayList<Menu>();
 		if (top == null) {
 			for (IBussInfo info : allDatas.values()) {
 				Menu menu = (Menu)info;
-				if (menu.getParent() == null) {
+				if (menu.getParent() == null && checkRole(menu.getFunction(), roles)) {
 					list.add(menu);
 				}
 			}
 		} else {
 			for (IBussInfo info : allDatas.values()) {
 				Menu menu = (Menu)info;
-				if (top.equals(menu.getParent())) {
+				if (top.equals(menu.getParent()) && checkRole(menu.getFunction(), roles)) {
 					list.add(menu);
 				}
 			}
@@ -42,6 +44,17 @@ public class MenuService extends BaseCacheService implements IMenuService{
 		
 		Collections.sort(list, menuComparator);
 		return list;
+	}
+	
+	private static boolean checkRole(Function function, Collection<Role> targetColl) {
+		Set<Role> ownColl = function.getRoles();
+		if (ownColl.isEmpty())
+			return true;
+		for (Role o : ownColl) {
+			if (targetColl.contains(o))
+				return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -55,6 +68,5 @@ public class MenuService extends BaseCacheService implements IMenuService{
 		}
 		return null;
 	}
-	
-	
+
 }

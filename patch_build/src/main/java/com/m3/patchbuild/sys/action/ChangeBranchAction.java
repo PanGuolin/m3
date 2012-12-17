@@ -27,7 +27,7 @@ public class ChangeBranchAction extends BaseAction{
 			setTips("指定的分支不存在");
 			return SUCCESS;
 		}
-		ContextUtil.setBranch(br);
+		ContextUtil.setCurrentBranch(br);
 		//setTips("分支切换成功，当前分支：" + br.getName() + "[" + br.getBranch() + "]");
 		return SUCCESS;
 		

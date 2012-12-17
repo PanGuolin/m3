@@ -1,12 +1,17 @@
 var footerObj = {
 	init : function(){
+		$('#queryBar').before($('#queryDiv'));
+		if ($('#queryDiv').length) {
+			$('#queryBar').append($("<img src='" + basePath + "/images/up.png'/>"))
+				.append($("<img src='" + basePath + "/images/down.png'/>"))
+				.click(function(){$('#queryDiv').slideToggle();});
+		}
 		if(menuPath) {
 			var paths = menuPath.split(">>");
 			for (var i=0; i<paths.length; i++) {
 				$("#menu_" + paths[i] ).css("color", "black").css("font-weight", "blod");
 			}
 		}
-		$('.queryBar').click(function(){$('.queryDiv').slideToggle();});
 		
 		$("TABLE").each(function() {
 			var clss = $(this).attr("colClass");
@@ -67,6 +72,7 @@ var footerObj = {
 		
 		appendSubmit('#queryForm', function(){return doDataQuery();});
 		doDataQuery();
+		if (mainObj && mainObj.init) mainObj.init();
 	},
 	
 	beforeSubmit : function() {

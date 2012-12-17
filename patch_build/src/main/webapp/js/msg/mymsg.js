@@ -49,34 +49,31 @@ var mainObj = {
 			}
 			$msg(msg, {title:"消息处理人"});
 		}, "json");
+	}, 
+	init : function() {
+		$("#queryForm INPUT").change(mainObj.query);
+		$('#ViewMsgDetail').click(function() {
+			var row = getSelectedRow(true);
+			if (row && row.content) {
+				$msg(row.content, {width:400});
+			}
+		});
+		$('#DoMsgTask').click(mainObj.doTask);
+		$('#ViewMsgOp').click(mainObj.viewOperator);
+		$('#IgnoreMsg').click(function(){
+			var row = getSelectedRow(true);
+			if (row && row.uuid) {
+				if (row.recievers[0].sendType == 0) {
+					alert("无法忽略任务消息！");
+					return;
+				}
+				var url =  basePath + "/msg/fnmsg.action?jfs=true&t=ig&i=" + row.uuid;
+				$.get(url, mainObj.query, "json");
+			}
+		});
 	}
 };
 	
-$().ready(function() {
-	$("#queryForm INPUT").change(mainObj.query);
-	$('#viewDetail').click(function() {
-		var row = getSelectedRow(true);
-		if (row && row.content) {
-			$msg(row.content, {width:400});
-		}
-	});
-	$('#handleTask').click(mainObj.doTask);
-	$('#viewOp').click(mainObj.viewOperator);
-	$('#ignore').click(function(){
-		var row = getSelectedRow(true);
-		if (row && row.uuid) {
-			if (row.recievers[0].sendType == 0) {
-				alert("无法忽略任务消息！");
-				return;
-			}
-			var url =  basePath + "/msg/fnmsg.action?jfs=true&t=ig&i=" + row.uuid;
-			$.get(url, mainObj.query, "json");
-		}
-	});
-	
-});
-		
-
 function messageType(value, row, index) {
 	return value[0].sendType == 0 ? "通知" : "抄送";
 }

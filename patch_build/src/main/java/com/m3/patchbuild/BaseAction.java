@@ -21,7 +21,7 @@ public abstract class BaseAction implements Action {
 	private static final Logger logger = Logger.getLogger(BaseAction.class);
 	
 	protected void setTips(String tips) {
-		dataMap.put("tips", ContextUtil.setTips(null, tips));
+		dataMap.put("tips", ContextUtil.setTips(tips));
 	}
 	
 	final public String execute() throws Exception {

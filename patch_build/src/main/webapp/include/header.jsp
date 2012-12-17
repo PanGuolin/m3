@@ -25,8 +25,10 @@
 		</select>
 	</div>
 	<div id="menu">
-	   <s:iterator value="#session.myMenus.keys" id="menu">
-	   <a href="${basePath}${menu.function.url}" id="menu_${menu.id}"><span class="corner"></span><s:property value="#menu.name"/></a>  
+	   <s:iterator value="#session.myMenus" id="menu">
+	   <s:if test="#menu.parent == null">
+	   <a href="${basePath}${menu.function.url}" id="menu_${menu.id}"><span class="corner"></span><s:property value="#menu.name"/></a>
+	   </s:if>  
 	   </s:iterator>  
 	</div>
 	<div id="menubar">
@@ -35,6 +37,9 @@
 	</div>
 </div>
 <div id="bodyDiv">
-  <s:iterator value="#requester.tools" id="tool">
-	   <s:property value="#tool"/></a>  
-	   </s:iterator>  
+	<div id="queryBar" title="点击隐藏/显示查询表单"></div>
+	<div class="toolBar">
+		<s:iterator value="#request.myTools" id="tool">
+		<img id="${tool.id }" src="${basePath }/${tool.image}" title="${tool.name }"/>  
+	   	</s:iterator>
+	</div> 

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.m3.common.BeanUtil;
-import com.m3.common.ContextUtil;
 import com.m3.patchbuild.aop.ExecuteException;
 import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.user.IUserService;

@@ -1,13 +1,14 @@
 package com.m3.common;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,10 +18,9 @@ import com.m3.patchbuild.branch.IBranchService;
 import com.m3.patchbuild.sys.Function;
 import com.m3.patchbuild.sys.IFunctionService;
 import com.m3.patchbuild.sys.IMenuService;
-import com.m3.patchbuild.sys.IToolButtonService;
+import com.m3.patchbuild.sys.IRoleService;
 import com.m3.patchbuild.sys.Menu;
 import com.m3.patchbuild.sys.Role;
-import com.m3.patchbuild.sys.ToolButton;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRole;
 import com.opensymphony.xwork2.ActionContext;
@@ -34,7 +34,7 @@ public abstract class ContextUtil {
 	
 	public static final String KEY_USREID = "userId";
 	
-	public static final String KEY_SESSION_BRANCH = "currentBranch";
+	public static final String KEY_SESS_USERROLES = "userRoles";
 	
 	private volatile static ThreadLocal<Map<String, Object>> values = new ThreadLocal<Map<String,Object>>();
 
@@ -61,151 +61,98 @@ public abstract class ContextUtil {
 	public static void setUserId(String userId) {
 		setValue(KEY_USREID, userId);
 	}
+	
+	
+	public static final String KEY_SESSION_BRANCH = "currentBranch";//当前工作分支 
+	public static void setCurrentBranch(Branch branch) {
+		setSessAttr(KEY_SESSION_BRANCH, branch);
+		User user = getLoginUser();
+		removeSessAttr(KEY_SESS_USERROLES);
+		if (user != null) {
+			Set<UserRole> userRoles = user.getRoles();
+			Set<Role> roles = new HashSet<Role>();
+			for (UserRole userRole : userRoles) {
+				if (userRole.getBranch().equals(branch.getBranch())) {
+					roles.add(userRole.getRole());
+				}
+			}
+			IRoleService roleService = (IRoleService)BussFactory.getService(Role.class);
+			roles.add(roleService.find(Role.loginedUser));
+			setSessAttr(KEY_SESS_USERROLES, roles);
+		}
+	}
+	
 	public static Branch getCurrentBranch() {
-		return (Branch)ActionContext.getContext().getSession().get(KEY_SESSION_BRANCH);
+		return (Branch)getSessAttr(KEY_SESSION_BRANCH);
 	}
 	
-	public static void setBranch(Branch branch) {
-		ActionContext.getContext().getSession().put(KEY_SESSION_BRANCH, branch);
+	@SuppressWarnings("unchecked")
+	private static Set<Role> getUserRoles() {
+		return (Set<Role>) getSessAttr(KEY_SESS_USERROLES);
 	}
-	
 	
 	public static final String KEY_TIPS = "tips"; //保存提示信息的KEY
 	/**
 	 * 保存提示信息到当前用户的上下文环境中
 	 * @param tips
 	 */
-	public static String setTips(HttpServletRequest request, String tips) {
+	public static String setTips(String tips) {
+		String old = getTips();
 		if (tips == null)
-			return getTips(request);
-		if (request == null) {
-			String old = (String) ActionContext.getContext().get(KEY_TIPS);
-			if (!StringUtil.isEmpty(old)) {
-				tips = old + "<br/>" + tips;
-			}
-			ActionContext.getContext().put(KEY_TIPS, tips);
-		} else {
-			String old = (String) request.getAttribute(KEY_TIPS);
-			if (!StringUtil.isEmpty(old)) {
-				tips = old + "<br/>" + tips;
-			}
-			request.setAttribute(KEY_TIPS, tips);
+			return getTips();
+		
+		if (!StringUtil.isEmpty(old)) {
+			tips = old + "<br/>" + tips;
 		}
+		setReqAttr(KEY_TIPS, tips);
 		return tips;
 	}
 	
-	public static String getTips(HttpServletRequest request) {
-		if (request == null) {
-			return (String) ActionContext.getContext().get(KEY_TIPS);
-		} else {
-			return (String) request.getAttribute(KEY_TIPS);
-		}
+	public static String getTips() {
+		return (String) getReqAttr(KEY_TIPS);
 	}
 	
 	public static final String KEY_SESSION_USER = "userBean"; //保存用户信息的KEY
 	public static final String KEY_SESSION_MENUS = "myMenus"; //我的菜单 
-	public static final String KEY_SESSION_TOOLBUTTONS = "myTools"; //我的菜单 
-	
-	public static final String KEY_REQ_MENUPATH = "menuPath"; //菜单路径 
-	
 	/**
 	 * 保存已登录用户信息
 	 * @param user
 	 * @param branch
 	 */
 	public static void userLogin(User user) {
-		Map<String, Object> session = ActionContext.getContext().getSession();
-		session.put(KEY_SESSION_USER, user);
-		if (getCurrentBranch() == null) {
-			IBranchService branchService = (IBranchService)BussFactory.getService(Branch.class);
-			session.put(KEY_SESSION_BRANCH, branchService.getBranch(user.getMainBranch()));
-		}
+		setSessAttr(KEY_SESSION_USER, user);
+		removeSessAttr(KEY_SESSION_MENUS);
+		Branch mainBranch = ((IBranchService)BussFactory.getService(Branch.class)).getBranch(user.getMainBranch());
+		setCurrentBranch(mainBranch);
+		Set<Role> userRoles = getUserRoles();
 		
 		//获取用户菜单信息
 		IMenuService menuService = (IMenuService)BussFactory.getService(Menu.class);
-		IToolButtonService tbService = (IToolButtonService)BussFactory.getService(ToolButton.class);
-		
-		List<Menu> topMenus = menuService.getMenu(null);
-		Set<Role> userRoles = new HashSet<Role>();
-		for (UserRole ur : user.getRoles()) {
-			userRoles.add(ur.getRole());
-		}
-		TreeMap<Menu, List<Menu>> myMenus = new TreeMap<Menu, List<Menu>>(new Comparator<Menu>() {
+		List<Menu> menuList = new ArrayList<Menu>();
+		listMenu(menuService, null, menuList, userRoles);
+		Collections.sort(menuList, new Comparator<Menu>() {
 			@Override
 			public int compare(Menu o1, Menu o2) {
-				return o1.getIndex() - o2.getIndex();
+				return o1.getLevel() == o2.getLevel() ? (o1.getIndex() - o2.getIndex()) : o1.getLevel() - o2.getLevel();
 			}
 		});
-		
-		Map<Menu, List<ToolButton>> myToolButtons = new HashMap<Menu, List<ToolButton>>();
-		
-		for (int mi=0; mi<topMenus.size(); mi++) {
-			Menu topMenu = topMenus.get(mi);
-			Set<Role> menuRoles = topMenu.getFunction().getRoles();
-			if (checkRole(menuRoles, userRoles)) {
-				List<Menu> subMenus = menuService.getMenu(topMenu);
-				for (int i=0; i<subMenus.size(); i++) {
-					Set<Role> subRoles = subMenus.get(i).getFunction().getRoles();
-					if (checkRole(subRoles, userRoles)) {
-						List<ToolButton> btns = tbService.getToolButtons(subMenus.get(i));
-						for (int ti=0; ti<btns.size(); ti++) {
-							Set<Role> toolRoles = btns.get(i).getFunction().getRoles();
-							if (!checkRole(toolRoles, userRoles)) {
-								btns.remove(ti);
-								ti --;
-							}
-						}
-						if (!btns.isEmpty())
-							myToolButtons.put(subMenus.get(i), btns);
-					} else {
-						subMenus.remove(i);
-						i --;
-					}
-				}
-				myMenus.put(topMenu, subMenus);
-				
-			} else {
-				topMenus.remove(mi);
-				mi--;
-			}
-		}
-		
-		session.put(KEY_SESSION_MENUS, myMenus);
-		session.put(KEY_SESSION_TOOLBUTTONS, myToolButtons);
+		setSessAttr(KEY_SESSION_MENUS, menuList);
 	}
 	
-	private static boolean checkRole(Collection<Role> ownColl, Collection<Role> targetColl) {
-		if (ownColl.isEmpty()) 
-			return true;
-		for (Role o : ownColl) {
-			if (Role.loginedUser.equals(o.getCode()) || targetColl.contains(o))
-				return true;
-		}
-		return false;
+	private static void listMenu(IMenuService menuService, Menu parent, List<Menu> list, Collection<Role> roles) {
+		 List<Menu> subMenus = menuService.getMenu(parent, roles);
+		 list.addAll(subMenus);
+		 for (Menu menu : subMenus) {
+			 listMenu(menuService, menu, list, roles);
+		 }
 	}
 	
 	public static User getLoginUser() {
-		return getLoginUser(null);
+		return (User) getSessAttr(KEY_SESSION_USER);
 	}
 	
-	/**
-	 * 获取已登录用户信息
-	 * @return
-	 */
-	public static User getLoginUser(HttpServletRequest request) {
-		if (request != null)
-			return (User)request.getSession().getAttribute(KEY_SESSION_USER);
-		else
-			return (User)ActionContext.getContext().getSession().get(KEY_SESSION_USER);
-	}
-	
-	public static boolean checkPermission(HttpServletRequest request) {
-		return checkPermission(request, null);
-	}
-	
-	public static boolean checkPermission(Class<?> actionClass) {
-		return checkPermission(null, actionClass);
-	}
+	public static final String KEY_REQ_TOOLS = "myTools"; //我的菜单 
+	public static final String KEY_REQ_MENUPATH = "menuPath"; //菜单路径 
 	
 	/**
 	 * 检查用户权限
@@ -213,47 +160,55 @@ public abstract class ContextUtil {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private static boolean checkPermission(HttpServletRequest request, Class<?> actionClass) {
-		if (request == null && actionClass == null) 
-			return false;
+	
+	public static boolean checkPermission(Class<?> actionClass) {
 		IFunctionService functService = (IFunctionService)BussFactory.getService(Function.class);
 		Function funct = null;
-		if (request != null) {
+		if (actionClass != null) {
+			funct = functService.getByAction(actionClass);
+		} else {
+			HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
 			String basePath = request.getContextPath();
 			String path = request.getRequestURI();
 			if (path.startsWith(basePath))
 				path = path.substring(basePath.length());
 			funct = functService.getByUrl(path);
-		} else {
-			funct = functService.getByAction(actionClass);
 		}
 		if (funct == null)
 			return true;
+		
+		User user = ContextUtil.getLoginUser();
 		IMenuService menuService = (IMenuService)BussFactory.getService(Menu.class);
 		Menu menu = menuService.findByFunction(funct);
 		if (menu != null) {
+			//存储相应的工具按钮信息
+			Menu lastLevel = menu;
+			while(lastLevel != null && lastLevel.isToolMenu()) {
+				lastLevel = lastLevel.getParent();
+			}
+			List<Menu> tools = new ArrayList<Menu>();
+			List<Menu> menuList = (List<Menu>)getSessAttr(KEY_SESSION_MENUS);
+			if (lastLevel != null) {
+				for (Menu m : menuList) {
+					if (m.isToolMenu() && lastLevel.equals(m.getParent())) {
+						tools.add(m);
+					}
+				}
+				setReqAttr(KEY_REQ_TOOLS, tools);
+			}
+			
 			String mPath = menu.getId();
 			while((menu = menu.getParent()) != null) {
 				mPath = menu.getId() + ">>" + mPath;
 			}
-			if (request != null) {
-				request.setAttribute(KEY_REQ_MENUPATH, mPath);
-				Map<Menu, List<ToolButton>>tools = (Map<Menu, List<ToolButton>>)
-						request.getSession().getAttribute(KEY_SESSION_TOOLBUTTONS);
-				request.setAttribute("tools", tools.get(menu));
-			} else {
-				ActionContext.getContext().getContextMap().put(KEY_REQ_MENUPATH, mPath);
-				Map<Menu, List<ToolButton>>tools = (Map<Menu, List<ToolButton>>) 
-						ActionContext.getContext().getSession().get(KEY_SESSION_TOOLBUTTONS);
-				ActionContext.getContext().getContextMap().put("tools", tools.get(menu));
-			}
+			setReqAttr(KEY_REQ_MENUPATH, mPath);
 		}
 		
 		if (funct.getRoles().isEmpty()) 
 			return true;
-		User user = ContextUtil.getLoginUser(request);
+		
 		if (user == null) {
-			setTips(request, "用户必须登录才能继续操作");
+			setTips("用户必须登录才能继续操作");
 			return false;
 		} else {
 			setUserId(user.getUserId());
@@ -270,7 +225,7 @@ public abstract class ContextUtil {
 				}
 			}
 		}
-		setTips(request, "用户没有执行当前功能的权限！");
+		setTips("用户没有执行当前功能的权限！");
 		return false;
 	}
 
@@ -278,10 +233,58 @@ public abstract class ContextUtil {
 	 * 用户注销
 	 */
 	public static void logout() {
-		Map<String, Object> map = ActionContext.getContext().getSession();
-		map.remove(KEY_SESSION_USER);
-		map.remove(KEY_SESSION_BRANCH);
+		removeSessAttr(KEY_SESSION_USER);
+		removeSessAttr(KEY_SESSION_BRANCH);
 		setValue(KEY_USREID, null);
 	}
-
+	
+	public static String KEY_HttpServletRequest = "request";
+	public static void setRequest(HttpServletRequest request) {
+		setValue(KEY_HttpServletRequest, request);
+	}
+	
+	public static void setSessAttr(String key, Object value) {
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		if (request != null) {
+			request.getSession().setAttribute(key, value);
+		} else {
+			ActionContext.getContext().getSession().put(key, value);
+		}
+	}
+	
+	public static Object getSessAttr(String key) {
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		if (request != null) {
+			return request.getSession().getAttribute(key);
+		} else {
+			return ActionContext.getContext().getSession().get(key);
+		}
+	}
+	
+	public static void removeSessAttr(String key) {
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		if (request != null) {
+			request.getSession().removeAttribute(key);
+		} else {
+			ActionContext.getContext().getSession().remove(key);
+		}
+	}
+	
+	public static void setReqAttr(String key, Object value) {
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		if (request != null) {
+			request.setAttribute(key, value);
+		} else {
+			ActionContext.getContext().put(key, value);
+		}
+	}
+	
+	public static Object getReqAttr(String key) {
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		if (request != null) {
+			return request.getAttribute(key);
+		} else {
+			return ActionContext.getContext().get(key);
+		}
+	}
 }

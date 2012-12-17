@@ -28,7 +28,8 @@ public class PermissionFilter implements Filter{
 	public void doFilter(ServletRequest req, ServletResponse rep,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest)req;
-		if (!ContextUtil.checkPermission(request)) {
+		ContextUtil.setRequest(request);
+		if (!ContextUtil.checkPermission(null)) {
 			request.getRequestDispatcher(loginPage).forward(req, rep);
 			return;
 		}

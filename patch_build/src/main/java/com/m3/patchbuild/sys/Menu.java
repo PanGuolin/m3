@@ -16,8 +16,9 @@ import com.m3.patchbuild.base.BaseBussInfo;
  */
 @Entity
 @Table(name="Sys_Menu")
-public class Menu extends BaseBussInfo{
+public class Menu extends BaseBussInfo {
 
+	private static final long serialVersionUID = 1L;
 	@Column(name="MenuIndex")
 	private int index; //菜单索引
 	@ManyToOne(cascade=CascadeType.MERGE, fetch=FetchType.EAGER)
@@ -26,9 +27,12 @@ public class Menu extends BaseBussInfo{
 	private String id;//ID号
 	private String name; //属性
 	private int level;//级别
+	private String image; //对应图片
 	@ManyToOne
 	@JoinColumn(name="function")
 	private Function function; //对应的功能
+	
+	private boolean toolMenu; //是否工具栏菜单 
 	
 //	@ManyToMany(cascade ={CascadeType.PERSIST,CascadeType.MERGE}, fetch=FetchType.EAGER)
 //    @JoinTable(name="Sys_MenuRole",  joinColumns={@JoinColumn(name="menuId")}, inverseJoinColumns={@JoinColumn(name="roleId")} )
@@ -81,6 +85,21 @@ public class Menu extends BaseBussInfo{
 	public void setFunction(Function function) {
 		this.function = function;
 	}
-	
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public boolean isToolMenu() {
+		return toolMenu;
+	}
+
+	public void setToolMenu(boolean toolMenu) {
+		this.toolMenu = toolMenu;
+	}
 	
 }
