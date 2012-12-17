@@ -1,6 +1,6 @@
 <%@page language="java" pageEncoding="UTF-8"%>
 <%@ include file="../include/header.jsp" %>
-<div class="queryDiv">
+<div id="queryDiv">
 	<s:form action="query" theme="simple" id="queryForm" namespace="/pack">
 	<s:set value="@com.m3.patchbuild.branch.BranchUtil@listAllBranch()" name="branchs"/>
 	<s:set value="@com.m3.patchbuild.pack.PackStatus@values()" name="packStatus"/>
@@ -57,15 +57,6 @@
 		</tr>
 	</table>
 	</s:form>
-</div>
-<div class="queryBar" title="点击隐藏/显示查询表单"><img src="${basePath }/images/up.png"/><img src="${basePath }/images/down.png"/></div>
-<div class="toolBar">
-	<img id="viewOp" 		src="${basePath}/images/tb/users.png" 		title="查看操作人"/>
-	<img id="handleTask" 	src="${basePath}/images/tb/task.png" 		title="处理任务"/>
-	<img id="downloadFile" 	src="${basePath}/images/tb/download.png" 	title="下载文件"/>
-	<img id="addPack" 		src="${basePath}/images/tb/add.png" 		title="新增构建"/>
-	<img id="viewDetail" 	src="${basePath}/images/tb/detail.png" 		title="查看明细"/>
-	<img id="viewBuildLog"	src="${basePath}/images/tb/log.png" 		title="查看构建日志"/>
 </div>
 
 <table class="fn-datagrid" style="display:none;" id="datagrid"

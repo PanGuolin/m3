@@ -188,12 +188,17 @@ public abstract class ContextUtil {
 			}
 			List<Menu> tools = new ArrayList<Menu>();
 			List<Menu> menuList = (List<Menu>)getSessAttr(KEY_SESSION_MENUS);
-			if (lastLevel != null) {
+			if (menuList != null && lastLevel != null) {
 				for (Menu m : menuList) {
 					if (m.isToolMenu() && lastLevel.equals(m.getParent())) {
 						tools.add(m);
 					}
 				}
+				Collections.sort(tools, new Comparator<Menu>() {
+					public int compare(Menu o1, Menu o2) {
+						return o1.getIndex() - o2.getIndex();
+					}
+				});
 				setReqAttr(KEY_REQ_TOOLS, tools);
 			}
 			

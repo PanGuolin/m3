@@ -1,6 +1,6 @@
 <%@page language="java" pageEncoding="UTF-8"%>
 <%@ include file="/include/header.jsp" %>
-<div class="queryDiv">
+<div id="queryDiv">
 	<s:form action="query" theme="simple" id="queryForm" namespace="/patch">
 	<s:set value="@com.m3.patchbuild.branch.BranchUtil@listAllBranch()" name="branchs"/>
 	<table>
@@ -23,19 +23,7 @@
 			<td><input type="submit" value="查询"/></td>
 		</tr>
 	</table>
-	<table>
-		<tr>
-			
-		</tr>
-	</table>
 	</s:form>
-</div>
-<div class="queryBar" title="点击隐藏/显示查询表单"><img src="${basePath }/images/up.png"/><img src="${basePath }/images/down.png"/></div>
-<div class="toolBar">
-	<img id="viewBuilds" 	src="${basePath}/images/tb/detail.png" 		title="查看包含构建包"/>
-	<img id="download" 		src="${basePath}/images/tb/download.png" 	title="下载补丁"/>
-	<img id="downEnc" 		src="${basePath}/images/tb/lock.png" 		title="下载加密补丁"/>
-	<img id="createBranch" 	src="${basePath}/images/tb/branch.png" 		title="创建分支"/>
 </div>
 <table class="fn-datagrid" style="display:none;" id="datagrid"
 		pagination="true"

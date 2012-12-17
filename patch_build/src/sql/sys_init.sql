@@ -53,7 +53,7 @@ INSERT INTO Sys_FunctionRole(FunctionId, roleId)
 	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='ViewMsgDetail' and role.code='[loginedUser]');
 INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
 	SELECT uuid(), menu.uuid, 'ViewMsgDetail', '查看详细消息', -1, funct.uuid, 1, '/images/tb/detail.png',
-		(SELECT ifNULL(max(mm.MenuIndex), 0)+10 FROM Sys_Menu mm WHERE mm.parent='myMessage') 
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='myMessage') 
 	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='ViewMsgDetail' and menu.id='myMessage'
 );
 
@@ -62,7 +62,7 @@ INSERT INTO Sys_FunctionRole(FunctionId, roleId)
 	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='ViewMsgOp' and role.code='[loginedUser]');
 INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
 	SELECT uuid(), menu.uuid, 'ViewMsgOp', '查看任务处理人', -1, funct.uuid, 1, '/images/tb/users.png',
-		(SELECT ifNULL(max(mm.MenuIndex), 0)+10 FROM Sys_Menu mm WHERE mm.parent='myMessage') 
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='myMessage') 
 	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='ViewMsgOp' and menu.id='myMessage'
 );
 
@@ -71,7 +71,7 @@ INSERT INTO Sys_FunctionRole(FunctionId, roleId)
 	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='DoMsgTask' and role.code='[loginedUser]');
 INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
 	SELECT uuid(), menu.uuid, 'DoMsgTask', '处理消息相关任务', -1, funct.uuid, 1, '/images/tb/task.png',
-		(SELECT ifNULL(max(mm.MenuIndex), 0)+10 FROM Sys_Menu mm WHERE mm.parent='myMessage') 
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='myMessage') 
 	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='DoMsgTask' and menu.id='myMessage'
 );
 
@@ -80,35 +80,100 @@ INSERT INTO Sys_FunctionRole(FunctionId, roleId)
 	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='IgnoreMsg' and role.code='[loginedUser]');
 INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
 	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/trash.png',
-		(SELECT ifNULL(max(mm.MenuIndex), 0)+10 FROM Sys_Menu mm WHERE mm.parent='myMessage') 
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='myMessage') 
 	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='IgnoreMsg' and menu.id='myMessage'
 );
 
-
-INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, MenuIndex) (
-	SELECT uuid(), menu.uuid, 'addPack', '新增构建包', -1, funct.uuid,
-		(SELECT ifNULL(max(mm.MenuIndex), 0)+10 FROM Sys_Menu mm WHERE mm.parent='packList') 
-	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='AddPack' and menu.id='packList'
+------ 
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'NewPack', '新增构建包', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='NewPack' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/add.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='packList') 
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='NewPack' and menu.id='packList'
 );
 
--- ====================================================================================
--- 工具按钮
--- ====================================================================================
-INSERT INTO Sys_ToolMenu(Uuid, Menu, Id, Name, imgPath, ToolIndex) (select * from(
-	SELECT uuid() as uuid, menu.uuid as menu, 'viewOp' as id, '查看操作人' as name, 'images/tb/users.png' as imgPath, ifNULL(max(tool.ToolIndex), 0) + 10 as ToolIndex
-	FROM Sys_Menu menu, Sys_ToolMenu tool WHERE tool.menu = menu.uuid AND menu.id='myMessage') t
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'ViewPackOP', '查看操作人', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='ViewPackOP' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/users.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='packList') 
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='ViewPackOP' and menu.id='packList'
 );
 
-DROP TABLE IF EXISTS Sys_ToolMenu;
-create table Sys_ToolMenu 
-(
-	Uuid			char(36)		not null,
-	Id				varchar(40)		not null,
-	MenuIndex		int				not null default 0,
-	Name			varchar(40)		not null,
-	imgPath			varchar(200)	not null,
-	Menu			char(36)		not null,
-   constraint PK_Sys_ToolMenu primary key clustered (uuid)
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'HandlePack', '处理构建包', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='HandlePack' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/task.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='packList') 
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='HandlePack' and menu.id='packList'
 );
-create unique index Sys_ToolMenu_BN on Sys_ToolMenu (Id ASC);
-Sys_MenuRole
+
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'DownloadPack', '下载构建包', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='DownloadPack' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/download.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='packList') 
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='DownloadPack' and menu.id='packList'
+);
+
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'ViewPackDetail', '查看构建包详细信息', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='ViewPackDetail' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/detail.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='packList') 
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='ViewPackDetail' and menu.id='packList'
+);
+
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'ViewPackBuildLog', '查看构建日志', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='ViewPackBuildLog' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/log.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='packList')
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='ViewPackBuildLog' and menu.id='packList'
+);
+
+--- 补丁管理
+
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'ViewPatchDetail', '查看补丁详细信息', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='ViewPatchDetail' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/detail.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='patchList')
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='ViewPatchDetail' and menu.id='patchList'
+);
+
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'DownloadPatch', '下载原始补丁', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='DownloadPatch' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/download.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='patchList')
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='DownloadPatch' and menu.id='patchList'
+);
+
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'DonladEncodedPatch', '下载加密补丁', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='DonladEncodedPatch' and role.code='[loginedUser]');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/lock.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='patchList')
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='DonladEncodedPatch' and menu.id='patchList'
+);
+
+INSERT INTO Sys_Function(UUID, Code, Name, URL, Act) VALUES (uuid(), 'CreateBrachOfPatch', '创建补丁对应分支', '', null);
+INSERT INTO Sys_FunctionRole(FunctionId, roleId) 
+	(SELECT funct.uuid, role.uuid FROM Sys_Function funct,Sys_role role where funct.code='CreateBrachOfPatch' and role.code='deployer');
+INSERT INTO Sys_Menu(UuId, Parent, Id, Name, Level, Function, ToolMenu, image, MenuIndex) (
+	SELECT uuid(), menu.uuid, funct.code, funct.name, -1, funct.uuid, 1, '/images/tb/branch.png',
+		(SELECT ifNULL(max(s.MenuIndex), 0)+10 FROM Sys_Menu s, Sys_Menu p WHERE s.parent=p.uuid && p.id='patchList')
+	FROM Sys_Function funct, Sys_Menu menu WHERE funct.code='CreateBrachOfPatch' and menu.id='patchList'
+);
+
