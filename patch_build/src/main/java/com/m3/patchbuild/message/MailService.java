@@ -10,7 +10,7 @@ import com.m3.common.mail.MailServer;
  * @author pangl
  *
  */
-public class MailService {
+public abstract class MailService {
 	private static final Logger logger = Logger.getLogger(MailServer.class);
 	private static final String MailServerName = "PatchBuildSystem";
 	private static MailServerDAO dao = new MailServerDAO();

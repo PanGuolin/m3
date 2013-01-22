@@ -31,8 +31,9 @@ public class ChangeLog {
 	}
 	
 	ChangeLog(String log) {
+		final int arrayLen = 3;
 		String[] ps = log.split(":");
-		assert ps.length == 3;
+		assert ps.length == arrayLen;
 		this.user = ps[0].trim();
 		this.action = ps[1].trim();
 		this.ts = Long.parseLong(ps[2]);

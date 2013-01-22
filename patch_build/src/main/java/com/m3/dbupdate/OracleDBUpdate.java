@@ -16,7 +16,7 @@ import java.util.List;
  * @author pangl
  *
  */
-public class OracleDBUpdate {
+public abstract class OracleDBUpdate {
 
 	public static void executeUpdate(Connection conn, File root, final String fileSuffix) throws IOException, SQLException {
 		final List<File> set = new ArrayList<File>();

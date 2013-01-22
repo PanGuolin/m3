@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMessage;
  * @author pangl
  *
  */
-public class MailUtil {
+public abstract class MailUtil {
 	public static final String CONFIG_NAME = "/com/byttersoft/patchbuild/utils/mail.properties";
 	
 	private static String serverHost = null;
@@ -76,6 +76,11 @@ public class MailUtil {
 	}
 }
 
+/**
+ * 邮件认证对象
+ * @author pangl
+ *
+ */
 class EmailAutherticator extends Authenticator {
 	private String username;
 	private String password;
@@ -84,15 +89,13 @@ class EmailAutherticator extends Authenticator {
         super();
     }
 
-    public EmailAutherticator(String user, String pwd)
-    {
+    public EmailAutherticator(String user, String pwd) {
         super();
         username = user;
         password = pwd;
     }
 
-    public PasswordAuthentication getPasswordAuthentication()
-    {
+    public PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(username, password);
     }
 }

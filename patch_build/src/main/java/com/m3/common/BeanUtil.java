@@ -1,6 +1,5 @@
 package com.m3.common;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -133,7 +132,7 @@ public abstract class BeanUtil {
 					Method method = cls.getMethod(property, (Class<?>[])null);
 					result = method.invoke(value, (Object[])null);
 				} catch (Exception eee) {
-					logger.info("找不到属性相应的方法：" + property,eee);
+					logger.info("找不到属性相应的方法：" + property, eee);
 					throw eee;
 				}
 			}
@@ -193,7 +192,7 @@ public abstract class BeanUtil {
 	public static Object executeScript(String script, Map<String, Object> context) throws Exception {
 		script = BeanUtil.parseString(script, context);
 		ScriptEngineManager manager = new ScriptEngineManager();
-		ScriptEngine engine = manager.getEngineByName ("js");
+		ScriptEngine engine = manager.getEngineByName("js");
 		return engine.eval(script);
 	}
 	

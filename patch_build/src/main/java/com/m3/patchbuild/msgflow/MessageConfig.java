@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -43,36 +44,40 @@ public class MessageConfig extends BaseAdviceConfig{
 	private String subject;
 	private String content;
 	private int infoIndex = 0;
+	private static final Logger logger = Logger.getLogger(MessageConfig.class);
 	
 	public MessageConfig(Element msgEl, Namespace ns) throws Exception {
-		service = msgEl.getChildTextTrim("service", ns);
-		adviceType = AdviceType.valueOf(msgEl.getChildTextTrim("advice", ns));
+		setService(msgEl.getChildTextTrim("service", ns));
+		setAdviceType(AdviceType.valueOf(msgEl.getChildTextTrim("advice", ns)));
 		recievers = getParticipants(msgEl.getChild("recievers", ns));
 		notifiers = getParticipants(msgEl.getChild("notifiers", ns));
 		subject = msgEl.getChildTextTrim("subject", ns);
 		content = msgEl.getChildTextTrim("content", ns);
-		condition = msgEl.getChildTextTrim("condition", ns);
+		String condition = msgEl.getChildTextTrim("condition", ns);
+		setCondition(condition);
 		try {
 			infoIndex = Integer.parseInt(msgEl.getChildTextTrim("infoIndex", ns));
-		} catch (Throwable t) {//没有设置，使用默认值
+		} catch (Throwable t) {
+			logger.info("", t);
 		}
 		String methodExp = msgEl.getChildTextTrim("method", ns);
 		int sIndex = methodExp.indexOf('(');
 		if (sIndex != -1) {
-			methodName = methodExp.substring(0, sIndex).trim();
+			setMethodName(methodExp.substring(0, sIndex).trim());
 			String paramExp = methodExp.substring(sIndex + 1, methodExp.length()-1).trim();
-			paramTypes = paramExp.split(",");
+			String[] paramTypes = paramExp.split(",");
 			for (int i=0; i<paramTypes.length; i++) {
 				paramTypes[i] = paramTypes[i].trim();
 			}
+			setParamTypes(paramTypes);
 		} else {
-			methodName = methodExp;
+			setMethodName(methodExp);
 		}
 		if (condition != null) {
 			if ("NEW_INFO".equals(condition)) {
-				condition = "'${_P" + getInfoIndex() + ".uuid}' == 'null'";
+				setCondition("'${_P" + getInfoIndex() + ".uuid}' == 'null'");
 			} else if ("OLD_INFO".equals(condition)){
-				condition = "'${_P" + getInfoIndex() + ".uuid}' != 'null'";
+				setCondition("'${_P" + getInfoIndex() + ".uuid}' != 'null'");
 			}
 		}
 	}

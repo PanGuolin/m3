@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.m3.patchbuild.base.IService;
 
+/**
+ * 分支服务接口
+ * @author pangl
+ *
+ */
 public interface IBranchService extends IService{
 	/**
 	 * 获取分支对象

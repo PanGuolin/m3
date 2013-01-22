@@ -14,14 +14,15 @@ import com.m3.patchbuild.base.BussFactory;
  * @author pangl
  *
  */
-public class BuildService {
+public abstract class BuildService {
 	private static final Logger logger = Logger.getLogger(BuildService.class);
 	
 	private static List<Pack> queue = new ArrayList<Pack>(); //待构建队列
 	
 	private static Map<String, BuildThread> buildThreads = new HashMap<String, BuildThread>(); //构建线程
 	
-	private static int threadSize = 3; //同时运行的线程数量
+	private static final int DEFAULT_THREAD_SIZE = 3;
+	private static int threadSize = DEFAULT_THREAD_SIZE; //同时运行的线程数量
 	
 	static {
 		startMonitor();
@@ -69,6 +70,7 @@ public class BuildService {
 		Thread monitor = new Thread("Build Monitor") {
 			@Override
 			public void run() {
+				final int sleepTime = 1000;
 				while(true) {
 					try {
 						synchronized (queue) {
@@ -80,7 +82,7 @@ public class BuildService {
 										logger.error("相同的构建包正在构建当中，放弃当前构建" + pack.getBuildNo());
 									} else if (buildThreads.size() >= threadSize) {
 										try {
-											Thread.sleep(1000);
+											Thread.sleep(sleepTime);
 										} catch (Throwable t) {
 											logger.error("构建监控线程等待时出错", t);
 										}

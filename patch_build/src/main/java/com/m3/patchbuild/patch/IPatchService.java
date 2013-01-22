@@ -7,6 +7,11 @@ import com.m3.patchbuild.base.IService;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.patch.action.PatchQuery;
 
+/**
+ * 补丁服务接口
+ * @author pangl
+ *
+ */
 public interface IPatchService extends IService{
 	/**
 	 * 返回某一天的补丁

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
  * @author pangl
  *
  */
-public class CachedEntitiesManager implements IEntitiesChangeListener{
+public final class CachedEntitiesManager implements IEntitiesChangeListener{
 	
 	private static final Logger logger = Logger.getLogger(CachedEntitiesManager.class);
 	

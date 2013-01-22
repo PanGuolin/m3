@@ -36,7 +36,7 @@ public abstract class ContextUtil {
 	
 	public static final String KEY_SESS_USERROLES = "userRoles";
 	
-	private volatile static ThreadLocal<Map<String, Object>> values = new ThreadLocal<Map<String,Object>>();
+	private static volatile  ThreadLocal<Map<String, Object>> values = new ThreadLocal<Map<String,Object>>();
 
 	public static Object getValue(String key) {
 		Map<String, Object> tValues = values.get();
@@ -243,13 +243,14 @@ public abstract class ContextUtil {
 		setValue(KEY_USREID, null);
 	}
 	
-	public static String KEY_HttpServletRequest = "request";
+	public static final String KEY_HTTP_SERVLET_REQUEST = "request";
+	
 	public static void setRequest(HttpServletRequest request) {
-		setValue(KEY_HttpServletRequest, request);
+		setValue(KEY_HTTP_SERVLET_REQUEST, request);
 	}
 	
 	public static void setSessAttr(String key, Object value) {
-		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HTTP_SERVLET_REQUEST);
 		if (request != null) {
 			request.getSession().setAttribute(key, value);
 		} else {
@@ -258,7 +259,7 @@ public abstract class ContextUtil {
 	}
 	
 	public static Object getSessAttr(String key) {
-		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HTTP_SERVLET_REQUEST);
 		if (request != null) {
 			return request.getSession().getAttribute(key);
 		} else {
@@ -267,7 +268,7 @@ public abstract class ContextUtil {
 	}
 	
 	public static void removeSessAttr(String key) {
-		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HTTP_SERVLET_REQUEST);
 		if (request != null) {
 			request.getSession().removeAttribute(key);
 		} else {
@@ -276,7 +277,7 @@ public abstract class ContextUtil {
 	}
 	
 	public static void setReqAttr(String key, Object value) {
-		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HTTP_SERVLET_REQUEST);
 		if (request != null) {
 			request.setAttribute(key, value);
 		} else {
@@ -285,7 +286,7 @@ public abstract class ContextUtil {
 	}
 	
 	public static Object getReqAttr(String key) {
-		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+		HttpServletRequest request = (HttpServletRequest) getValue(KEY_HTTP_SERVLET_REQUEST);
 		if (request != null) {
 			return request.getAttribute(key);
 		} else {

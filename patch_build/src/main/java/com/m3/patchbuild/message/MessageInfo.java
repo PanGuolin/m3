@@ -5,6 +5,11 @@ import java.util.HashSet;
 
 import com.m3.patchbuild.IBussInfo;
 
+/**
+ * 消息对象
+ * @author pangl
+ *
+ */
 public class MessageInfo {
 	
 	private Collection<String> receivers;

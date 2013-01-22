@@ -31,9 +31,14 @@ public class MailServer{
 	
 	private static Logger logger = Logger.getLogger(MailServer.class);
 	
+	/**
+	 * 默认SMTP发送端口
+	 */
+	public static final int DEFAULT_SMTP_PORT = 25;
+	
 	private String host; //服务器地址
 	
-	private int smtpPort = 25; //发送接口
+	private int smtpPort = DEFAULT_SMTP_PORT; 
 	
 	private String user; //登录用户
 	

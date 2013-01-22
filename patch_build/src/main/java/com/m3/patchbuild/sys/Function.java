@@ -25,6 +25,8 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Cacheable()
 public class Function extends BaseBussInfo {
 
+	private static final long serialVersionUID = 1L;
+
 	private String code;//功能编码
 	
 	private String name;//功能名称
@@ -37,7 +39,7 @@ public class Function extends BaseBussInfo {
 	private int type;//功能类型
 	
 	@ManyToMany(cascade ={CascadeType.PERSIST,CascadeType.MERGE}, fetch=FetchType.EAGER)
-    @JoinTable(name="Sys_FunctionRole",  joinColumns={@JoinColumn(name="functionId")}, inverseJoinColumns={@JoinColumn(name="roleId")} )
+    @JoinTable(name="Sys_FunctionRole",  joinColumns={@JoinColumn(name="functionId")}, inverseJoinColumns={@JoinColumn(name="roleId")})
 	private Set<Role> roles = new HashSet<Role>();
 	
 	public String getCode() {

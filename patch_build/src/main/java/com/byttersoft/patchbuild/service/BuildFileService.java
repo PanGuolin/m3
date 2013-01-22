@@ -27,7 +27,7 @@ import com.byttersoft.patchbuild.utils.PatchUtil;
  * @author pangl
  *
  */
-public class BuildFileService {
+public abstract class BuildFileService {
 	
 	/**
 	 * 最后的补丁包名称

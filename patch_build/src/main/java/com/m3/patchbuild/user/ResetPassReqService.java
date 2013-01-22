@@ -8,6 +8,11 @@ import com.m3.patchbuild.base.BaseService;
 import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.base.DaoUtil;
 
+/**
+ * 重置密码请求服务
+ * @author pangl
+ *
+ */
 public class ResetPassReqService extends BaseService implements IResetPassReqService{
 
 	public ResetPassReqService() {
@@ -44,6 +49,11 @@ public class ResetPassReqService extends BaseService implements IResetPassReqSer
 		return new HandleContext();
 	}
 	
+	/**
+	 * 处理上下文
+	 * @author pangl
+	 *
+	 */
 	static class HandleContext {
 		private boolean accepted;
 

@@ -5,6 +5,11 @@ import java.util.Map;
 
 import com.m3.patchbuild.IBussInfo;
 
+/**
+ * AOP执行上下文
+ * @author pangl
+ *
+ */
 public class ExecuteContext implements IExecuteContext {
 	
 	private IBussInfo bussInfo;

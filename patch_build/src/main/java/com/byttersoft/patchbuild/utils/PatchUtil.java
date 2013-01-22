@@ -26,7 +26,7 @@ import com.byttersoft.patchbuild.service.BuildReposManager;
  * @author pangl
  *
  */
-public class PatchUtil {
+public abstract class PatchUtil {
 	
 	
 	/**
@@ -180,7 +180,7 @@ public class PatchUtil {
 		StringBuilder sb = new StringBuilder();
 		if (!file.exists() || !file.isFile())
 			return sb;
-		int buffer = 1024;
+		final int buffer = 1024;
 		byte[] bs = new byte[buffer];
 		FileInputStream in = new FileInputStream(file);
 		int len = in.read(bs);

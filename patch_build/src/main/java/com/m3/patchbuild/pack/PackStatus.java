@@ -37,6 +37,8 @@ public enum PackStatus {
 			case testing: 	return "正在测试";
 			case publishFail: return "发布失败";
 			case assigned:	return "已分配";
+		default:
+			break;
 		}
 		return super.toString();
 	} 

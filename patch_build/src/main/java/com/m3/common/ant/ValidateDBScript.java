@@ -21,7 +21,7 @@ import com.m3.dbupdate.DBUpdateTool;
  * @author pangl
  *
  */
-public class ValidateDBScript extends Task{
+public class ValidateDBScript extends Task {
 	
 	private String driver;
 	private String url;

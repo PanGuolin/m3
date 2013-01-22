@@ -82,10 +82,10 @@ public abstract class FileUtil {
 	 * @throws IOException
 	 */
 	public static void copyContent(File srcFile, File destFile) throws IOException {
-		final int BUFF_SIZE = 1024;
+		final int buffSize = 1024;
 		BufferedInputStream input = new BufferedInputStream(new FileInputStream(srcFile));
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(destFile));
-		byte[] bs = new byte[BUFF_SIZE];
+		byte[] bs = new byte[buffSize];
 		int len = 0;
 		while((len = input.read(bs)) != -1) {
 			out.write(bs, 0, len);

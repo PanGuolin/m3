@@ -1,5 +1,10 @@
 package com.m3.metadata.info;
 
+/**
+ * 功能元数据对象
+ * @author pangl
+ *
+ */
 public class MFunction extends BaseMetadataInfo{
 	
 	private MService service;
@@ -12,7 +17,7 @@ public class MFunction extends BaseMetadataInfo{
 	
 	public void setService(MService service) {
 		this.service = service;
-		this.pack = service.getPack();
+		setPack(service.getPack());
 	}
 	public String getMethod() {
 		return method;

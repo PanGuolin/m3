@@ -3,6 +3,11 @@ package com.m3.patchbuild.aop.handler;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+/**
+ * 参与人对象
+ * @author pangl
+ *
+ */
 public class Participant {
 	
 	public static final String TYPE_ROLE = "role";

@@ -16,9 +16,9 @@ import com.byttersoft.patchbuild.beans.BuildFile;
  */
 public abstract class BPICache {
 	
-	private static int MAX_CACHE_SIZE = 500;
+	private static final int MAX_CACHE_SIZE = 500;
 	
-	private static long EXPIRE_INTERVAL = 60*60*1000;
+	private static final long EXPIRE_INTERVAL = 60*60*1000;
 	
 	private static Map<File, BuildFile> infos = new Hashtable<File, BuildFile>();
 	

@@ -1,5 +1,10 @@
 package com.m3.patchbuild.aop;
 
+/**
+ * 执行错误
+ * @author pangl
+ *
+ */
 public class ExecuteException extends RuntimeException {
 
 	public ExecuteException(String string) {

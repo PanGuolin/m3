@@ -15,6 +15,11 @@ import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
 import com.opensymphony.xwork2.ActionContext;
 
+/**
+ * 用户登录Action
+ * @author pangl
+ *
+ */
 public class LoginAction extends BaseAction implements ServletResponseAware, ServletRequestAware {
 	
 	public static final String COOKIE_USERNAME = "SESSION_LOGIN_USERNAME";
@@ -75,14 +80,14 @@ public class LoginAction extends BaseAction implements ServletResponseAware, Ser
 		
 		ContextUtil.userLogin(user);
 		dataMap.put("sessionId", ServletActionContext.getRequest().getSession().getId());
-		
+		final int maxAge = 99999999;
 		if (storeCookie) {
 			Cookie cookie = new Cookie(COOKIE_USERNAME, username);
-			cookie.setMaxAge(99999999);  
+			cookie.setMaxAge(maxAge);  
 			response.addCookie(cookie);  
 			
 			cookie = new Cookie(COOKIE_PASSWORD, user.getPassword());  
-			cookie.setMaxAge(99999999);  
+			cookie.setMaxAge(maxAge);  
 			response.addCookie(cookie);  
 		}
 		return SUCCESS;

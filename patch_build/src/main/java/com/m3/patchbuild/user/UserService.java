@@ -50,7 +50,8 @@ public class UserService extends BaseService implements IUserService{
 	
 	@Override
 	public void saveInfo(User user) {
-		if (!StringUtil.isEmpty(user.getPassword()) && user.getPassword().length() != 32) {
+		final int encodeLen = 32;
+		if (!StringUtil.isEmpty(user.getPassword()) && user.getPassword().length() != encodeLen) {
 			user.setPassword(MD5Util.getMD5(user.getUserId() + user.getPassword()));
 		}
 		DaoUtil.saveInfo(user);

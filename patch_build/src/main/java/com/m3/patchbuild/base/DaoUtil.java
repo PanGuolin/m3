@@ -12,6 +12,11 @@ import com.m3.common.HibernateUtil;
 import com.m3.common.query.IQuery;
 import com.m3.patchbuild.IBussInfo;
 
+/**
+ * Dao工具类，处理统一的DAO功能
+ * @author pangl
+ *
+ */
 public abstract class DaoUtil {
 
 	/**
@@ -109,9 +114,13 @@ public abstract class DaoUtil {
 	}
 
 	/**
+	 * 默认批处理大小
+	 */
+	private static final int DEFAULT_BATCH_SIZE = 20;
+	/**
 	 * 批量处理大小
 	 */
-	public static int batch_size = 20;
+	private static int batchSize = DEFAULT_BATCH_SIZE;
 
 	/**
 	 * 批量保存 
@@ -120,15 +129,15 @@ public abstract class DaoUtil {
 	public static void saveBatch(Collection<?> infos) {
 		if (infos == null || infos.size() == 0)
 			return;
-		if (batch_size < 1)
-			batch_size = 1;
+		if (batchSize < 1)
+			batchSize = 1;
 		try {
 			Session session = HibernateUtil.openSession();
 			int s = 0;
 			for (Object o : infos) {
 				s ++;
 				session.saveOrUpdate(o);
-				if (s % batch_size == 0) {
+				if (s % batchSize == 0) {
 					session.flush();
 					session.clear();
 					s = 0;
@@ -142,15 +151,15 @@ public abstract class DaoUtil {
 	public static void deleteAll(Collection<?> infos) {
 		if (infos == null || infos.size() == 0)
 			return;
-		if (batch_size < 1)
-			batch_size = 1;
+		if (batchSize < 1)
+			batchSize = 1;
 		try {
 			Session session = HibernateUtil.openSession();
 			int s = 0;
 			for (Object o : infos) {
 				s ++;
 				session.delete(o);
-				if (s % batch_size == 0) {
+				if (s % batchSize == 0) {
 					session.flush();
 					session.clear();
 					s = 0;

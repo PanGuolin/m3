@@ -64,6 +64,8 @@ public class Permission {
 				case deployer:
 					accept = UserUtil.isDeployer(req);
 					break;
+			default:
+				break;
 			}
 			if (accept)
 				break;

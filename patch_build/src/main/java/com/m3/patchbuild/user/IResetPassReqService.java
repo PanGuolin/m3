@@ -3,6 +3,11 @@ package com.m3.patchbuild.user;
 import com.m3.patchbuild.base.IService;
 import com.m3.patchbuild.message.IHandleService;
 
+/**
+ * 重置密码请求服务
+ * @author pangl
+ *
+ */
 public interface IResetPassReqService extends IService, IHandleService {
 	
 	/**

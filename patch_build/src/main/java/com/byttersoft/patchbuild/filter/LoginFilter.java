@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.byttersoft.patchbuild.utils.UserUtil;
 
+/**
+ * 登录过滤器
+ * @author pangl
+ *
+ */
 public class LoginFilter implements Filter{
 
 	public void destroy() {

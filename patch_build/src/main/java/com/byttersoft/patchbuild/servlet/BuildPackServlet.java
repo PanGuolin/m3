@@ -25,7 +25,7 @@ public class BuildPackServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		String build_files = req.getParameter("build_files");
+		String buildFiles = req.getParameter("build_files");
 		String comment = req.getParameter("comment");
 		if (comment != null) {
 			comment = new String(comment.getBytes("ISO8859_1"), "UTF-8");
@@ -43,7 +43,7 @@ public class BuildPackServlet extends HttpServlet{
 		config.setVps(vps);
 		config.setId(vps.split(";")[0]);
 		
-		String[] files = build_files.split(";");
+		String[] files = buildFiles.split(";");
 		for (String file : files) {
 			if (!config.addFile(file)) {
 				System.err.println("文件路径不合法:" + file);

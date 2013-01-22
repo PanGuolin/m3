@@ -5,6 +5,11 @@ package com.byttersoft.patchbuild.filter;
  */
 import com.byttersoft.patchbuild.command.BuildCommand;
 
+/**
+ * ICommandFilter 的默认实现
+ * @author pangl
+ *
+ */
 public class CommandFilterAdapter implements ICommandFilter {
 
 	public boolean beforeExecute(BuildCommand command) throws Exception {

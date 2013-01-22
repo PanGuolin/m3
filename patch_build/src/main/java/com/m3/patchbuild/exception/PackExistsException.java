@@ -19,9 +19,9 @@ public class PackExistsException extends BuildPackException {
 	}
 	@Override
 	public String getMessage() {
-		return "已存在相同构建包,申请人：" + old.getRequester() +
-				",申请时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(old.getRequestTime()) +
-				",状态：" + old.getStatus();
+		return "已存在相同构建包,申请人：" + old.getRequester()
+				+ ",申请时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(old.getRequestTime()) 
+				+ ",状态：" + old.getStatus();
 	}
 
 	

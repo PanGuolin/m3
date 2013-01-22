@@ -14,8 +14,8 @@ import com.m3.patchbuild.sys.UserNoLoginException;
  *
  */
 public class UserMessageQueue {
-	
-	private static long expiredTime = 1000 * 60 * 10; //线程超期10分钟
+	private static final long DEFAULT_EXPIRED_TIME = 1000 * 60 * 10;
+	private static long expiredTime = DEFAULT_EXPIRED_TIME; //线程超期10分钟
 	private static volatile Map<Object, UserMessageQueue> queues = new Hashtable<Object, UserMessageQueue>(); //全局消息分类队列
 	
 	/**
@@ -73,8 +73,8 @@ public class UserMessageQueue {
 	
 	
 	//private static final Logger logger  = Logger.getLogger(UserMessageQueue.class);
-	
-	private static int maxQueueLength = 50; //最大队列长度，默认为50条消息，注意队列中可能存在非特定消费者可消费的类型
+	private static final int DEFAULT_MAX_QUE_LEN = 50;
+	private static int maxQueueLength = DEFAULT_MAX_QUE_LEN; //最大队列长度，默认为50条消息，注意队列中可能存在非特定消费者可消费的类型
 	
 	private long lastActived = 0L; //上一次活动时间
 	

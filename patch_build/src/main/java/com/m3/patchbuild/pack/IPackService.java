@@ -11,6 +11,11 @@ import com.m3.patchbuild.exception.BussException;
 import com.m3.patchbuild.message.IHandleService;
 import com.m3.patchbuild.pack.action.PackQuery;
 
+/**
+ * 构建包服务接口
+ * @author pangl
+ *
+ */
 public interface IPackService extends IService, IHandleService {
 	
 	

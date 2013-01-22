@@ -7,6 +7,11 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+/**
+ * 元数据工具类
+ * @author pangl
+ *
+ */
 public abstract class MDUtil {
 	
 	public static IMetadataInfo loadFromDom(Class<? extends IMetadataInfo> clz, Element el) throws Exception{

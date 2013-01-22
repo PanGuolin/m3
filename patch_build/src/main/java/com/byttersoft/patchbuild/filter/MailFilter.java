@@ -13,6 +13,11 @@ import com.byttersoft.patchbuild.command.CommandContext;
 import com.byttersoft.patchbuild.utils.MailInfo;
 import com.byttersoft.patchbuild.utils.MailUtil;
 
+/**
+ * 邮件服务过滤器
+ * @author pangl
+ *
+ */
 public class MailFilter implements ICommandFilter{
 
 	public boolean beforeExecute(BuildCommand command) throws Exception {
@@ -59,6 +64,11 @@ public class MailFilter implements ICommandFilter{
 
 }
 
+/**
+ * 邮件认证对象
+ * @author pangl
+ *
+ */
 class EmailAutherticator extends Authenticator {
 	private String username;
 	private String password;
@@ -67,15 +77,13 @@ class EmailAutherticator extends Authenticator {
         super();
     }
 
-    public EmailAutherticator(String user, String pwd)
-    {
+    public EmailAutherticator(String user, String pwd) {
         super();
         username = user;
         password = pwd;
     }
 
-    public PasswordAuthentication getPasswordAuthentication()
-    {
+    public PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(username, password);
     }
 }

@@ -5,7 +5,11 @@ import java.util.List;
 
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.base.BaseCacheService;
-
+/**
+ * 工具按钮服务
+ * @author pangl
+ *
+ */
 public class ToolButtonService extends BaseCacheService implements IToolButtonService{
 
 	@Override
@@ -16,7 +20,7 @@ public class ToolButtonService extends BaseCacheService implements IToolButtonSe
 	@Override
 	public List<ToolButton> getToolButtons(Menu menu) {
 		List<ToolButton> tools = new ArrayList<ToolButton>();
-		for (IBussInfo info : allDatas.values()) {
+		for (IBussInfo info : getAllDatas().values()) {
 			ToolButton tool = (ToolButton)info;
 			if (tool.getMenu().equals(menu)) {
 				tools.add(tool);

@@ -7,6 +7,11 @@ import org.apache.log4j.Logger;
 import com.m3.common.query.IQuery;
 import com.m3.patchbuild.IBussInfo;
 
+/**
+ * 基础服务类
+ * @author pangl
+ *
+ */
 public abstract class BaseService implements IService{
 	private static final Logger logger = Logger.getLogger(BaseService.class);
 	
@@ -46,7 +51,7 @@ public abstract class BaseService implements IService{
 		return (List<? extends IBussInfo>) DaoUtil.list(getBizClass(), query);
 	}
 
-	final public Class<? extends IBussInfo> getBizClass() {
+	public final Class<? extends IBussInfo> getBizClass() {
 		return doGetBizClass();
 	}
 	

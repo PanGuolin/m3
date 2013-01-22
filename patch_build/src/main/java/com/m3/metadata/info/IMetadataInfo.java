@@ -1,5 +1,10 @@
 package com.m3.metadata.info;
 
+/**
+ * 元数据对象接口
+ * @author pangl
+ *
+ */
 public interface IMetadataInfo {
 	
 	/**

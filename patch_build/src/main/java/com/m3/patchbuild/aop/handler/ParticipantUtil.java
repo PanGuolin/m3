@@ -13,6 +13,11 @@ import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
 
+/**
+ * 参与人工具类
+ * @author pangl
+ *
+ */
 public abstract class ParticipantUtil {
 	
 	/**

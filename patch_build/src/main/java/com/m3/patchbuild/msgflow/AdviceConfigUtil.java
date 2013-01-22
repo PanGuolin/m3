@@ -52,7 +52,7 @@ public abstract class AdviceConfigUtil {
 		if (config.getCondition() != null) {
 			String script = BeanUtil.parseString(config.getCondition(), context);
 			ScriptEngineManager manager = new ScriptEngineManager();
-			ScriptEngine engine = manager.getEngineByName ("js");
+			ScriptEngine engine = manager.getEngineByName("js");
 			try {
 				Object rs = engine.eval(script);
 				return ((Boolean)rs).booleanValue();

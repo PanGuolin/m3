@@ -29,17 +29,17 @@ public class AttachmentService extends BaseService{
 	
 	public static final String DEFAULT_ROOT_DIR = "/m3_attachments"; //保存附件的默认根目录
 	
-	private static File ROOT_DIR = null;
-	private static boolean SEP_BY_DATE = false;
+	private static File rooDir = null;
+	private static boolean sepByDate = false;
 	
 	static {
 		if (System.getProperty(KEY_ROOT_DIR) != null) {
-			ROOT_DIR = new File(System.getProperty(KEY_ROOT_DIR));
+			rooDir = new File(System.getProperty(KEY_ROOT_DIR));
 		} else {
-			ROOT_DIR = new File(DEFAULT_ROOT_DIR);
+			rooDir = new File(DEFAULT_ROOT_DIR);
 		}
 		try {
-			ROOT_DIR.mkdirs();
+			rooDir.mkdirs();
 		} catch (Throwable t) {
 			logger.error("创建附件根目录时出错", t);
 		}
@@ -55,10 +55,10 @@ public class AttachmentService extends BaseService{
 	public Attachment createAttachment(File file, IBussInfo info, boolean keepSource) throws IOException {		
 		if (!file.exists() || !file.isFile())
 			return null;
-		File to = ROOT_DIR;
+		File to = rooDir;
 		
 		Date date = new Date();
-		if (SEP_BY_DATE) {
+		if (sepByDate) {
 			to = new File(to, new SimpleDateFormat("yyyy/MM/dd").format(date));
 			to.mkdirs();
 		}

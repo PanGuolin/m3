@@ -16,7 +16,7 @@ import org.hibernate.service.ServiceRegistryBuilder;
  * @author MickeyMic
  *
  */
-public class HibernateUtil {
+public abstract class HibernateUtil {
 	
 	private static SessionFactory sf = null; 
 	
@@ -76,6 +76,11 @@ public class HibernateUtil {
 			sessions.remove();
 	}
 	
+	/**
+	 * hibernate会话对象
+	 * @author pangl
+	 *
+	 */
 	private static class SessionObject {
 		private int deeps = 0;
 		private Session session = null;
@@ -88,7 +93,7 @@ public class HibernateUtil {
 		}
 		
 		synchronized boolean close() {
-			deeps --;
+			deeps--;
 			if (deeps <= 0) {
 				tx.commit();
 				session.clear();
@@ -109,7 +114,7 @@ public class HibernateUtil {
 		}
 		
 		void open() {
-			deeps ++;
+			deeps++;
 		}
 		
 	}

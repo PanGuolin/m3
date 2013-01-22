@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.tmatesoft.svn.core.SVNException;
-
 import com.m3.common.ContextUtil;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.IBussInfo;
@@ -46,8 +44,9 @@ public class PackService extends BaseService implements IPackService {
 	 * @param bp
 	 */
 	public void saveInfo(Pack pack) {
-		if (pack.getComments() != null && pack.getComments().length() > 400)
-			pack.setComments(pack.getComments().substring(0, 400));
+		final int maxLen = 400;
+		if (pack.getComments() != null && pack.getComments().length() > maxLen)
+			pack.setComments(pack.getComments().substring(0, maxLen));
 		DaoUtil.saveInfo(pack);
 	}
 	
@@ -265,6 +264,7 @@ public class PackService extends BaseService implements IPackService {
 				pack.setDeployer(hContext.getDeployer());
 				pack.setDeployTime(new Date());
 				break;
+				default: throw new IllegalStateException();
 		}
 		switch(pack.getStatus()) {
 			case request:
@@ -272,6 +272,8 @@ public class PackService extends BaseService implements IPackService {
 			case published:
 			case testFail:
 				getDao().removeDependOn(pack);
+				break;
+			default: break;
 		}
 		saveInfo(pack);
 	}
@@ -303,7 +305,9 @@ public class PackService extends BaseService implements IPackService {
 				case init:
 				case published:
 				case request:
-				case testFail:
+				case testFail:break;
+				default:
+					break;
 				}
 			}
 		}

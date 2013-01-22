@@ -12,6 +12,11 @@ import com.m3.patchbuild.user.IUserRole;
 import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
 
+/**
+ * 从SVN导入用户Action
+ * @author pangl
+ *
+ */
 public class ImportUserFromSVN extends BaseAction{
 	
 	private User user;

@@ -20,11 +20,11 @@ import com.byttersoft.patchbuild.utils.AntTaskUtil;
  */
 public class PrivateBuildCommand extends BuildCommand{
 	
-	private String COMMAND_NAME = "获取私家包";
+	private static final String COMMAND_NAME = "获取私家包";
 
 	@Override
 	protected void doExcute() throws Exception {
-		BuildFile buildFile = context.getBuildFile();
+		BuildFile buildFile = getContext().getBuildFile();
 		BuildConfig config = buildFile.getConfig();
 		String[] depends = config.getDepends();
 		if (depends != null) {

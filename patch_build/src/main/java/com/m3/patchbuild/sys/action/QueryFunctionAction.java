@@ -7,6 +7,11 @@ import com.m3.patchbuild.base.BussFactory;
 import com.m3.patchbuild.sys.Function;
 import com.m3.patchbuild.sys.IFunctionService;
 
+/**
+ * 功能查询Action
+ * @author pangl
+ *
+ */
 public class QueryFunctionAction extends BaseAction{
 	private FunctionQuery q = new FunctionQuery();
 

@@ -61,24 +61,44 @@ public final class HandlerConfig {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((args == null) ? 0 : args.hashCode());
+		result = prime * result
+				+ ((condition == null) ? 0 : condition.hashCode());
+		result = prime * result
+				+ ((handlerClz == null) ? 0 : handlerClz.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return true;
-		if (!(obj instanceof HandlerConfig)) return false;
-		HandlerConfig o = (HandlerConfig)obj;
-		if (!handlerClz.equals(o.handlerClz)) return false;
-		
-		if (this.condition == null) {
-			if (o.condition != null)
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HandlerConfig other = (HandlerConfig) obj;
+		if (args == null) {
+			if (other.args != null)
 				return false;
-		} else {
-			if (!condition.equals(o.condition))
+		} else if (!args.equals(other.args))
+			return false;
+		if (condition == null) {
+			if (other.condition != null)
 				return false;
-		}
-		if (!type.equals(o.type))
+		} else if (!condition.equals(other.condition))
+			return false;
+		if (handlerClz == null) {
+			if (other.handlerClz != null)
+				return false;
+		} else if (!handlerClz.equals(other.handlerClz))
+			return false;
+		if (type != other.type)
 			return false;
 		return true;
 	}
-	
-	
 }

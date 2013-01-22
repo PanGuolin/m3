@@ -90,14 +90,14 @@ public class RepositoryInfo {
 	private String versionSuffix = "";
 	
 	
-	public Set<String> testUsers = new HashSet<String>();
+	private Set<String> testUsers = new HashSet<String>();
 	
-	public Set<String> deployUsers = new HashSet<String>();
+	private Set<String> deployUsers = new HashSet<String>();
 	
 	/**
 	 * 保存用户名-密码对
 	 */
-	public Map<String, String> userAuthInfo = new HashMap<String, String>();
+	private Map<String, String> userAuthInfo = new HashMap<String, String>();
 	
 	/**
 	 * versionInfo文件的路径

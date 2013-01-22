@@ -1,6 +1,5 @@
 package com.m3.patchbuild.svn;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;

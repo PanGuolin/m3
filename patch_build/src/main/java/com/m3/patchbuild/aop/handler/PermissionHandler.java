@@ -12,6 +12,11 @@ import com.m3.patchbuild.aop.IAOPHandler;
 import com.m3.patchbuild.aop.IExecuteArguments;
 import com.m3.patchbuild.aop.IExecuteContext;
 
+/**
+ * 权限限制处理
+ * @author pangl
+ *
+ */
 public class PermissionHandler implements IAOPHandler {
 
 	@Override

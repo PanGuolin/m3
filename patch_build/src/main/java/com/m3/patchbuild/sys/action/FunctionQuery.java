@@ -7,6 +7,11 @@ import com.m3.common.query.BaseQuery;
 import com.m3.common.query.QueryField;
 import com.m3.common.query.QueryType;
 
+/**
+ * 功能查询条件对象
+ * @author pangl
+ *
+ */
 public class FunctionQuery extends BaseQuery{
 	
 	@QueryField(type=QueryType.AllLike)

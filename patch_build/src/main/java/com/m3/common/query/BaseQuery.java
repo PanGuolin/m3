@@ -15,8 +15,15 @@ import com.m3.common.BeanUtil;
 import com.m3.common.StringUtil;
 import com.m3.patchbuild.IBussInfo;
 
+/**
+ * 基础查询对象类
+ * 用于处理查询类到具体hibernate查询功能的转换
+ * @author pangl
+ *
+ */
 public abstract class BaseQuery implements IQuery{
 	private static final Logger logger = Logger.getLogger(BaseQuery.class);
+	
 	private int pageIndex = -1;
 	private int pageSize = -1;
 	private List<QueryOrder> orders = new ArrayList<QueryOrder>();
@@ -150,6 +157,7 @@ public abstract class BaseQuery implements IQuery{
 			criter.add(Restrictions.lt(propertyName, value));break;
 		case LittleEqual:
 			criter.add(Restrictions.le(propertyName, value));break;
+			default: throw new IllegalStateException("un handle QueryType " + ann.type());
 		}
 		
 	}

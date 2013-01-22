@@ -6,11 +6,11 @@ package com.m3.patchbuild.user;
  *
  */
 public interface IUserRole {
-	String developer = "developer";//开发
-	String designer = "designer"; //设计师
-	String testmanager = "testmanager"; //测试经理
-	String tester = "tester";//测试员
-	String deployer = "deployer";//发布人员
-	String admin = "admin";//系统管理员
-	String loginedUser = "[loginedUser]";//登录用户
+	String DEVELOPER = "developer";//开发
+	String DESIGNER = "designer"; //设计师
+	String TESTMANAGER = "testmanager"; //测试经理
+	String TESTER = "tester";//测试员
+	String DEPLOYER = "deployer";//发布人员
+	String ADMIN = "admin";//系统管理员
+	String LOGINEDUSER = "[loginedUser]";//登录用户
 }

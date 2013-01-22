@@ -1,5 +1,10 @@
 package com.m3.common.query;
 
+/**
+ * 查询条件类型枚举
+ * @author pangl
+ *
+ */
 public enum QueryType {
 
 	Equal, //相等

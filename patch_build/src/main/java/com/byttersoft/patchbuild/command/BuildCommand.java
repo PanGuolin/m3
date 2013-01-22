@@ -16,19 +16,14 @@ public abstract class BuildCommand implements Cloneable{
 	/**
 	 * 命令上下文信息
 	 */
-	protected CommandContext context = null;
-	
-	/**
-	 * 实例ID号
-	 */
-	protected String commandId = null;
+	private CommandContext context = null;
 	
 	/**
 	 * 旧有配置内容，用于回滚操作
 	 */
-	protected String oldXML = null;
+	private String oldXML = null;
 	
-	protected ICommandFilter[] filters = EMPTY_FILTER;
+	private ICommandFilter[] filters = EMPTY_FILTER;
 	
 	protected BuildCommand(){
 		

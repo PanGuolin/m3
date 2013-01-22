@@ -1,6 +1,7 @@
 package com.m3.patchbuild.aop.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jdom.Element;
@@ -80,43 +81,56 @@ public final class FunctionConfig {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (obj == null) return false;
-		if (!(obj instanceof FunctionConfig))
-			return false;
-		FunctionConfig o = (FunctionConfig)obj;
-		if (!methodName.equals(o.methodName))
-			return false;
-		if (!arrayEquals(paramTypes, o.paramTypes))
-			return false;
-		if (paramTypes != null) {
-			if (o.paramTypes == null)
-				return false;
-			if (paramTypes.length != o.paramTypes.length)
-				return false;
-			for (int i=0; i<paramTypes.length; i++) {
-				if (!paramTypes[i].equals(o.paramTypes[i]))
-					return false;
-			}
-		} else {
-			if (o.paramTypes != null)
-				return false;
-		}
-		// TODO Auto-generated method stub
-		return super.equals(obj);
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((handlers == null) ? 0 : handlers.hashCode());
+		result = prime * result + infoIndex;
+		result = prime * result
+				+ ((methodName == null) ? 0 : methodName.hashCode());
+		result = prime * result + Arrays.hashCode(paramTypes);
+		return result;
 	}
-	
-	private boolean arrayEquals(Object[] array1, Object[] array2) {
-		if (array1 == array2) return true;
-		if (array1 == null) return array2 == null;
-		if (array1.length != array2.length) return false;
-		for (int i=0; i<array1.length; i++) {
-			if (!array1[i].equals(array2[i]))
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FunctionConfig other = (FunctionConfig) obj;
+		if (handlers == null) {
+			if (other.handlers != null)
 				return false;
-		}
+		} else if (!handlers.equals(other.handlers))
+			return false;
+		if (infoIndex != other.infoIndex)
+			return false;
+		if (methodName == null) {
+			if (other.methodName != null)
+				return false;
+		} else if (!methodName.equals(other.methodName))
+			return false;
+		if (!Arrays.equals(paramTypes, other.paramTypes))
+			return false;
 		return true;
 	}
+	
+	
+	
+//	private boolean arrayEquals(Object[] array1, Object[] array2) {
+//		if (array1 == array2) return true;
+//		if (array1 == null) return array2 == null;
+//		if (array1.length != array2.length) return false;
+//		for (int i=0; i<array1.length; i++) {
+//			if (!array1[i].equals(array2[i]))
+//				return false;
+//		}
+//		return true;
+//	}
 
 	void join(FunctionConfig function) {
 		List<HandlerConfig> nHandlers = function.getHandlers();

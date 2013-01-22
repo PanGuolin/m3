@@ -17,7 +17,7 @@ import com.byttersoft.patchbuild.utils.PatchUtil;
  * @author pangl
  *
  */
-public class PatchFileService {
+public abstract class PatchFileService {
 
 	/**
 	 * 产生加密补丁包
@@ -25,7 +25,7 @@ public class PatchFileService {
 	 * @param patchName
 	 */
 	public static File encodePatch(String branch, String patchName) {
-		if (patchName.equalsIgnoreCase("latest.zip"))
+		if ("latest.zip".equalsIgnoreCase(patchName))
 			return null;
 		RepositoryInfo repos = BuildReposManager.getByName(branch);
 		File file = new File(repos.getDeployDir(), patchName);
@@ -59,7 +59,7 @@ public class PatchFileService {
 		TreeSet<PatchFile> pInfos = new TreeSet<PatchFile>();
 		if (patchs != null) {
 			for (File f : patchs) {
-				if (f.isDirectory() || f.getName().equals("latest.zip"))
+				if (f.isDirectory() || "latest.zip".equals(f.getName()))
 					continue;
 				pInfos.add(PatchFile.getPatchFile(f, branch));
 			}

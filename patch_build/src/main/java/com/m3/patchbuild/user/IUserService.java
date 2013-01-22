@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.m3.patchbuild.base.IService;
 
+/**
+ * 用户服务接口
+ * @author pangl
+ *
+ */
 public interface IUserService extends IService{
 
 	/**

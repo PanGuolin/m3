@@ -16,6 +16,11 @@ import com.m3.patchbuild.pack.PackStatus;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserUtil;
 
+/**
+ * 构建包查询条件对象
+ * @author pangl
+ *
+ */
 public class PackQuery extends BaseQuery{
 
 	@QueryField(property="branch.branch")

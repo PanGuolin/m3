@@ -8,11 +8,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.m3.common.ContextUtil;
 import com.m3.patchbuild.BaseAction;
 import com.m3.patchbuild.base.BussFactory;
-import com.m3.patchbuild.message.IMessageService;
-import com.m3.patchbuild.message.Message;
 import com.m3.patchbuild.pack.BuildFile;
 import com.m3.patchbuild.pack.IPackService;
 import com.m3.patchbuild.pack.Pack;
@@ -40,7 +37,8 @@ public class CreateBranchAction extends BaseAction{
 	protected String doExecute() throws Exception {
 		if (branchUrl == null) {
 			Patch patch = valid();
-			String url = branchUrl = patch.getBranch().getSvnTagRoot();
+			branchUrl = patch.getBranch().getSvnTagRoot();
+			String url = branchUrl;
 			if (url != null) {
 				url = url.replaceAll("/tags/", "/branches/");
 			}
@@ -51,11 +49,9 @@ public class CreateBranchAction extends BaseAction{
 			return "next";
 		} else {
 			final Patch patch = valid();
-			final String userId = ContextUtil.getUserId();
 			Thread thread = new Thread("create sub branch" + branchUrl) {
 				@Override
 				public void run() {
-					IMessageService msgService = (IMessageService)BussFactory.getService(Message.class);
 					try {
 						createBranch(patch);
 						//msgService.sendNotifyMessage(userId, "分支已创建", "分支：" + branchUrl + "已成功创建！", patch, null);

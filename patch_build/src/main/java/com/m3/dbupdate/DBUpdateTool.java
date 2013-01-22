@@ -50,7 +50,7 @@ public abstract class DBUpdateTool {
 	 * @return
 	 */
 	public static String[] readSqls(File sqlFile) throws IOException{
-		BufferedReader reader = new BufferedReader(new InputStreamReader (new FileInputStream(sqlFile), fileEncoding));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sqlFile), fileEncoding));
 		StringBuilder sb = new StringBuilder();
 		List<String> list = new ArrayList<String>(); 
 		boolean isMultiComment = false;
@@ -87,9 +87,9 @@ public abstract class DBUpdateTool {
 						line = line.substring(0, index);
 					}
 				}
-				if (line.startsWith("create or replace trigger ") ||
-						line.startsWith("create or replace procedure ") ||
-						line.startsWith("alter trigger ")) {
+				if (line.startsWith("create or replace trigger ") 
+						|| line.startsWith("create or replace procedure ")
+						|| line.startsWith("alter trigger ")) {
 					isCreateTri = true;
 				} else if (!isCreateTri && line.startsWith("declare")) {
 					isDeclare = true;
@@ -102,7 +102,7 @@ public abstract class DBUpdateTool {
 						line = line.substring(0, line.length() - 1);
 						sb.append(" ").append(line);
 						sqlEnd = true;
-					} else if (line.equalsIgnoreCase("go")) {
+					} else if("go".equalsIgnoreCase(line)){
 						sqlEnd = true;
 					}
 				}
@@ -158,18 +158,21 @@ public abstract class DBUpdateTool {
 			try {
 				conn.close();
 			} catch (Exception ex) {
+				logger.error("", ex);
 			}
 		}
 		if (stmt != null) {
 			try {
 				stmt.close();
 			} catch (Exception ex) {
+				logger.error("", ex);
 			}
 		}
 		if (rs != null) {
 			try {
 				rs.close();
 			} catch (Exception ex) {
+				logger.error("", ex);
 			}
 		}
 	}
@@ -184,7 +187,7 @@ public abstract class DBUpdateTool {
 	
 	private static void addSql(List<String> list, StringBuilder sb) {
 		String sql = sb.toString().trim();
-		if (sql.length() > 0 && !sql.startsWith("comment ") && !sql.equals("commit")) {
+		if (sql.length() > 0 && !sql.startsWith("comment ") && !"commit".equals(sql)) {
 			while(sql.indexOf("  ") != -1) {
 				sql = sql.replaceAll("  ", " ");
 			}

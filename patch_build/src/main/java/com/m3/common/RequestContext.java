@@ -4,6 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.opensymphony.xwork2.ActionContext;
 
+/**
+ * 请求上下文
+ * @author pangl
+ *
+ */
 public class RequestContext {
 	
 	private HttpServletRequest request;

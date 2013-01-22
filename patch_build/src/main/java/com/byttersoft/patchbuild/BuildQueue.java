@@ -27,7 +27,7 @@ public class BuildQueue extends Thread{
 	/**
 	 * 等待构建队列最大长度
 	 */ 
-	private int MAX_WAIT_SIZE = 100;
+	private static final int MAX_WAIT_SIZE = 100;
 	
 	static {
 		buildQueue = new BuildQueue();

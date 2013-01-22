@@ -5,6 +5,11 @@ import java.lang.reflect.Method;
 
 import com.m3.patchbuild.base.IService;
 
+/**
+ * 切面处理服务
+ * @author pangl
+ *
+ */
 public class InvocationService implements InvocationHandler{
 	private IService service;
 	

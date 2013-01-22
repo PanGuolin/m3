@@ -10,13 +10,17 @@ import org.apache.log4j.Logger;
 import com.m3.common.ContextUtil;
 import com.m3.common.HibernateUtil;
 import com.opensymphony.xwork2.Action;
-
+/**
+ * 基础Action类
+ * @author pangl
+ *
+ */
 public abstract class BaseAction implements Action {
 	
 	public static final String JSON = "json";
 	
-	protected Map<String, Object> dataMap = new HashMap<String, Object>();
-	protected boolean jfs = false; //json for success;
+	private Map<String, Object> dataMap = new HashMap<String, Object>();
+	private boolean jfs = false; //json for success;
 	
 	private static final Logger logger = Logger.getLogger(BaseAction.class);
 	
@@ -24,7 +28,7 @@ public abstract class BaseAction implements Action {
 		dataMap.put("tips", ContextUtil.setTips(tips));
 	}
 	
-	final public String execute() throws Exception {
+	public final String execute() throws Exception {
 		if (!ContextUtil.checkPermission(getClass()))
 			return LOGIN;
 		try {

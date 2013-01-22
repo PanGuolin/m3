@@ -85,11 +85,11 @@ public abstract class SVNUtil {
 			ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(user, password);
 			repository.setAuthenticationManager(authManager);
 			
-			Collection entries = repository.getDir("", -1 , null , (Collection) null );
-	        Iterator iterator = entries.iterator( );
-	        while ( iterator.hasNext( ) ) {
-	            SVNDirEntry entry = ( SVNDirEntry ) iterator.next( );
-	            if ( entry.getKind() == SVNNodeKind.DIR ) {
+			Collection entries = repository.getDir("", -1 , null , (Collection) null);
+	        Iterator iterator = entries.iterator();
+	        while (iterator.hasNext()) {
+	            SVNDirEntry entry = (SVNDirEntry)iterator.next();
+	            if (entry.getKind() == SVNNodeKind.DIR) {
 	            	String name = entry.getName();
 	            	if (!name.startsWith("."))
 	            		set.add(name);
@@ -118,8 +118,8 @@ public abstract class SVNUtil {
 		Set<SVNLogEntry> set = new HashSet<SVNLogEntry>();
 		
 		Collection logEntries = repository.log(new String[] { "" }, null, startRevision, endRevision, true, true);
-		for ( Iterator entries = logEntries.iterator( ); entries.hasNext( ); ) {
-            SVNLogEntry logEntry = (SVNLogEntry) entries.next( );
+		for (Iterator entries = logEntries.iterator(); entries.hasNext();) {
+            SVNLogEntry logEntry = (SVNLogEntry)entries.next();
            	set.add(logEntry);
 		}
 		return set;
@@ -161,19 +161,19 @@ public abstract class SVNUtil {
 		Set<String> logs = new HashSet<String>();
 		
 		Collection logEntries = repository.log(modules, null, startRevision, endRevision, true, true);
-		for ( Iterator entries = logEntries.iterator( ); entries.hasNext( ); ) {
-            SVNLogEntry logEntry = (SVNLogEntry) entries.next( );
+		for (Iterator entries = logEntries.iterator(); entries.hasNext();) {
+            SVNLogEntry logEntry = (SVNLogEntry) entries.next();
             String logMsg = logEntry.getMessage();
             if (logMsg == null)
             	continue;
             //System.out.println(logMsg);
             for (String pattern : logPatterns) {
             	if (logMsg.indexOf(pattern) != -1) {
-            		 if (logEntry.getChangedPaths().size() > 0 ) {
+            		 if (logEntry.getChangedPaths().size() > 0) {
             			 logs.add(logMsg);
                     	 Set changedPathsSet = logEntry.getChangedPaths().keySet();
-                         for (Iterator changedPaths = changedPathsSet.iterator(); changedPaths.hasNext(); ) {
-                             SVNLogEntryPath entryPath = (SVNLogEntryPath ) logEntry.getChangedPaths().get(changedPaths.next());
+                         for (Iterator changedPaths = changedPathsSet.iterator(); changedPaths.hasNext();) {
+                             SVNLogEntryPath entryPath = (SVNLogEntryPath) logEntry.getChangedPaths().get(changedPaths.next());
                              if (entryPath.getType() == 'D' ||
                             		 entryPath.getKind() == SVNNodeKind.DIR) {
                             	 continue;

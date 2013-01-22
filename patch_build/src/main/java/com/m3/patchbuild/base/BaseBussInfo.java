@@ -27,11 +27,11 @@ public class BaseBussInfo implements IBussInfo, Serializable {
 	@GenericGenerator(name = "hibernate-uuid", strategy = "uuid2")
 	private String uuid;
 
-	final public String getUuid() {
+	public final String getUuid() {
 		return uuid;
 	}
 
-	final public void setUuid(String uuid) {
+	public final void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
 

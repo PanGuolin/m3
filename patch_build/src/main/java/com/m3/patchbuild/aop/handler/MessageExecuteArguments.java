@@ -8,6 +8,11 @@ import org.jdom.Namespace;
 
 import com.m3.patchbuild.aop.IExecuteArguments;
 
+/**
+ * 消息处理参数信息
+ * @author pangl
+ *
+ */
 public class MessageExecuteArguments implements IExecuteArguments{
 	
 	private final String[] recievers;

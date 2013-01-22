@@ -17,10 +17,17 @@ import org.apache.commons.codec.binary.Base64OutputStream;
  *
  * @author zhangjf
  */
-public class Base64Util {
+public abstract class Base64Util {
 
-    public final static int BUFFER_SIZE = 4096;
-    public final static String FILE_EXTENSION_TAG = "bytter";
+	/**
+	 * 数据缓冲大小
+	 */
+    public static final int BUFFER_SIZE = 4096;
+    
+    /**
+     * 加密文件的文件名后缀
+     */
+    public static final String FILE_EXTENSION_TAG = "bytter";
 
     /**
      * 加密文件,无密钥
@@ -28,7 +35,7 @@ public class Base64Util {
      * @param toEncodeFilePath
      * @param encodedFilePath
      */
-    public static void encodeFile(String toEncodeFilePath, String encodedFilePath)  throws Exception{
+    public static void encodeFile(String toEncodeFilePath, String encodedFilePath)  throws Exception {
         encodeFile(toEncodeFilePath, encodedFilePath, "bytter");
     }
 
@@ -39,12 +46,12 @@ public class Base64Util {
      * @param encodedFilePath
      * @param key
      */
-    public static void encodeFile(String toEncodeFilePath, String encodedFilePath, String key) throws Exception{
+    public static void encodeFile(String toEncodeFilePath, String encodedFilePath, String key) throws Exception {
         byte[] buffer = new byte[BUFFER_SIZE];
-        OutputStream encodeOutput = new Base64OutputStream(new FileOutputStream(encodedFilePath), true);//加密文件流
+        OutputStream encodeOutput = new Base64OutputStream(new FileOutputStream(encodedFilePath), true); //加密文件流
         if (key != null) {
-        	byte[] head = Base64.encodeBase64(key.getBytes());//加密头部密钥
-        	encodeOutput.write(head, 0, head.length);//密钥、文件流合并
+        	byte[] head = Base64.encodeBase64(key.getBytes()); //加密头部密钥
+        	encodeOutput.write(head, 0, head.length); //密钥、文件流合并
         } 
         
         int bytesRead = -1;
@@ -65,7 +72,7 @@ public class Base64Util {
      * @param encodedFilePath
      * @param decodedFilePath
      */
-    public static void decodeFile(String encodedFilePath, String decodedFilePath) throws Exception{
+    public static void decodeFile(String encodedFilePath, String decodedFilePath) throws Exception {
         decodeFile(encodedFilePath, decodedFilePath, "bytter");
     }
 

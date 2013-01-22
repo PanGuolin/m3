@@ -5,6 +5,11 @@ import java.util.List;
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.base.IService;
 
+/**
+ * 消息处理接口
+ * @author pangl
+ *
+ */
 public interface IMessageService extends IService{
 	
 	/**

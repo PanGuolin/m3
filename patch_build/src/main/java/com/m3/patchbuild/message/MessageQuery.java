@@ -14,12 +14,12 @@ import com.m3.common.query.QueryField;
  */
 public class MessageQuery extends BaseQuery{
 	
-	public static int NT_RECIEVER = 0; //接收消息
-	public static int NT_NOTIFIER = 1; //通知消息
+	public static final int NT_RECIEVER = 0; //接收消息
+	public static final int NT_NOTIFIER = 1; //通知消息
 	
-	public static int STATUS_NOR = 0; //正常状态
+	public static final int STATUS_NOR = 0; //正常状态
 	
-	public static int STATUS_INCLUD_EXPIR = 1; //包含处理过的
+	public static final int STATUS_INCLUD_EXPIR = 1; //包含处理过的
 	
 	@QueryField
 	private int status = 0; //消息状态，默认为0，即正常状态
@@ -76,9 +76,4 @@ public class MessageQuery extends BaseQuery{
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	
-	
-
-	
 }

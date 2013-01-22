@@ -16,7 +16,7 @@ import com.m3.patchbuild.aop.IProxyService;
  * @author pangl
  *
  */
-public class BussFactory {
+public abstract class BussFactory {
 	private static Logger logger = Logger.getLogger(BussFactory.class);
 	private static Map<String, IService> serviceRegister = new Hashtable<String, IService>(); //服务对象原型
 	

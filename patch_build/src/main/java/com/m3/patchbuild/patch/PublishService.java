@@ -27,7 +27,7 @@ import com.m3.patchbuild.pack.PackStatus;
  * @author pangl
  *
  */
-public class PublishService {
+public abstract class PublishService {
 	public static final String DEFAULT_ANT_FILE = "/default_publish.xml";
 	
 	private static final Logger logger = Logger.getLogger(PublishService.class);

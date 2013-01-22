@@ -1,10 +1,15 @@
 package com.m3.metadata.info;
 
+/**
+ * 基础的元数据描述
+ * @author pangl
+ *
+ */
 public class BaseMetadataInfo implements IMetadataInfo {
 
-	protected String pack;
-	protected String id;
-	protected String name;
+	private String pack;
+	private String id;
+	private String name;
 	
 	public String getPack() {
 		return pack;

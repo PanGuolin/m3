@@ -8,6 +8,11 @@ import com.m3.patchbuild.base.IService;
 import com.m3.patchbuild.branch.Branch;
 import com.m3.patchbuild.pack.Pack;
 
+/**
+ * SVN提交日志服务接口
+ * @author pangl
+ *
+ */
 public interface ISVNLogService extends IService{
 	
 	

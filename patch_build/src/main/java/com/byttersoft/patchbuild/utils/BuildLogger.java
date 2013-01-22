@@ -18,6 +18,11 @@ import org.tmatesoft.svn.core.wc.SVNEvent;
 
 import com.byttersoft.patchbuild.beans.RepositoryInfo;
 
+/**
+ * 构建日志信息
+ * @author pangl
+ *
+ */
 public class BuildLogger implements BuildListener, ISVNEventHandler {
 	
 	private File logFile;

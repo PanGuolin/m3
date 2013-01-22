@@ -8,6 +8,11 @@ import org.jdom.Namespace;
 
 import com.m3.patchbuild.aop.IExecuteArguments;
 
+/**
+ * 权限限制的参数信息
+ * @author pangl
+ *
+ */
 public class PermissionArguments implements IExecuteArguments{
 	
 	private final String[] accepts;

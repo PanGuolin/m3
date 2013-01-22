@@ -24,7 +24,7 @@ import com.m3.patchbuild.base.BussFactory;
  * @author pangl
  *
  */
-public class MessageHandler {
+public abstract class MessageHandler {
 	
 	private static final String DEFAULT_ACTION = "/msg/handleTask";
 	
@@ -136,12 +136,17 @@ public class MessageHandler {
 		}
 	}
 	
+	/**
+	 * 配置存储对象
+	 * @author pangl
+	 *
+	 */
 	private static class HandlerConfig {
-		String info;
-		String action;
-		String viewmode;
-		String condition;
-		String input;
+		private String info;
+		private String action;
+		private String viewmode;
+		private String condition;
+		private String input;
 		//String[] conditions;
 		//String[] condModes;
 		

@@ -364,15 +364,123 @@ public class BuildConfig {
 		this.testers = testers;
 	}
 
-	public boolean equals(Object o) {
-		if (this == o)
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		final int offset = 32;
+		int result = 1;
+		result = prime * result + (int) (buildTS ^ (buildTS >>> offset));
+		result = prime * result
+				+ ((changeLogs == null) ? 0 : changeLogs.hashCode());
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+		result = prime * result + ((csFiles == null) ? 0 : csFiles.hashCode());
+		result = prime * result
+				+ ((customer == null) ? 0 : customer.hashCode());
+		result = prime * result + ((depends == null) ? 0 : depends.hashCode());
+		result = prime * result + (int) (deployTS ^ (deployTS >>> offset));
+		result = prime * result
+				+ ((developers == null) ? 0 : developers.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((javaFiles == null) ? 0 : javaFiles.hashCode());
+		result = prime * result + ((modules == null) ? 0 : modules.hashCode());
+		result = prime * result + (int) (passTS ^ (passTS >>> offset));
+		result = prime * result
+				+ ((resourceFiles == null) ? 0 : resourceFiles.hashCode());
+		result = prime * result + ((testers == null) ? 0 : testers.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		result = prime * result + ((vps == null) ? 0 : vps.hashCode());
+		result = prime * result
+				+ ((webFiles == null) ? 0 : webFiles.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		if (o == null)
+		if (obj == null)
 			return false;
-		if (!(o instanceof BuildConfig))
+		if (getClass() != obj.getClass())
 			return false;
-		BuildConfig conf = (BuildConfig)o;
-		return id.equals(conf.id);
+		BuildConfig other = (BuildConfig) obj;
+		if (buildTS != other.buildTS)
+			return false;
+		if (changeLogs == null) {
+			if (other.changeLogs != null)
+				return false;
+		} else if (!changeLogs.equals(other.changeLogs))
+			return false;
+		if (comment == null) {
+			if (other.comment != null)
+				return false;
+		} else if (!comment.equals(other.comment))
+			return false;
+		if (csFiles == null) {
+			if (other.csFiles != null)
+				return false;
+		} else if (!csFiles.equals(other.csFiles))
+			return false;
+		if (customer == null) {
+			if (other.customer != null)
+				return false;
+		} else if (!customer.equals(other.customer))
+			return false;
+		if (depends == null) {
+			if (other.depends != null)
+				return false;
+		} else if (!depends.equals(other.depends))
+			return false;
+		if (deployTS != other.deployTS)
+			return false;
+		if (developers == null) {
+			if (other.developers != null)
+				return false;
+		} else if (!developers.equals(other.developers))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (javaFiles == null) {
+			if (other.javaFiles != null)
+				return false;
+		} else if (!javaFiles.equals(other.javaFiles))
+			return false;
+		if (modules == null) {
+			if (other.modules != null)
+				return false;
+		} else if (!modules.equals(other.modules))
+			return false;
+		if (passTS != other.passTS)
+			return false;
+		if (resourceFiles == null) {
+			if (other.resourceFiles != null)
+				return false;
+		} else if (!resourceFiles.equals(other.resourceFiles))
+			return false;
+		if (testers == null) {
+			if (other.testers != null)
+				return false;
+		} else if (!testers.equals(other.testers))
+			return false;
+		if (version == null) {
+			if (other.version != null)
+				return false;
+		} else if (!version.equals(other.version))
+			return false;
+		if (vps == null) {
+			if (other.vps != null)
+				return false;
+		} else if (!vps.equals(other.vps))
+			return false;
+		if (webFiles == null) {
+			if (other.webFiles != null)
+				return false;
+		} else if (!webFiles.equals(other.webFiles))
+			return false;
+		return true;
 	}
 	
 	/**

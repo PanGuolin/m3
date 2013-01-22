@@ -8,6 +8,11 @@ import com.m3.common.query.BaseQuery;
 import com.m3.common.query.QueryField;
 import com.m3.common.query.QueryType;
 
+/**
+ * 分支查询条件对象
+ * @author pangl
+ *
+ */
 public class PatchQuery extends BaseQuery{
 	
 	@QueryField(property="branch.uuid")

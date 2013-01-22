@@ -12,6 +12,11 @@ import com.m3.patchbuild.pack.IPackService;
 import com.m3.patchbuild.pack.Pack;
 import com.m3.patchbuild.pack.PackStatus;
 
+/**
+ * 发布构建包Action
+ * @author pangl
+ *
+ */
 public class PublishAction extends BaseAction{
 	
 	private List<Pack> packs;

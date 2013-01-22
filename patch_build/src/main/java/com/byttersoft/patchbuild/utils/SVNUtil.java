@@ -40,7 +40,7 @@ import com.byttersoft.patchbuild.service.BuildReposManager;
  * @author pangl
  *
  */
-public class SVNUtil {
+public abstract class SVNUtil {
 	
 	static {
 		System.setProperty("svnkit.http.sslProtocols", "SSLv3");
@@ -66,7 +66,6 @@ public class SVNUtil {
 	 * @param password 密码 
 	 * @return 
 	 */
-	@SuppressWarnings("deprecation")
 	public static boolean checkLogin(String branchName, String user, String password) {
 		if (offLineMode) 
 			return true;
@@ -93,7 +92,7 @@ public class SVNUtil {
 	 * @param branchName
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@SuppressWarnings({ "rawtypes"})
 	public static String[] listSVNProjects(String branchName) {
 		
 		RepositoryInfo reposInfo = BuildReposManager.getByName(branchName);

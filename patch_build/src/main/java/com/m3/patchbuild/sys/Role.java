@@ -16,7 +16,7 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Table(name="Sys_Role")
 public class Role extends BaseBussInfo implements Serializable{
 	
-	public static final String loginedUser = "[loginedUser]";
+	public static final String LOGINED_USER = "[loginedUser]";
 
 	private static final long serialVersionUID = 1L;
 	

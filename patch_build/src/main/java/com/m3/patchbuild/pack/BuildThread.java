@@ -65,18 +65,15 @@ public class BuildThread extends Thread {
 			logger.error("执行构建时出错", e);
 //			bp.setStatus(PackStatus.buildFail);
 		} finally {
-			try {
-				if (logOut != null) {
-					logOut.flush();
-					logOut.close();
-				}
-				if (sysOut != null) {
-					System.setOut(sysOut);
-				}
-				BuildService.buildComplete(bp);
-				packService.handle(bp, context);
-			} finally {
+			if (logOut != null) {
+				logOut.flush();
+				logOut.close();
 			}
+			if (sysOut != null) {
+				System.setOut(sysOut);
+			}
+			BuildService.buildComplete(bp);
+			packService.handle(bp, context);
 		}
 	}
 	
@@ -120,7 +117,8 @@ public class BuildThread extends Thread {
 				File toFile = new File(bp.getWSRoot(), "/lib/" + name);
 				toFile.getParentFile().mkdirs();
 				OutputStream output = new FileOutputStream(toFile);
-				byte[] bs = new byte[1024];
+				final int buffSize = 1024;
+				byte[] bs = new byte[buffSize];
 				int len;
 				while((len = input.read(bs)) != -1) {
 					output.write(bs, 0, len);

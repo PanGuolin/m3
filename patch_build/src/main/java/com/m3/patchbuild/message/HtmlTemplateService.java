@@ -13,7 +13,7 @@ import com.m3.patchbuild.pack.Pack;
  * @author pangl
  *
  */
-public class HtmlTemplateService {
+public abstract class HtmlTemplateService {
 	private static final Logger logger = Logger.getLogger(HtmlTemplateService.class);
 	
 	private static HtmlTemplateDAO dao = new HtmlTemplateDAO();

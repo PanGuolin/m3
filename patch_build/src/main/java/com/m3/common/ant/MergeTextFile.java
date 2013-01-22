@@ -21,7 +21,7 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class MergeTextFile extends Task {
 
-	private String encoding="GBK";
+	private String encoding = "GBK";
 	
 	private File destFile; //目标文件
 	
@@ -88,22 +88,42 @@ public class MergeTextFile extends Task {
 		}
 	}
 
+	/**
+	 * 设置合并后保存的文件
+	 * @param destFile
+	 */
 	public void setDestFile(File destFile) {
 		this.destFile = destFile;
 	}
 
+	/**
+	 * 增加一个文件列表
+	 * @param fileset
+	 */
 	public void addFileSet(FileSet fileset) {
 		this.fileSets.add(fileset);
 	}
 
+	/**
+	 * 设置注释行开始标志 
+	 * @param commentStart
+	 */
 	public void setCommentStart(String commentStart) {
 		this.commentStart = commentStart;
 	}
 
+	/**
+	 * 设置注释行结束标志 
+	 * @param commentEnd
+	 */
 	public void setCommentEnd(String commentEnd) {
 		this.commentEnd = commentEnd;
 	}
 
+	/**
+	 * 设置文件编码
+	 * @param encoding
+	 */
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}

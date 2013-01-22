@@ -9,7 +9,11 @@ import org.hibernate.criterion.Restrictions;
 import com.m3.common.HibernateUtil;
 import com.m3.patchbuild.BaseDAO;
 
-@SuppressWarnings("unchecked")
+/**
+ * 用户DAO对象
+ * @author pangl
+ *
+ */
 public class UserDAO extends BaseDAO {
 
 	public UserDAO() {
@@ -21,6 +25,7 @@ public class UserDAO extends BaseDAO {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public List<User> findByRole(String branch, String role) {
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -40,6 +45,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<User> listByUserId(Collection<String> userIds) {
 		try {
 			return HibernateUtil.openSession()
@@ -51,6 +57,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<User> findFollows(String userId) {
 		try {
 			return HibernateUtil.openSession()
@@ -66,6 +73,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<User> findMemebers(String userId) {
 		try {
 			return HibernateUtil.openSession()

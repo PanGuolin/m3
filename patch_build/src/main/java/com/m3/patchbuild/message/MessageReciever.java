@@ -26,9 +26,9 @@ public class MessageReciever implements IStateful{
 	
 	public static final int SEND_TYPE_TO = 0; //发送给
 	
-	public static int STATUS_NORMAL = 0; //正常状态
+	public static final int STATUS_NORMAL = 0; //正常状态
 	
-	public static int STATUS_INGORE = -1; //忽略
+	public static final int STATUS_INGORE = -1; //忽略
 
 	@Id
 	@GeneratedValue(generator = "hibernate-uuid")
@@ -36,7 +36,7 @@ public class MessageReciever implements IStateful{
 	@Column(name = "uuid", unique = true)
 	private String uuid;//唯一ID
 	
-	@ManyToOne( fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="messageId")
 	private Message message;
 	

@@ -12,7 +12,7 @@ import com.byttersoft.patchbuild.command.CommandContext;
  */
 public class BuildLogFilter extends CommandFilterAdapter {
 	
-	protected static final Logger logger = Logger.getLogger(BuildCommand.class);
+	private static final Logger logger = Logger.getLogger(BuildCommand.class);
 
 	@Override
 	public boolean beforeExecute(BuildCommand command) throws Exception {

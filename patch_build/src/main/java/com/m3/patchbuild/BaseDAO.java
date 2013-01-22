@@ -13,7 +13,7 @@ import com.m3.patchbuild.base.DaoUtil;
  */
 public abstract class BaseDAO {
 	
-	protected Class<?> bizClass;
+	private Class<?> bizClass;
 	
 	public BaseDAO(Class<?> bizClass) {
 		this.bizClass = bizClass;

@@ -14,7 +14,11 @@ import com.m3.patchbuild.user.IChangeRoleReqService;
 import com.m3.patchbuild.user.IUserService;
 import com.m3.patchbuild.user.User;
 import com.m3.patchbuild.user.UserRole;
-
+/**
+ * 编辑用户Action
+ * @author pangl
+ *
+ */
 public class EditUserAction extends BaseAction{
 	
 	private String i; //维护的目标用户UUID

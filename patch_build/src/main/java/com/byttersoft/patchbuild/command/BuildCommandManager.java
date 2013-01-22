@@ -13,7 +13,7 @@ import com.byttersoft.patchbuild.filter.ICommandFilter;
  * @author pangl
  *
  */
-public class BuildCommandManager {
+public abstract class BuildCommandManager {
 	
 	public static final String FILE_CONFIG = "/com/byttersoft/patchbuild/command/action_command.properties";
 	
@@ -40,7 +40,7 @@ public class BuildCommandManager {
 	/**
 	 * 命令原型管理
 	 */
-	static Map<String, BuildCommand> CommandRegister = new HashMap<String, BuildCommand>();
+	private static Map<String, BuildCommand> commandRegister = new HashMap<String, BuildCommand>();
 	
 	static {
 		init();

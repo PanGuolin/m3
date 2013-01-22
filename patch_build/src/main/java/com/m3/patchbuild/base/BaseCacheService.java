@@ -11,9 +11,14 @@ import org.apache.log4j.Logger;
 import com.m3.common.query.IQuery;
 import com.m3.patchbuild.IBussInfo;
 
+/**
+ * 基础缓存服务
+ * @author pangl
+ *
+ */
 public abstract class BaseCacheService implements IService{
 	private static final Logger logger = Logger.getLogger(BaseCacheService.class);
-	protected Map<String, IBussInfo> allDatas = new HashMap<String, IBussInfo>();
+	private Map<String, IBussInfo> allDatas = new HashMap<String, IBussInfo>();
 	
 	public BaseCacheService() {
 		this.loadAll();
@@ -79,7 +84,7 @@ public abstract class BaseCacheService implements IService{
 		return true;
 	}
 	
-	final public Class<? extends IBussInfo> getBizClass() {
+	public final Class<? extends IBussInfo> getBizClass() {
 		return doGetBizClass();
 	}
 	
@@ -93,4 +98,9 @@ public abstract class BaseCacheService implements IService{
 			return null;
 		}
 	}
+
+	protected Map<String, IBussInfo> getAllDatas() {
+		return allDatas;
+	}
+	
 }

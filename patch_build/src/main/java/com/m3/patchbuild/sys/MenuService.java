@@ -10,6 +10,11 @@ import java.util.Set;
 import com.m3.patchbuild.IBussInfo;
 import com.m3.patchbuild.base.BaseCacheService;
 
+/**
+ * 菜单服务
+ * @author pangl
+ *
+ */
 public class MenuService extends BaseCacheService implements IMenuService{
 	private static Comparator<Menu> menuComparator  = new Comparator<Menu>() {
 		@Override

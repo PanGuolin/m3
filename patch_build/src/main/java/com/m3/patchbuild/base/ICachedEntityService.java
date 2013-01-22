@@ -2,6 +2,11 @@ package com.m3.patchbuild.base;
 
 import java.util.List;
 
+/**
+ * 可缓存的实体服务对象
+ * @author pangl
+ *
+ */
 public interface ICachedEntityService {
 	
 	/**

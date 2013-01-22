@@ -57,6 +57,11 @@ public class ChangeRoleReqService extends BaseService implements IChangeRoleReqS
 		return new HandleContext();
 	}
 	
+	/**
+	 * 处理器上下文信息
+	 * @author pangl
+	 *
+	 */
 	static class HandleContext {
 		private boolean accepted = false;
 		private String[] roles = null;

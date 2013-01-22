@@ -55,11 +55,11 @@ public abstract class HandleTaskAction extends BaseAction{
 	 */
 	protected abstract void fillPack(Pack pack) throws Exception;
 
-	final public String getI() {
+	public final String getI() {
 		return i;
 	}
 
-	final public void setI(String i) {
+	public final void setI(String i) {
 		this.i = i;
 	}
 	

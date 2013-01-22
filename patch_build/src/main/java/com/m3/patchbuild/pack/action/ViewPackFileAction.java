@@ -20,14 +20,16 @@ import com.m3.patchbuild.pack.Pack;
 public class ViewPackFileAction extends BaseAction{
 	public static final String KEY_URL = "url"; //保存URL的KEY
 	public static final String KEY_CONTENT = "content"; //保存内容的KEY
+	private static final int UUID_LEN = 36;
 	
 	private String i; //pack uuid + file uuid;
 	private Map<String, Object> dataMap = new HashMap<String, Object>();
 
+	
 	@Override
 	protected String doExecute() throws Exception {
-		String packUid = i.substring(0, 36);
-		String fileUid = i.substring(36);
+		String packUid = i.substring(0, UUID_LEN);
+		String fileUid = i.substring(UUID_LEN);
 		IPackService packService = (IPackService)BussFactory.getService(Pack.class);
 		Pack pack = (Pack) packService.findByUuid(packUid);
 		for (BuildFile f : pack.getBuildFiles()) {

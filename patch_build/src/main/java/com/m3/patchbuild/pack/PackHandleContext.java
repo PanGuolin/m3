@@ -5,6 +5,11 @@ import java.io.PrintStream;
 import com.m3.common.StringUtil;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
+/**
+ * 构建包处理上下文对象
+ * @author pangl
+ *
+ */
 public class PackHandleContext {
 	
 	private String failReason;
@@ -60,10 +65,11 @@ public class PackHandleContext {
 	public void setException(Throwable t) {
 		if (t == null)
 			return;
+		final int maxLen = 300;
 		ByteOutputStream out = new ByteOutputStream();
 		t.printStackTrace(new PrintStream(out));
 		String s = new String(out.getBytes());
-		this.failReason = s.length() > 300 ? s.substring(0, 300) : s;
+		this.failReason = s.length() > maxLen ? s.substring(0, maxLen) : s;
 	}
 
 	public String getDeployer() {

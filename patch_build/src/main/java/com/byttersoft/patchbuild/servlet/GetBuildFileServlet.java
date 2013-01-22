@@ -3,10 +3,8 @@ package com.byttersoft.patchbuild.servlet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -93,11 +91,13 @@ public class GetBuildFileServlet extends HttpServlet{
 		case pbuild:
 			file = BuildFileService.getPrivateFile(branch, fileName);
 			break;
+		default:
+			break;
 		}
 		downloadFile(req, resp, file);
 	}
 	
-	public void downloadFile(HttpServletRequest req, HttpServletResponse resp, File f) throws ServletException, UnsupportedEncodingException,IOException {
+	public void downloadFile(HttpServletRequest req, HttpServletResponse resp, File f) throws ServletException, IOException {
 		String fileName = f.getName();
 		if (fileName.indexOf('/') != -1 || fileName.indexOf('\\') != -1) {
 			throw new ServletException("文件名称不合法" + fileName);
@@ -115,8 +115,8 @@ public class GetBuildFileServlet extends HttpServlet{
 				resp.setHeader("Content-Disposition", "attachment; filename=" + 
 						new String(fileName.getBytes(fileNameEncoding),"iso8859-1") + "");
 				
-				final int BUFFER_SIZE = 1024;
-				byte[] bs = new byte[BUFFER_SIZE];
+				final int buffSize = 1024;
+				byte[] bs = new byte[buffSize];
 				int len = fileInputStream.read(bs);
 				while(len != -1) {
 					out.write(bs, 0, len);

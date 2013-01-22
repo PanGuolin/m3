@@ -3,7 +3,11 @@ package com.m3.common.query;
 import java.util.List;
 
 import org.hibernate.Criteria;
-
+/**
+ * 查询对象接口
+ * @author pangl
+ *
+ */
 public interface IQuery {
 	
 	/**
