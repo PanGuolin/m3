@@ -66,7 +66,7 @@ public class ManagerRelationAction extends BaseAction{
 		IUserService userService = (IUserService)BussFactory.getService(User.class);
 		String userId = ContextUtil.getUserId();
 		User curUser = userService.findUser(userId);
-		followable = userService.findUserByRole(branch, IUserRole.developer);
+		followable = userService.findUserByRole(branch, IUserRole.DEVELOPER);
 		for (int i=0; i<followable.size(); i++) {
 			if (userId.equals(followable.get(i).getUserId())) {
 				followable.remove(i);
@@ -81,7 +81,7 @@ public class ManagerRelationAction extends BaseAction{
 		if (canHaveMember(branch, curUser)) {
 			memberable = new ArrayList<User>();
 			memberable.addAll(followable);
-			List<User> users = userService.findUserByRole(branch, IUserRole.tester);
+			List<User> users = userService.findUserByRole(branch, IUserRole.TESTER);
 			for (User user : users) {
 				if (!memberable.contains(user)) {
 					memberable.add(user);

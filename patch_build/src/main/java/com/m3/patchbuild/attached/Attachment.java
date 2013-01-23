@@ -15,6 +15,8 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Entity
 @Table(name="Att_Attachment")
 public class Attachment extends BaseBussInfo{
+
+	private static final long serialVersionUID = 1L;
 	private String fileName; //附件名称
 	private Date createTime; //创建时间
 	private String fileUuid; //文件的唯一名称 

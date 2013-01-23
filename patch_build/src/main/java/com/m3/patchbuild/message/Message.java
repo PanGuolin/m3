@@ -22,6 +22,8 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Table(name="Msg_Message")
 public class Message  extends BaseBussInfo {
 	
+	private static final long serialVersionUID = 1L;
+
 	public static final int MESSAGE_TYPE_TASK = 0; //消息类型：任务
 	
 	@Column(name="bussType")

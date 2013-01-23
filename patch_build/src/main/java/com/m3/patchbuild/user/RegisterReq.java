@@ -14,6 +14,10 @@ import com.m3.patchbuild.base.BaseReqInfo;
 @Table(name = "User_RegisterReq")
 public class RegisterReq extends BaseReqInfo{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String userId; //对应的用户ID
 
 	public String getUserId() {

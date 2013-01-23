@@ -19,8 +19,8 @@ public abstract class BaseAction implements Action {
 	
 	public static final String JSON = "json";
 	
-	private Map<String, Object> dataMap = new HashMap<String, Object>();
-	private boolean jfs = false; //json for success;
+	protected Map<String, Object> dataMap = new HashMap<String, Object>();
+	protected boolean jfs = false; //json for success;
 	
 	private static final Logger logger = Logger.getLogger(BaseAction.class);
 	

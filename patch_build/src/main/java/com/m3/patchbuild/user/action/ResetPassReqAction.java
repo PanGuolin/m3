@@ -39,7 +39,7 @@ public class ResetPassReqAction extends BaseAction implements ServletRequestAwar
 		}
 		
 		IRoleService roleService = (IRoleService)BussFactory.getService(Role.class);
-		Role adminRole = roleService.find(IUserRole.admin);
+		Role adminRole = roleService.find(IUserRole.ADMIN);
 		if (requester.hasRole(null, adminRole)) {
 			setTips("无法重置管理员密码");
 			return INPUT;

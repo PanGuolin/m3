@@ -25,6 +25,11 @@ import com.m3.patchbuild.sys.Role;
 @Table(name="PB_User")
 public class User extends BaseBussInfo {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="userId", nullable=false)
 	private String userId; //用户登录名
 	

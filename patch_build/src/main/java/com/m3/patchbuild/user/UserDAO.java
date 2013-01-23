@@ -20,6 +20,7 @@ public class UserDAO extends BaseDAO {
 		super(User.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<User> listAllUser() {
 		return (List<User>)super.list(null);
 	}

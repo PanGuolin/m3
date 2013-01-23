@@ -19,6 +19,10 @@ import com.m3.patchbuild.user.User;
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseReqInfo extends BaseBussInfo implements IReqInfo{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Date createTime; //请求创建时间
 	private Date handleTime; //处理时间
 	private boolean accepted; //是否接受重置

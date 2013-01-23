@@ -17,6 +17,11 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Table(name="PB_SVNLog")
 public class SVNLog extends BaseBussInfo{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="branch")
 	private String branch;//所属分支名称
 	

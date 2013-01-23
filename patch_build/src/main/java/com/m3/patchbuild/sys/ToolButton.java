@@ -15,6 +15,10 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Entity
 @Table(name="Sys_ToolButton")
 public class ToolButton extends BaseBussInfo{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int index; //索引号
 	private String id; //ID号
 	private String name; //显示名称

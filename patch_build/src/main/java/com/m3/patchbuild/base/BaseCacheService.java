@@ -18,7 +18,7 @@ import com.m3.patchbuild.IBussInfo;
  */
 public abstract class BaseCacheService implements IService{
 	private static final Logger logger = Logger.getLogger(BaseCacheService.class);
-	private Map<String, IBussInfo> allDatas = new HashMap<String, IBussInfo>();
+	protected Map<String, IBussInfo> allDatas = new HashMap<String, IBussInfo>();
 	
 	public BaseCacheService() {
 		this.loadAll();

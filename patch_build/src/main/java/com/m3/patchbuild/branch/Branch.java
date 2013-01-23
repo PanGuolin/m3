@@ -17,6 +17,7 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Table(name="PB_Branch")
 public class Branch extends BaseBussInfo{
 	
+	private static final long serialVersionUID = 1L;
 	public static final String DIR_SVN = "svn"; //SVN文件目录名称
 	public static final String DIR_JAVA_SRC = "src"; //java文件保存目录名称
 	public static final String FILE_BUILD = "build.xml"; //构建所用的脚本名称

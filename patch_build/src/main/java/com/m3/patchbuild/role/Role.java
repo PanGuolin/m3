@@ -9,6 +9,11 @@ import com.m3.patchbuild.base.BaseBussInfo;
  */
 public class Role extends BaseBussInfo{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String roleId;
 	
 	private String roleName;

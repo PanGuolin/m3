@@ -14,6 +14,10 @@ import com.m3.patchbuild.base.BaseReqInfo;
 @Table(name="user_ResetPassReq")
 public class ResetPassReq extends BaseReqInfo{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String password; //新口令
 	private String clientAddr; //请求的客户地址
 	public String getPassword() {

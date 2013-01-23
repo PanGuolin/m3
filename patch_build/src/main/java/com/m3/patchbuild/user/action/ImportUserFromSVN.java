@@ -36,7 +36,7 @@ public class ImportUserFromSVN extends BaseAction{
 			IRoleService roleService = (IRoleService)BussFactory.getService(Role.class);
 			user.getRoles().clear();
 			user.setEnabled(true);
-			user.addRole(branch, roleService.find(IUserRole.developer));
+			user.addRole(branch, roleService.find(IUserRole.DEVELOPER));
 			userService.add(user);
 			ContextUtil.userLogin(user);
 			return SUCCESS;

@@ -11,7 +11,7 @@ public class BuildPackException extends BussException{
 
 	private static final long serialVersionUID = 1L;
 
-	private Pack buildPack;
+	protected Pack buildPack;
 	
 	public BuildPackException(Pack bp) {
 		this.buildPack = bp;

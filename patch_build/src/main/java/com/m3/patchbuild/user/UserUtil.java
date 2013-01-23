@@ -20,7 +20,7 @@ public abstract class UserUtil {
 	 */
 	public static List<User> listAllTester(String branch) {
 		IUserService userService = (IUserService)BussFactory.getService(User.class);
-		return userService.findUserByRole(branch, IUserRole.tester);
+		return userService.findUserByRole(branch, IUserRole.TESTER);
 	}
 	
 	/**

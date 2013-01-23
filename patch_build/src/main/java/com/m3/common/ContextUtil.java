@@ -77,7 +77,7 @@ public abstract class ContextUtil {
 				}
 			}
 			IRoleService roleService = (IRoleService)BussFactory.getService(Role.class);
-			roles.add(roleService.find(Role.loginedUser));
+			roles.add(roleService.find(Role.LOGINED_USER));
 			setSessAttr(KEY_SESS_USERROLES, roles);
 		}
 	}
@@ -167,7 +167,7 @@ public abstract class ContextUtil {
 		if (actionClass != null) {
 			funct = functService.getByAction(actionClass);
 		} else {
-			HttpServletRequest request = (HttpServletRequest) getValue(KEY_HttpServletRequest);
+			HttpServletRequest request = (HttpServletRequest) getValue(KEY_HTTP_SERVLET_REQUEST);
 			String basePath = request.getContextPath();
 			String path = request.getRequestURI();
 			if (path.startsWith(basePath))

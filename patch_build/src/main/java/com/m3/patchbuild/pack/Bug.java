@@ -17,6 +17,11 @@ import com.m3.patchbuild.base.BaseBussInfo;
 @Table(name="Pack_Bug")
 public class Bug  extends BaseBussInfo {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String bugNo; //BUG 编号
 	
 	@Column(name="cmmt")

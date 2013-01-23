@@ -27,6 +27,11 @@ import com.m3.patchbuild.pack.Pack;
 @Table(name="Patch_Patch")
 public class Patch extends BaseBussInfo {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="name")
 	private String name; //补丁名称
 	

@@ -13,6 +13,11 @@ import com.m3.patchbuild.base.BaseReqInfo;
 @Table(name = "User_ChangeRoleReq")
 public class ChangeRoleReq extends BaseReqInfo{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String newRoles; //新的角色列表，用分号连接
 	
 	private String branch; //所在分支

@@ -22,6 +22,11 @@ import com.m3.patchbuild.branch.Branch;
  *
  */
 public class Pack  extends BaseBussInfo {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = Logger.getLogger(Pack.class);
 
 	private String buildNo; //构建号
