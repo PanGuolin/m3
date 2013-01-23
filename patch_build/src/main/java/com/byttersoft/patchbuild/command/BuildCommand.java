@@ -16,7 +16,7 @@ public abstract class BuildCommand implements Cloneable{
 	/**
 	 * 命令上下文信息
 	 */
-	private CommandContext context = null;
+	protected CommandContext context = null;
 	
 	/**
 	 * 旧有配置内容，用于回滚操作

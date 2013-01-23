@@ -71,7 +71,7 @@ public abstract class BuildCommandManager {
 						}
 						command.setFilters((ICommandFilter[])oFilterList.toArray(new ICommandFilter[oFilterList.size()]));
 					}
-					CommandRegister.put(action, command);
+					commandRegister.put(action, command);
 				}
 			}
 		} catch (Exception ex) {
@@ -89,7 +89,7 @@ public abstract class BuildCommandManager {
 	 */
 	public static BuildCommand getCommand(CommandContext context) {
 		
-		BuildCommand command = CommandRegister.get(context.getAction());
+		BuildCommand command = commandRegister.get(context.getAction());
 		command = (BuildCommand) command.clone();
 		command.setContext(context);
 		return command;

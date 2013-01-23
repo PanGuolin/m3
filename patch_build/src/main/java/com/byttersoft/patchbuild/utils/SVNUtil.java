@@ -128,7 +128,7 @@ public abstract class SVNUtil {
 	 * @return
 	 * @throws SVNException 
 	 */
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@SuppressWarnings({ "rawtypes" })
 	public static Set<SVNLogEntry> getSVNLogEntry(String svnUrl, String user, String password, 
 			String logPattern, boolean onlySelf) throws SVNException {
 		DAVRepositoryFactory.setup();
@@ -163,7 +163,7 @@ public abstract class SVNUtil {
 	 * @return
 	 * @throws SVNException 
 	 */
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@SuppressWarnings({ "rawtypes"})
 	public static ChangedSVNFiles listChangedFiles(String branch, String[] modules, String[] logPatterns) throws SVNException {
 		
 		RepositoryInfo repos = BuildReposManager.getByName(branch);
@@ -232,7 +232,6 @@ public abstract class SVNUtil {
 	 * @param rootDir 本地SVN根目
 	 * @throws SVNException
 	 */
-	@SuppressWarnings("deprecation")
 	public static void checkOutModule(String branch, String module, BuildLogger logger) throws SVNException {
 		if (offLineMode)
 			return;
@@ -271,7 +270,6 @@ public abstract class SVNUtil {
 	 * @param message 打标记时的消息
 	 * @throws SVNException 
 	 */
-	@SuppressWarnings("deprecation")
 	public static void tagProjects(String snvName, String user, String pwd, String[] projects, 
 			String tagName, String message) 
 			throws Exception {
